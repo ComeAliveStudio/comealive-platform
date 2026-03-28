@@ -222,9 +222,9 @@ function About() {
         <div className="about-text">
           <div className="section-label">About</div>
           <h2>My work experience ranges from<br /><em>automotive to independent film</em></h2>
-          <p>As former business consultant, author and coach, I've produced indie films with no budget, worked for corporate clients all over Europe and co-interviewed former presidents and ministers in 7 consecutive world public forums. Over the course of these years, I learned to question many rules before rewriting my own.</p>
-          <p>My work experience ranges from automotive consulting to independent film making, developing in recent years a great interest for personal growth and relationship psychology. Two Decades. Hundreds of hours. And one consistent belief: limitations can become an opportunity, once we learn to work with them.</p>
-          <p>This platform exists because I spent years recording content for other people's channels until I decided it was time to build something on my own to help people like you gain clarity, freedom and confidence. Feel free to ask me how and click below.</p>
+          <p>My work experience ranges from consultancy to indie film production, mentoring and writing. Having lived across two continents, I completed my engineering thesis in California before working as sales trainer and consultant in the automotive business.</p>
+          <p>As my career evolved into film production, I moved to Vienna where I worked as film & media producer, participating in 10 consecutive Cannes and Berlin Film Festivals and 6 editions of the World Public Forum in Rhodes — recording more than 150 interviews and 200 hours of conferences.</p>
+          <p>In recent years I developed a deep interest in personal growth and relationship psychology, while completing an MBA in Vienna and a coaching certification with MindValley.</p>
           <div className="about-stats">
             <div className="stat"><div className="stat-num">25+</div><div className="stat-label">Years international experience</div></div>
             <div className="stat"><div className="stat-num">5</div><div className="stat-label">Books published</div></div>
@@ -270,7 +270,7 @@ function Tiers({ setPage }) {
               <li>Priority booking — 20% discount</li>
               <li>Progress tracking dashboard</li>
             </ul>
-            <button className="tier-btn tier-btn-filled">Join Professional — €29/mo</button>
+            <button className="tier-btn tier-btn-filled">Join Professional · €29 / month</button>
           </div>
           <div className="tier-card">
             <div className="tier-name">Mastery</div>
