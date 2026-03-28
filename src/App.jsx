@@ -197,10 +197,8 @@ function Hero({ setPage }) {
         <div className="hero-eyebrow">Come Alive Studio · Vienna</div>
         <h1>Make it<br /><em>Happen.</em></h1>
         <p className="hero-sub">
-          As former business consultant, author and coach, I've produced indie films with no budget, worked for corporate clients all over Europe and co-interviewed former presidents and ministers in 7 consecutive world public forums. Over the course of these years, I learned to question many rules before rewriting my own.
-        </p>
-        <p className="hero-sub" style={{marginTop:'-1rem'}}>
-          Two Decades. Hundreds of hours. One consistent belief: limitations can become an opportunity, once we learn to work with them. This platform exists because I spent years recording content for other people's channels — until I decided it was time to build something of my own.
+          Coaching, courses, and frameworks for independent filmmakers, creative professionals,
+          and anyone ready to stop waiting for permission.
         </p>
         <div className="hero-actions">
           <button className="btn-primary" onClick={() => setPage('library')}>Explore Courses</button>
@@ -224,12 +222,12 @@ function About() {
         <div className="about-text">
           <div className="section-label">About</div>
           <h2>My work experience ranges from<br /><em>automotive to independent film</em></h2>
-          <p>Having lived in Brazil, the UK, Italy, and the US, I completed my engineering thesis at UCR Riverside before joining Ford and BMW Italy as a sales trainer and innovation consultant.</p>
-          <p>As my career evolved into film production, I moved to Vienna where I worked as film & media producer, coordinating content for the World Public Forum in Rhodes across 6 editions — more than 150 interviews and 200 hours of conferences.</p>
-          <p>In recent years I developed a deep interest in personal growth and relationship psychology, publishing six books and obtaining an MBA and a coaching certification with EMCC Global.</p>
+          <p>As former business consultant, author and coach, I've produced indie films with no budget, worked for corporate clients all over Europe and co-interviewed former presidents and ministers in 7 consecutive world public forums. Over the course of these years, I learned to question many rules before rewriting my own.</p>
+          <p>My work experience ranges from automotive consulting to independent film making, developing in recent years a great interest for personal growth and relationship psychology. Two Decades. Hundreds of hours. And one consistent belief: limitations can become an opportunity, once we learn to work with them.</p>
+          <p>This platform exists because I spent years recording content for other people's channels until I decided it was time to build something on my own to help people like you gain clarity, freedom and confidence. Feel free to ask me how and click below.</p>
           <div className="about-stats">
             <div className="stat"><div className="stat-num">25+</div><div className="stat-label">Years international experience</div></div>
-            <div className="stat"><div className="stat-num">6</div><div className="stat-label">Books published</div></div>
+            <div className="stat"><div className="stat-num">5</div><div className="stat-label">Books published</div></div>
             <div className="stat"><div className="stat-num">450+</div><div className="stat-label">Festival screenings</div></div>
             <div className="stat"><div className="stat-num">7</div><div className="stat-label">World Public Forums</div></div>
           </div>
