@@ -222,14 +222,14 @@ function About() {
         <div className="about-text">
           <div className="section-label">About</div>
           <h2>My work experience ranges from<br /><em>automotive to independent film</em></h2>
-          <p>My work experience ranges from consultancy to indie film production, mentoring and writing. Having lived across two continents, I completed my engineering thesis in California before working as sales trainer and consultant in the automotive business.</p>
+          <p>My experience ranges from consultancy to film production and mentoring. Having lived across two continents, I completed my engineering thesis in California before working as sales trainer and consultant in the automotive business.</p>
           <p>As my career evolved into film production, I moved to Vienna where I worked as film & media producer, participating in 10 consecutive Cannes and Berlin Film Festivals and 6 editions of the World Public Forum in Rhodes — recording more than 150 interviews and 200 hours of conferences.</p>
           <p>In recent years I developed a deep interest in personal growth and relationship psychology, while completing an MBA in Vienna and a coaching certification with MindValley.</p>
           <div className="about-stats">
-            <div className="stat"><div className="stat-num">25+</div><div className="stat-label">Years international experience</div></div>
+            <div className="stat"><div className="stat-num">20+</div><div className="stat-label">Years international experience</div></div>
             <div className="stat"><div className="stat-num">5</div><div className="stat-label">Books published</div></div>
             <div className="stat"><div className="stat-num">450+</div><div className="stat-label">Festival screenings</div></div>
-            <div className="stat"><div className="stat-num">7</div><div className="stat-label">World Public Forums</div></div>
+            <div className="stat"><div className="stat-num">6</div><div className="stat-label">World Public Forums</div></div>
           </div>
         </div>
       </div>
@@ -237,9 +237,48 @@ function About() {
   );
 }
 
-function Tiers({ setPage }) {
+function Tiers({ setPage, setIsRegistered }) {
+  const [showRegister, setShowRegister] = useState(false);
+  const [regForm, setRegForm] = useState({name:'', email:''});
+  const [regDone, setRegDone] = useState(false);
+
+  const handleRegister = async () => {
+    await fetch(FORMSPREE, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({name: regForm.name, email: regForm.email, _subject:'New Member Registration — Come Alive Studio'})
+    });
+    setIsRegistered(true);
+    setRegDone(true);
+  };
+
   return (
     <section style={{background:'var(--ink)'}}>
+      {showRegister && (
+        <div style={{position:'fixed', inset:0, background:'rgba(14,13,11,0.92)', zIndex:200, display:'flex', alignItems:'center', justifyContent:'center'}}>
+          <div style={{background:'var(--slate)', border:'1px solid var(--gold)', padding:'3rem', maxWidth:420, width:'90%'}}>
+            {regDone ? (
+              <div style={{textAlign:'center'}}>
+                <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.8rem', color:'var(--gold)', marginBottom:'1rem'}}>Welcome.</div>
+                <p style={{color:'var(--mist)', fontSize:'0.88rem', marginBottom:'1.5rem'}}>You now have access to the full library and all booking sessions.</p>
+                <button className="btn-primary" onClick={() => setShowRegister(false)}>Start exploring</button>
+              </div>
+            ) : (
+              <>
+                <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.6rem', color:'var(--parchment)', marginBottom:'0.5rem'}}>Join Professional</div>
+                <div style={{fontFamily:'DM Mono', fontSize:'0.65rem', color:'var(--gold)', letterSpacing:'0.1em', marginBottom:'1.5rem'}}>€29 / month · Cancel anytime</div>
+                <div className="form-group" style={{marginBottom:'1rem'}}><label className="form-label">Your Name</label><input className="form-input" value={regForm.name} onChange={e=>setRegForm({...regForm,name:e.target.value})} placeholder="Full name" /></div>
+                <div className="form-group" style={{marginBottom:'1.5rem'}}><label className="form-label">Email</label><input className="form-input" type="email" value={regForm.email} onChange={e=>setRegForm({...regForm,email:e.target.value})} placeholder="your@email.com" /></div>
+                <div style={{fontSize:'0.75rem', color:'var(--mist)', marginBottom:'1.5rem', padding:'0.8rem', border:'1px solid var(--border)'}}>
+                  → Payment via Stripe will be activated shortly. For now, registering here gives you immediate access and Angelo will follow up with the payment link.
+                </div>
+                <button className="btn-primary" style={{width:'100%'}} onClick={handleRegister}>Register & Unlock Access</button>
+                <button onClick={() => setShowRegister(false)} style={{width:'100%', marginTop:'0.8rem', background:'none', border:'none', color:'var(--mist)', cursor:'pointer', fontSize:'0.78rem'}}>Cancel</button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
       <div className="max-w text-center">
         <div className="section-label" style={{justifyContent:'center'}}>Membership</div>
         <h2>Choose your <em>level of access</em></h2>
@@ -270,7 +309,7 @@ function Tiers({ setPage }) {
               <li>Priority booking — 20% discount</li>
               <li>Progress tracking dashboard</li>
             </ul>
-            <button className="tier-btn tier-btn-filled">Join Professional · €29 / month</button>
+            <button className="tier-btn tier-btn-filled" onClick={() => setShowRegister(true)}>Join Professional</button>
           </div>
           <div className="tier-card">
             <div className="tier-name">Mastery</div>
@@ -291,7 +330,7 @@ function Tiers({ setPage }) {
   );
 }
 
-function Library() {
+function Library({ isRegistered, setPage }) {
   const [activeTab, setActiveTab] = useState("Filmmaking");
   return (
     <div className="library" style={{paddingTop:'6rem'}}>
@@ -299,7 +338,7 @@ function Library() {
         <div className="section-label">Course Library</div>
         <h2>Everything in one place.<br /><em>Organised by track.</em></h2>
         <p style={{color:'var(--mist)', marginBottom:'2.5rem', fontSize:'0.9rem', maxWidth:520}}>
-          Free episodes marked clearly. Premium content unlocks with Professional membership.
+          Free episodes available to all. Premium content unlocks with Professional membership.
         </p>
         <div className="course-tabs">
           {Object.keys(courses).map(tab => (
@@ -307,26 +346,41 @@ function Library() {
           ))}
         </div>
         <div className="videos-grid">
-          {courses[activeTab].map(v => (
-            <div className="video-card" key={v.id}>
-              <div className="video-thumb">
-                <div className="video-thumb-icon">▶</div>
-                <div className={`video-lock ${v.free?'video-free':''}`}>{v.free?'Free':'Premium'}</div>
+          {courses[activeTab].map(v => {
+            const locked = !v.free && !isRegistered;
+            return (
+              <div className="video-card" key={v.id} style={{opacity: locked ? 0.45 : 1, cursor: locked ? 'default' : 'pointer'}}>
+                <div className="video-thumb">
+                  <div className="video-thumb-icon">{locked ? '🔒' : '▶'}</div>
+                  <div className={`video-lock ${v.free?'video-free':''}`}>{v.free?'Free':'Premium'}</div>
+                </div>
+                <div className="video-info">
+                  <div className="video-duration">{v.duration}</div>
+                  <div className="video-title">{v.title}</div>
+                  <div className="video-desc">{v.desc}</div>
+                  {locked && <div style={{marginTop:'0.6rem', fontSize:'0.72rem', color:'var(--gold)', fontFamily:'DM Mono', letterSpacing:'0.08em'}}>→ Join Professional to unlock</div>}
+                </div>
               </div>
-              <div className="video-info">
-                <div className="video-duration">{v.duration}</div>
-                <div className="video-title">{v.title}</div>
-                <div className="video-desc">{v.desc}</div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
+        {!isRegistered && (
+          <div style={{marginTop:'3rem', padding:'2rem', border:'1px solid var(--border)', textAlign:'center', background:'var(--slate)'}}>
+            <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.4rem', color:'var(--parchment)', marginBottom:'0.8rem'}}>
+              Ready to go deeper?
+            </div>
+            <p style={{color:'var(--mist)', fontSize:'0.88rem', marginBottom:'1.5rem'}}>
+              Join Professional to unlock all premium episodes across every track.
+            </p>
+            <button className="btn-primary" onClick={() => setPage('home')}>View Membership Plans</button>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-function Booking() {
+function Booking({ isRegistered }) {
   const [selected, setSelected] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
@@ -358,14 +412,23 @@ function Booking() {
         <h2>Work directly <em>with Angelo</em></h2>
         <div className="booking-grid">
           <div>
-            <p style={{color:'var(--mist)', fontSize:'0.88rem', marginBottom:'1.5rem'}}>Choose the session that fits where you are right now. The Discovery call is always free.</p>
+            <p style={{color:'var(--mist)', fontSize:'0.88rem', marginBottom:'1.5rem'}}>
+              The Discovery call is always free. Paid sessions are available to registered members.
+            </p>
             <div className="session-types">
-              {sessions.map((s,i) => (
-                <div key={s.id} className={`session-type ${selected===i?'active':''}`} onClick={() => setSelected(i)}>
-                  <div className="session-name">{s.name}</div>
-                  <div className="session-meta">{s.meta}</div>
-                </div>
-              ))}
+              {sessions.map((s,i) => {
+                const locked = i > 0 && !isRegistered;
+                return (
+                  <div key={s.id}
+                    className={`session-type ${selected===i && !locked ?'active':''}`}
+                    onClick={() => !locked && setSelected(i)}
+                    style={{opacity: locked ? 0.4 : 1, cursor: locked ? 'default' : 'pointer', position:'relative'}}>
+                    <div className="session-name">{s.name}</div>
+                    <div className="session-meta">{s.meta}</div>
+                    {locked && <div style={{fontSize:'0.7rem', color:'var(--gold)', fontFamily:'DM Mono', marginTop:'0.4rem', letterSpacing:'0.08em'}}>→ Register to unlock</div>}
+                  </div>
+                );
+              })}
             </div>
           </div>
           <div>
@@ -545,6 +608,7 @@ function Dashboard() {
 
 export default function App() {
   const [page, setPage] = useState('home');
+  const [isRegistered, setIsRegistered] = useState(false);
   return (
     <>
       <style>{css}</style>
@@ -552,8 +616,8 @@ export default function App() {
       {page==='home' && (
         <>
           <Hero setPage={setPage} />
+          <Tiers setPage={setPage} setIsRegistered={setIsRegistered} />
           <About />
-          <Tiers setPage={setPage} />
           <section style={{background:'var(--slate)', padding:'5rem 3rem', textAlign:'center'}}>
             <div className="section-label" style={{justifyContent:'center'}}>Podcast</div>
             <h2>Make It Happen<br /><em>premieres May 2026</em></h2>
@@ -573,8 +637,8 @@ export default function App() {
           </footer>
         </>
       )}
-      {page==='library'   && <Library />}
-      {page==='booking'   && <Booking />}
+      {page==='library'   && <Library isRegistered={isRegistered} setPage={setPage} />}
+      {page==='booking'   && <Booking isRegistered={isRegistered} />}
       {page==='contact'   && <Contact />}
       {page==='dashboard' && <Dashboard />}
     </>
