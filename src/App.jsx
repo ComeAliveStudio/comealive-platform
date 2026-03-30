@@ -67,3 +67,92 @@ function useAuth() {
   const isPremium = plan === "professional" || plan === "mastery";
   return { user, plan, isPremium, loading };
 }
+
+// ── COMPONENTS ───────────────────────────────────────────────────────────────
+function NavBar({ user }) {
+  return (
+    <nav className="navbar">
+      <a href="#hero">Home</a>
+      <a href="#tiers">Memberships</a>
+      <a href="#library">Library</a>
+      <a href="#booking">Booking</a>
+      {user ? <span>Welcome, {user.email}</span> : <button onClick={() => supabase.auth.signInWithOAuth({ provider: 'google' })}>Login</button>}
+    </nav>
+  );
+}
+
+function Hero() {
+  return (
+    <section id="hero">
+      <h1>Welcome to Our Platform</h1>
+      <p>Choose your membership or session below.</p>
+    </section>
+  );
+}
+
+function Tiers() {
+  return (
+    <section id="tiers">
+      <h2>Memberships</h2>
+      <div className="tier-list">
+        <div className="tier">
+          <h3>Professional</h3>
+          <button className="tier-btn tier-btn-filled" onClick={() => goToStripe('professional')}>Join Professional</button>
+        </div>
+        <div className="tier">
+          <h3>Mastery</h3>
+          <button className="tier-btn tier-btn-outline" onClick={() => goToStripe('mastery')}>Join Mastery</button>
+        </div>
+      </div>
+      <h2>Sessions</h2>
+      <div className="session-list">
+        <button onClick={() => goToStripe('filmmaking')}>Filmmaking Strategy</button>
+        <button onClick={() => goToStripe('relationship')}>Relationship Clarity</button>
+        <button onClick={() => goToStripe('mindset')}>Mindset Coaching</button>
+      </div>
+    </section>
+  );
+}
+
+function Library() {
+  return (
+    <section id="library">
+      <h2>Library</h2>
+      <p>Access resources even before membership. You can return later to join a plan.</p>
+    </section>
+  );
+}
+
+function Booking() {
+  return (
+    <section id="booking">
+      <h2>Book a Call</h2>
+      <form action={FORMSPREE} method="POST">
+        <input type="text" name="name" placeholder="Name" required />
+        <input type="email" name="email" placeholder="Email" required />
+        <textarea name="message" placeholder="Message"></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </section>
+  );
+}
+
+// ── APP ─────────────────────────────────────────────────────────────────────
+export default function App() {
+  const { user, plan, isPremium, loading } = useAuth();
+
+  if (loading) return <div>Loading...</div>;
+
+  return (
+    <div>
+      <NavBar user={user} />
+      <Hero />
+      <Tiers />
+      <Library />
+      <Booking />
+      <footer>
+        <p>&copy; 2026 Your Company</p>
+      </footer>
+    </div>
+  );
+}
