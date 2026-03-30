@@ -1,123 +1,69 @@
-import { useState, useEffect } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { loadStripe } from '@stripe/stripe-js'
+// ── IMPORTS ────────────────────────────────────────────────────────────────
+import { useState, useEffect } from "react";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const STRIPE_KEY = process.env.NEXT_PUBLIC_STRIPE_KEY
+// ── ENV ─────────────────────────────────────────────────────────────────────
+const SUPABASE_URL  = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_KEY  = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const STRIPE_KEY    = import.meta.env.VITE_STRIPE_KEY;
+const FORMSPREE     = "https://formspree.io/f/xgopawdr";
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ── PRICES ──────────────────────────────────────────────────────────────────
 const PRICES = {
-  professional: 'price_1XXXXXXX',
-  mastery: 'price_2XXXXXXX',
+  professional: "price_1TGMXNE72B8UAf4G0JSemNG5",
+  mastery:      "price_1TGMaOE72B8UAf4Gjks176aW",
+  discovery:    "price_1TGR3BE72B8UAf4GM1udhJHX",
+  filmmaking:   "price_1TGMflE72B8UAf4GqOpfrAXO",
+  relationship: "price_1TGMgME72B8UAf4GkqcoJwBQ",
+  mindset:      "price_1TGMggE72B8UAf4GWCzUx3gF",
+};
+
+// ── STRIPE PAYMENT LINKS ─────────────────────────────────────────────────────
+const PAYMENT_LINKS = {
+  professional: "https://buy.stripe.com/test_dRmeVd8IDdED5R00TggUM00",
+  mastery:      "https://buy.stripe.com/test_6oUbJ15wr8kjenwgSegUM01",
+  filmmaking:   "https://buy.stripe.com/test_28E7sL9MHdED3ISfOagUM02",
+  relationship: "https://buy.stripe.com/test_00w4gz0c77gfdjs6dAgUM03",
+  mindset:      "https://buy.stripe.com/test_bJe3cv7Ez587djs0TggUM04",
+};
+
+function goToStripe(planKey) {
+  const url = PAYMENT_LINKS[planKey];
+  if (!url || url.includes("REPLACE")) {
+    alert("Payment link not configured yet. Please add your Stripe Payment Links.");
+    return;
+  }
+  window.location.href = url + "?success_url=" + encodeURIComponent(window.location.origin + "/?payment=success") + "&cancel_url=" + encodeURIComponent(window.location.origin);
 }
 
-export default function Home() {
-  const supabase = createClientComponentClient()
-  const [user, setUser] = useState(null)
-  const [plan, setPlan] = useState(null)
-  const [stripe, setStripe] = useState(null)
+// ── AUTH ─────────────────────────────────────────────────────────────────────
+function useAuth() {
+  const [user, setUser]   = useState(null);
+  const [plan, setPlan]   = useState("explorer");
+  const [loading, setLoading] = useState(true);
 
-  // Caricamento Stripe una sola volta
   useEffect(() => {
-    loadStripe(STRIPE_KEY).then((s) => setStripe(s))
-  }, [])
+    supabase.auth.getSession().then(({ data }) => {
+      setUser(data.session?.user ?? null);
+      if (data.session?.user) fetchPlan(data.session.user.email);
+      else setLoading(false);
+    });
+    const { data: listener } = supabase.auth.onAuthStateChange((_e, session) => {
+      setUser(session?.user ?? null);
+      if (session?.user) fetchPlan(session.user.email);
+      else { setPlan("explorer"); setLoading(false); }
+    });
+    return () => listener.subscription.unsubscribe();
+  }, []);
 
-  // Recupera utente loggato e piano
-  useEffect(() => {
-    const getUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (session) {
-        setUser(session.user)
-        // recupera piano dall'utente nel DB
-        const { data } = await supabase.from('members').select('plan').eq('id', session.user.id).single()
-        setPlan(data?.plan || null)
-      }
-    }
-    getUser()
-  }, [])
+  const fetchPlan = async (email) => {
+    const { data } = await supabase.from("members").select("plan").eq("email", email).single();
+    setPlan(data?.plan ?? "explorer");
+    setLoading(false);
+  };
 
-  const isPremium = plan === 'professional' || plan === 'mastery'
-
-  const handleJoin = async (priceId) => {
-    if (!user) { alert('Devi prima accedere'); return }
-    if (!stripe) { alert('Stripe sta caricando...'); return }
-
-    console.log('Price ID:', priceId)
-    console.log('Stripe Key:', STRIPE_KEY)
-
-    await stripe.redirectToCheckout({
-      lineItems: [{ price: priceId, quantity: 1 }],
-      mode: 'subscription',
-      successUrl: `${window.location.origin}/?payment=success`,
-      cancelUrl: `${window.location.origin}/`,
-    })
-  }
-
-  // Controlla query param success
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search)
-    if (urlParams.get('payment') === 'success') {
-      alert('Pagamento completato!');
-      // ricarica piano dall'API Supabase
-      supabase.from('members').select('plan').eq('id', user.id).single().then(({ data }) => setPlan(data?.plan))
-    }
-  }, [user])
-
-  return (
-    <div>
-      <header>
-        <nav>
-          <a href="#hero">Home</a>
-          <a href="#about">About</a>
-          <a href="#library">Library</a>
-          <a href="#booking">Booking</a>
-          <a href="#tiers">Join</a>
-        </nav>
-      </header>
-
-      <section id="hero">
-        <h1>Benvenuto alla piattaforma</h1>
-        {!user && <button onClick={() => supabase.auth.signInWithOtp({ email: prompt('Inserisci la tua email') })}>Accedi / Registrati</button>}
-      </section>
-
-      <section id="about">
-        <h2>About</h2>
-        <p>Informazioni sulla piattaforma e sui corsi.</p>
-      </section>
-
-      <section id="library">
-        <h2>Library</h2>
-        <div>
-          <div>
-            <h3>Video Base</h3>
-            <video src="/video-base.mp4" controls />
-          </div>
-          {isPremium && (
-            <div>
-              <h3>Video Professional / Mastery</h3>
-              <video src="/video-premium.mp4" controls />
-            </div>
-          )}
-          {!isPremium && <p>Iscriviti a Professional o Mastery per accedere ai contenuti premium!</p>}
-        </div>
-      </section>
-
-      <section id="booking">
-        <h2>Booking</h2>
-        <form action="https://formspree.io/f/yourformid" method="POST">
-          <input type="text" name="name" placeholder="Nome" required />
-          <input type="email" name="email" placeholder="Email" required />
-          <select name="session" required>
-            <option value="session1">Session 1</option>
-            <option value="session2">Session 2</option>
-          </select>
-          <textarea name="message" placeholder="Messaggio"></textarea>
-          <button type="submit">Prenota</button>
-        </form>
-      </section>
-
-      <section id="tiers">
-        <h2>Join</h2>
-        <button className="tier-btn tier-btn-filled" onClick={() => handleJoin(PRICES.professional)}>Join Professional</button>
-        <button className="tier-btn tier-btn-outline" onClick={() => handleJoin(PRICES.mastery)}>Join Mastery</button>
-      </section>
-    </div>
-  )
+  const isPremium = plan === "professional" || plan === "mastery";
+  return { user, plan, isPremium, loading };
 }
