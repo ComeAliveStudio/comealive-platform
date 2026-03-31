@@ -43,13 +43,17 @@ export default async function handler(req, res) {
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object
 
+      if (session.payment_status !== 'paid') {
+        return res.status(200).json({ skipped: 'not paid' })
+      }
+
       const email =
         session.customer_details?.email ||
         session.customer_email ||
         session.metadata?.email ||
         null
 
-      let plan = 'explorer'
+      let plan = null
 
       if (session.metadata?.plan) {
         plan = session.metadata.plan
@@ -59,11 +63,16 @@ export default async function handler(req, res) {
         plan = 'mastery'
       }
 
+      if (!plan) {
+        return res.status(200).json({ skipped: 'no plan match' })
+      }
+
       console.log('Stripe session debug:', {
         email,
         amount_total: session.amount_total,
         metadata: session.metadata,
-        mode: session.mode
+        mode: session.mode,
+        payment_status: session.payment_status
       })
 
       if (!email) {
