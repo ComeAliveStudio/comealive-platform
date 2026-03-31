@@ -1,4 +1,3 @@
-
 import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
 
@@ -31,16 +30,49 @@ export default async function handler(req, res) {
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object
     const email = session.customer_details?.email
-    const plan = session.metadata?.plan || 'explorer'
+
+    let plan = 'explorer'
+
+    if (session.metadata?.plan) {
+      plan = session.metadata.plan
+    } else if (session.amount_total === 2900) {
+      plan = 'professional'
+    } else if (session.amount_total === 9700) {
+      plan = 'mastery'
+    }
 
     if (email) {
-      const { error } = await supabase
+      const { data: existing, error: findError } = await supabase
         .from('members')
-        .upsert({ email, plan }, { onConflict: 'email' })
+        .select('email')
+        .eq('email', email)
+        .maybeSingle()
 
-      if (error) {
-        console.error('Supabase update error:', error.message)
-        return res.status(500).json({ error: error.message })
+      if (findError) {
+        console.error('Supabase find error:', findError.message)
+        return res.status(500).json({ error: findError.message })
+      }
+
+      let updateError = null
+
+      if (existing) {
+        const { error } = await supabase
+          .from('members')
+          .update({ plan })
+          .eq('email', email)
+
+        updateError = error
+      } else {
+        const { error } = await supabase
+          .from('members')
+          .insert({ email, plan })
+
+        updateError = error
+      }
+
+      if (updateError) {
+        console.error('Supabase update error:', updateError.message)
+        return res.status(500).json({ error: updateError.message })
       }
 
       console.log(`Updated ${email} -> ${plan}`)
