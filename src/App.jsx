@@ -205,32 +205,50 @@ function goToStripe(planKey) {
 
 // ── AUTH ──────────────────────────────────────────────────────────────────────
 function useAuth() {
-  const [user, setUser]   = useState(null)
-  const [plan, setPlan]   = useState("explorer")
+  const [user, setUser] = useState(null)
+  const [plan, setPlan] = useState("explorer")
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setUser(data.session?.user ?? null)
-      if (data.session?.user) fetchPlan(data.session.user.email)
-      else setLoading(false)
-    })
-    const { data: listener } = supabase.auth.onAuthStateChange((_e, session) => {
-      setUser(session?.user ?? null)
-      if (session?.user) fetchPlan(session.user.email)
-      else { setPlan("explorer"); setLoading(false) }
-    })
-    return () => listener.subscription.unsubscribe()
-  }, [])
-
   const fetchPlan = async (email) => {
-    const { data } = await supabase.from("members").select("plan").eq("email", email).single()
-    setPlan(data?.plan ?? "explorer")
+    const { data, error } = await supabase
+      .from("members")
+      .select("plan")
+      .eq("email", email)
+      .single()
+
+    if (!error) {
+      setPlan(data?.plan ?? "explorer")
+    } else {
+      setPlan("explorer")
+    }
     setLoading(false)
   }
 
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      const currentUser = data.session?.user ?? null
+      setUser(currentUser)
+
+      if (currentUser?.email) fetchPlan(currentUser.email)
+      else setLoading(false)
+    })
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_e, session) => {
+      const currentUser = session?.user ?? null
+      setUser(currentUser)
+
+      if (currentUser?.email) fetchPlan(currentUser.email)
+      else {
+        setPlan("explorer")
+        setLoading(false)
+      }
+    })
+
+    return () => listener.subscription.unsubscribe()
+  }, [])
+
   const isPremium = plan === "professional" || plan === "mastery"
-  return { user, plan, isPremium, loading }
+  return { user, plan, isPremium, loading, fetchPlan }
 }
 
 // ── AUTH MODAL ────────────────────────────────────────────────────────────────
@@ -643,7 +661,7 @@ function Dashboard({ user, plan }) {
 export default function App() {
   const [page, setPage]         = useState('home')
   const [showAuth, setShowAuth] = useState(false)
-  const { user, plan, isPremium, loading } = useAuth()
+  const { user, plan, isPremium, loading, fetchPlan } = useAuth()
 
 useEffect(() => {
   if (localStorage.getItem('justPaid')) {
