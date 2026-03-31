@@ -305,11 +305,19 @@ function NavBar({ setPage, user, onSignIn, onSignOut }) {
   return (
     <nav>
       <span className="nav-logo" onClick={() => setPage('home')}>Come Alive Studio</span>
-      <ul className="nav-links">
-        {['Library','Booking','Contact'].map(p => (
-          <li key={p}><a onClick={() => setPage(p.toLowerCase())}>{p}</a></li>
-        ))}
-      </ul>
+     <ul className="nav-links">
+  {['Library','Booking','Contact'].map(p => (
+    <li key={p}>
+      <a onClick={() => setPage(p.toLowerCase())}>{p}</a>
+    </li>
+  ))}
+
+  {user && (
+    <li>
+      <a onClick={() => setPage('dashboard')}>Dashboard</a>
+    </li>
+  )}
+</ul>
       {user
         ? <button className="nav-cta" onClick={onSignOut}>Sign Out</button>
         : <button className="nav-cta" onClick={onSignIn}>Member Area</button>
