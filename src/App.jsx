@@ -177,31 +177,30 @@ const courses = {
 }
 
 const sessions = [
-  { id:1, name:"Discovery Session",    meta:"45 min · Free",  priceId: null },
-  { id:2, name:"Filmmaking Strategy",  meta:"60 min · €60",   priceId: PRICES.filmmaking },
-  { id:3, name:"Relationship Clarity", meta:"60 min · €90",   priceId: PRICES.relationship },
-  { id:4, name:"Mindset Coaching",     meta:"60 min · €120",  priceId: PRICES.mindset },
+  { id:1, name:"Discovery Session",    meta:"45 min · Free",  planKey: null },
+  { id:2, name:"Filmmaking Strategy",  meta:"60 min · €60",   planKey: 'filmmaking' },
+  { id:3, name:"Relationship Clarity", meta:"60 min · €90",   planKey: 'relationship' },
+  { id:4, name:"Mindset Coaching",     meta:"60 min · €120",  planKey: 'mindset' },
 ]
 
-// ── STRIPE CHECKOUT ───────────────────────────────────────────────────────────
-async function goToStripe(priceId, mode = "subscription") {
-  const stripe = await loadStripe(STRIPE_KEY)
-  await stripe.redirectToCheckout({
-    lineItems: [{ price: priceId, quantity: 1 }],
-    mode,
-    successUrl: `${window.location.origin}/?payment=success`,
-    cancelUrl:  `${window.location.origin}/`,
-  })
+// ── STRIPE PAYMENT LINKS ─────────────────────────────────────────────────────
+// Replace these with your actual Stripe Payment Links
+// Stripe Dashboard → Products → [product] → "Create payment link"
+const PAYMENT_LINKS = {
+  professional: "https://buy.stripe.com/test_dRmeVd8IDdED5R00TggUM00",
+  mastery:      "https://buy.stripe.com/test_6oUbJ15wr8kjenwgSegUM01",
+  filmmaking:   "https://buy.stripe.com/test_28E7sL9MHdED3ISfOagUM02",
+  relationship: "https://buy.stripe.com/test_00w4gz0c77gfdjs6dAgUM03",
+  mindset:      "https://buy.stripe.com/test_bJe3cv7Ez587djs0TggUM04",
 }
 
-function loadStripe(key) {
-  return new Promise((resolve) => {
-    if (window.Stripe) { resolve(window.Stripe(key)); return }
-    const s = document.createElement("script")
-    s.src = "https://js.stripe.com/v3/"
-    s.onload = () => resolve(window.Stripe(key))
-    document.head.appendChild(s)
-  })
+function goToStripe(planKey) {
+  const url = PAYMENT_LINKS[planKey]
+  if (!url || url.includes("REPLACE")) {
+    alert("Payment link not configured yet. Please add your Stripe Payment Links.")
+    return
+  }
+  window.location.href = url + "?success_url=" + encodeURIComponent(window.location.origin + "/?payment=success") + "&cancel_url=" + encodeURIComponent(window.location.origin)
 }
 
 // ── AUTH ──────────────────────────────────────────────────────────────────────
@@ -322,7 +321,7 @@ function Hero({ setPage }) {
 
 // ── TIERS ─────────────────────────────────────────────────────────────────────
 function Tiers({ setPage }) {
-  const handleJoin = (priceId) => goToStripe(priceId, "subscription")
+  const handleJoin = (planKey) => goToStripe(planKey)
   return (
     <section style={{background:'var(--ink)'}}>
       <div className="max-w text-center">
@@ -352,7 +351,7 @@ function Tiers({ setPage }) {
               <li>Priority booking — 20% discount</li>
               <li>Progress tracking dashboard</li>
             </ul>
-            <button className="tier-btn tier-btn-filled" onClick={() => handleJoin(PRICES.professional)}>Join Professional</button>
+            <button className="tier-btn tier-btn-filled" onClick={() => handleJoin('professional')}>Join Professional</button>
           </div>
           <div className="tier-card">
             <div className="tier-name">Mastery</div>
@@ -365,7 +364,7 @@ function Tiers({ setPage }) {
               <li>Custom growth roadmap</li>
               <li>Early access to new courses</li>
             </ul>
-            <button className="tier-btn tier-btn-outline" onClick={() => handleJoin(PRICES.mastery)}>Join Mastery</button>
+            <button className="tier-btn tier-btn-outline" onClick={() => handleJoin('mastery')}>Join Mastery</button>
           </div>
         </div>
       </div>
@@ -456,8 +455,8 @@ function Booking({ isPremium }) {
   const handleSubmit = async () => {
     setSending(true)
     const s = sessions[selected]
-    if (s.priceId) {
-      await goToStripe(s.priceId, "payment")
+    if (s.planKey) {
+      goToStripe(s.planKey)
       return
     }
     try {
@@ -480,7 +479,7 @@ function Booking({ isPremium }) {
             <p style={{color:'var(--mist)', fontSize:'0.88rem', marginBottom:'1.5rem'}}>The Discovery call is always free. Paid sessions open Stripe checkout directly.</p>
             <div>
               {sessions.map((s,i) => {
-                const locked = s.priceId && !isPremium
+                const locked = s.planKey && !isPremium
                 return (
                   <div key={s.id}
                     className={`session-type ${selected===i&&!locked?'active':''}`}
@@ -504,7 +503,7 @@ function Booking({ isPremium }) {
                 <div className="form-group"><label className="form-label">Timezone</label><input className="form-input" value={form.timezone} onChange={e=>setForm({...form,timezone:e.target.value})} placeholder="e.g. CET, GMT+1" /></div>
                 <div className="form-group"><label className="form-label">Tell me where you are</label><textarea className="form-textarea" value={form.message} onChange={e=>setForm({...form,message:e.target.value})} placeholder="What are you working on?" /></div>
                 <button className="btn-primary" style={{width:'100%'}} onClick={handleSubmit} disabled={sending}>
-                  {sessions[selected].priceId ? 'Proceed to Payment →' : sending ? 'Sending…' : 'Request Session'}
+                  {sessions[selected].planKey ? 'Proceed to Payment →' : sending ? 'Sending…' : 'Request Session'}
                 </button>
               </div>
             )}
