@@ -645,6 +645,13 @@ export default function App() {
   const [showAuth, setShowAuth] = useState(false)
   const { user, plan, isPremium, loading } = useAuth()
 
+useEffect(() => {
+  if (localStorage.getItem('justPaid')) {
+    setPage('dashboard')
+    localStorage.removeItem('justPaid')
+  }
+}, [])
+
   // Handle Stripe success redirect
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
