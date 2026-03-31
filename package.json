@@ -4,10 +4,15 @@
   "private": true,
   "type": "module",
   "dependencies": {
+<<<<<<< HEAD
     "@supabase/supabase-js": "^2.101.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "stripe": "^21.0.1"
+=======
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+>>>>>>> 22f09bdce155aa4d276015ee0f63a6cd4f8136ea
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.0.0",
