@@ -668,69 +668,245 @@ function Contact() {
 }
 
 // ── DASHBOARD ─────────────────────────────────────────────────────────────────
-function Dashboard({ user, plan }) {
+function Dashboard({ user, plan, progressMap, saveProgress, isPremium }) {
   const [activeSection, setActiveSection] = useState('overview')
-  const navItems = [{id:'overview',label:'Overview',icon:'◈'},{id:'courses',label:'My Courses',icon:'▤'},{id:'sessions',label:'Sessions',icon:'◷'},{id:'profile',label:'Profile',icon:'◯'}]
-  const progress = { Filmmaking:40, Mindset:15, Relationships:65, Coaching:20 }
+
+  const navItems = [
+    { id:'overview', label:'Overview', icon:'◈' },
+    { id:'courses', label:'My Courses', icon:'▤' },
+    { id:'sessions', label:'Sessions', icon:'◷' },
+    { id:'profile', label:'Profile', icon:'◯' }
+  ]
+
+  const allVideos = Object.values(courses).flat()
+  const watchedVideos = allVideos.filter(v => (progressMap?.[String(v.id)]?.progress ?? 0) > 0)
+  const completedVideos = allVideos.filter(v => (progressMap?.[String(v.id)]?.progress ?? 0) >= 100)
+  const totalProgress = allVideos.length
+    ? Math.round(
+        allVideos.reduce((sum, v) => sum + (progressMap?.[String(v.id)]?.progress ?? 0), 0) / allVideos.length
+      )
+    : 0
+
+  const trackProgress = Object.fromEntries(
+    Object.entries(courses).map(([track, items]) => {
+      const pct = items.length
+        ? Math.round(
+            items.reduce((sum, v) => sum + (progressMap?.[String(v.id)]?.progress ?? 0), 0) / items.length
+          )
+        : 0
+      return [track, pct]
+    })
+  )
+
+  const continueWatching = watchedVideos
+    .sort((a, b) => {
+      const aDate = progressMap?.[String(a.id)]?.updated_at ?? ''
+      const bDate = progressMap?.[String(b.id)]?.updated_at ?? ''
+      return new Date(bDate) - new Date(aDate)
+    })
+    .slice(0, 6)
+
   return (
     <div className="dashboard">
-      <div style={{padding:'2rem 3rem', borderBottom:'1px solid var(--border)', background:'var(--slate)', display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-        <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.6rem', fontWeight:300}}>Welcome back, <span style={{color:'var(--gold)'}}>{user?.email?.split('@')[0]}</span></div>
-        <div style={{fontFamily:'DM Mono', fontSize:'0.65rem', color:'var(--mist)', letterSpacing:'0.1em', textTransform:'uppercase'}}>{plan} Plan · Active</div>
+      <div style={{
+        padding:'2rem 3rem',
+        borderBottom:'1px solid var(--border)',
+        background:'var(--slate)',
+        display:'flex',
+        justifyContent:'space-between',
+        alignItems:'center'
+      }}>
+        <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.6rem', fontWeight:300}}>
+          Welcome back, <span style={{color:'var(--gold)'}}>{user?.email?.split('@')[0]}</span>
+        </div>
+        <div style={{
+          fontFamily:'DM Mono',
+          fontSize:'0.65rem',
+          color:'var(--mist)',
+          letterSpacing:'0.1em',
+          textTransform:'uppercase'
+        }}>
+          {plan} Plan · {isPremium ? 'Active' : 'Free'}
+        </div>
       </div>
+
       <div className="dash-grid">
         <div className="dash-sidebar">
           {navItems.map(item => (
-            <div key={item.id} className={`dash-nav-item ${activeSection===item.id?'active':''}`} onClick={() => setActiveSection(item.id)}>
+            <div
+              key={item.id}
+              className={`dash-nav-item ${activeSection===item.id?'active':''}`}
+              onClick={() => setActiveSection(item.id)}
+            >
               <span>{item.icon}</span> {item.label}
             </div>
           ))}
         </div>
+
         <div className="dash-content">
           {activeSection==='overview' && (
             <>
               <div className="dash-cards">
-                <div className="dash-card"><div className="dash-card-label">Episodes Watched</div><div className="dash-card-value">0</div><div className="dash-card-sub">of 18 total</div><div className="progress-bar"><div className="progress-fill" style={{width:'0%'}} /></div></div>
-                <div className="dash-card"><div className="dash-card-label">Sessions Booked</div><div className="dash-card-value">0</div><div className="dash-card-sub">Book your first session</div></div>
-                <div className="dash-card"><div className="dash-card-label">Membership</div><div className="dash-card-value" style={{fontSize:'1.4rem', marginTop:'0.3rem', textTransform:'capitalize'}}>{plan}</div><div className="dash-card-sub">Active</div></div>
+                <div className="dash-card">
+                  <div className="dash-card-label">Episodes Watched</div>
+                  <div className="dash-card-value">{watchedVideos.length}</div>
+                  <div className="dash-card-sub">of {allVideos.length} total</div>
+                  <div className="progress-bar">
+                    <div className="progress-fill" style={{width:`${Math.round((watchedVideos.length / allVideos.length) * 100 || 0)}%`}} />
+                  </div>
+                </div>
+
+                <div className="dash-card">
+                  <div className="dash-card-label">Completed</div>
+                  <div className="dash-card-value">{completedVideos.length}</div>
+                  <div className="dash-card-sub">videos completed</div>
+                </div>
+
+                <div className="dash-card">
+                  <div className="dash-card-label">Membership</div>
+                  <div className="dash-card-value" style={{fontSize:'1.4rem', marginTop:'0.3rem', textTransform:'capitalize'}}>
+                    {plan}
+                  </div>
+                  <div className="dash-card-sub">{isPremium ? 'Premium access enabled' : 'Upgrade to unlock more'}</div>
+                </div>
               </div>
+
               <div className="section-label">Progress by Track</div>
-              {Object.entries(progress).map(([track, pct]) => (
+              {Object.entries(trackProgress).map(([track, pct]) => (
                 <div key={track} style={{marginBottom:'1.5rem'}}>
                   <div style={{display:'flex', justifyContent:'space-between', marginBottom:'0.5rem'}}>
                     <span style={{fontSize:'0.85rem', color:'var(--parchment)'}}>{track}</span>
-                    <span style={{fontFamily:'DM Mono', fontSize:'0.65rem', color:'var(--gold)'}}>0%</span>
+                    <span style={{fontFamily:'DM Mono', fontSize:'0.65rem', color:'var(--gold)'}}>{pct}%</span>
                   </div>
-                  <div className="progress-bar" style={{height:'4px'}}><div className="progress-fill" style={{width:'0%'}} /></div>
+                  <div className="progress-bar" style={{height:'4px'}}>
+                    <div className="progress-fill" style={{width:`${pct}%`}} />
+                  </div>
                 </div>
               ))}
             </>
           )}
+
           {activeSection==='courses' && (
             <>
               <div className="section-label">Continue Watching</div>
-              <div className="videos-grid">
-                {courses["Filmmaking"].filter(v=>v.free).map(v => (
-                  <div className="video-card" key={v.id}>
-                    <div className="video-thumb"><div className="video-thumb-icon">▶</div></div>
-                    <div className="video-info"><div className="video-duration">{v.duration}</div><div className="video-title">{v.title}</div></div>
+
+              {continueWatching.length === 0 ? (
+                <div style={{padding:'3rem', border:'1px solid var(--border)', textAlign:'center'}}>
+                  <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.4rem', color:'var(--mist)', marginBottom:'0.8rem'}}>
+                    No progress yet
                   </div>
-                ))}
-              </div>
+                  <p style={{fontSize:'0.82rem', color:'var(--mist)'}}>
+                    Start a course in the Library and your progress will appear here.
+                  </p>
+                </div>
+              ) : (
+                <div className="videos-grid">
+                  {continueWatching.map(v => {
+                    const currentProgress = progressMap?.[String(v.id)]?.progress ?? 0
+                    const locked = !v.free && !isPremium
+
+                    return (
+                      <div className="video-card" key={v.id} style={{opacity: locked ? 0.45 : 1}}>
+                        <div className="video-thumb">
+                          <div className="video-thumb-icon">{locked ? '🔒' : '▶'}</div>
+                        </div>
+
+                        <div className="video-info">
+                          <div className="video-duration">{v.duration}</div>
+                          <div className="video-title">{v.title}</div>
+                          <div className="video-desc">{v.desc}</div>
+
+                          <div style={{ marginTop:'0.8rem' }}>
+                            <div style={{
+                              fontSize:'0.72rem',
+                              color:'var(--gold)',
+                              fontFamily:'DM Mono',
+                              letterSpacing:'0.08em',
+                              marginBottom:'0.35rem'
+                            }}>
+                              Progress: {currentProgress}%
+                            </div>
+
+                            <div style={{
+                              height:'4px',
+                              background:'var(--border)',
+                              borderRadius:'999px',
+                              overflow:'hidden'
+                            }}>
+                              <div style={{
+                                width:`${currentProgress}%`,
+                                height:'100%',
+                                background:'var(--gold)'
+                              }} />
+                            </div>
+                          </div>
+
+                          {!locked && currentProgress < 100 && (
+                            <button
+                              style={{
+                                marginTop:'0.8rem',
+                                background:'none',
+                                border:'1px solid var(--border)',
+                                color:'var(--mist)',
+                                padding:'0.45rem 0.75rem',
+                                cursor:'pointer',
+                                fontSize:'0.7rem',
+                                letterSpacing:'0.06em',
+                                textTransform:'uppercase'
+                              }}
+                              onClick={() => saveProgress(String(v.id), 100)}
+                            >
+                              Mark complete
+                            </button>
+                          )}
+
+                          {currentProgress >= 100 && (
+                            <div style={{
+                              marginTop:'0.8rem',
+                              fontSize:'0.72rem',
+                              color:'var(--gold)',
+                              fontFamily:'DM Mono',
+                              letterSpacing:'0.08em'
+                            }}>
+                              ✓ Completed
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
             </>
           )}
+
           {activeSection==='sessions' && (
             <div style={{padding:'3rem', border:'1px solid var(--border)', textAlign:'center'}}>
-              <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.4rem', color:'var(--mist)', marginBottom:'0.8rem'}}>No sessions booked yet</div>
-              <p style={{fontSize:'0.82rem', color:'var(--mist)'}}>Head to the Booking page to schedule your first session.</p>
+              <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.4rem', color:'var(--mist)', marginBottom:'0.8rem'}}>
+                No sessions booked yet
+              </div>
+              <p style={{fontSize:'0.82rem', color:'var(--mist)'}}>
+                Head to the Booking page to schedule your first session.
+              </p>
             </div>
           )}
+
           {activeSection==='profile' && (
             <>
               <div className="section-label">Your Profile</div>
               <div style={{display:'flex', flexDirection:'column', gap:'1rem', maxWidth:480}}>
-                <div className="form-group"><label className="form-label">Email</label><input className="form-input" type="text" defaultValue={user?.email} readOnly /></div>
-                <div className="form-group"><label className="form-label">Plan</label><input className="form-input" type="text" defaultValue={plan} readOnly style={{textTransform:'capitalize'}} /></div>
+                <div className="form-group">
+                  <label className="form-label">Email</label>
+                  <input className="form-input" type="text" defaultValue={user?.email} readOnly />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Plan</label>
+                  <input className="form-input" type="text" defaultValue={plan} readOnly style={{textTransform:'capitalize'}} />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Overall Progress</label>
+                  <input className="form-input" type="text" defaultValue={`${totalProgress}%`} readOnly />
+                </div>
               </div>
             </>
           )}
@@ -744,7 +920,8 @@ function Dashboard({ user, plan }) {
 export default function App() {
   const [page, setPage]         = useState('home')
   const [showAuth, setShowAuth] = useState(false)
-  const { user, plan, isPremium, loading, fetchPlan } = useAuth()
+  const { user, plan, planStatus, isPremium, loading, fetchPlan } = useAuth()
+  const { progressMap, saveProgress } = useVideoProgress(user)
 
 useEffect(() => {
   if (localStorage.getItem('justPaid')) {
@@ -794,7 +971,21 @@ useEffect(() => {
       {page==='library'   && <Library isPremium={isPremium} setPage={setPage} />}
       {page==='booking'   && <Booking isPremium={isPremium} />}
       {page==='contact'   && <Contact />}
-      {page==='dashboard' && (user ? <Dashboard user={user} plan={plan} /> : <div style={{paddingTop:'8rem', textAlign:'center', color:'var(--mist)'}}>Please sign in to access your dashboard.</div>)}
+      {page==='dashboard' && (
+  user ? (
+    <Dashboard
+      user={user}
+      plan={plan}
+      progressMap={progressMap}
+      saveProgress={saveProgress}
+      isPremium={isPremium}
+    />
+  ) : (
+    <div style={{paddingTop:'8rem', textAlign:'center', color:'var(--mist)'}}>
+      Please sign in to access your dashboard.
+    </div>
+  )
+)}
     </>
   )
 }
