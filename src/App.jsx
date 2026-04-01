@@ -207,20 +207,24 @@ function goToStripe(planKey) {
 function useAuth() {
   const [user, setUser] = useState(null)
   const [plan, setPlan] = useState("explorer")
+  const [planStatus, setPlanStatus] = useState(null)
   const [loading, setLoading] = useState(true)
 
   const fetchPlan = async (email) => {
     const { data, error } = await supabase
       .from("members")
-      .select("plan")
+      .select("plan, plan_status")
       .eq("email", email)
       .single()
 
-    if (!error) {
-      setPlan(data?.plan ?? "explorer")
+    if (!error && data) {
+      setPlan(data.plan ?? "explorer")
+      setPlanStatus(data.plan_status ?? null)
     } else {
       setPlan("explorer")
+      setPlanStatus(null)
     }
+
     setLoading(false)
   }
 
@@ -240,6 +244,7 @@ function useAuth() {
       if (currentUser?.email) fetchPlan(currentUser.email)
       else {
         setPlan("explorer")
+        setPlanStatus(null)
         setLoading(false)
       }
     })
@@ -247,8 +252,11 @@ function useAuth() {
     return () => listener.subscription.unsubscribe()
   }, [])
 
-  const isPremium = plan === "professional" || plan === "mastery"
-  return { user, plan, isPremium, loading, fetchPlan }
+  const isPremium =
+    (plan === "professional" || plan === "mastery") &&
+    (planStatus === "active" || planStatus === "trialing")
+
+  return { user, plan, planStatus, isPremium, loading, fetchPlan }
 }
 
 // ── AUTH MODAL ────────────────────────────────────────────────────────────────
