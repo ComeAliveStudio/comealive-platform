@@ -149,7 +149,7 @@ const css = `
 
 const courses = {
   "Filmmaking": [
-    { id:1,  title:"The Myth of the Budget",             duration:"18 min", free:true,  desc:"Why money is not the answer, and what to ask instead." url:"https://vimeo.com/958087223/c3900df67f" },
+    { id:1,  title:"The Myth of the Budget",             duration:"18 min", free:true,  desc:"Why money is not the answer, and what to ask instead.", "https://player.vimeo.com/video/958087223?h=c3900df67f" },
     { id:2,  title:"Hire for Attitude, Trade for Skill", duration:"22 min", free:true,  desc:"Building your team from scratch, find the right alchemy." },
     { id:3,  title:"Preparation is Key",                 duration:"25 min", free:false, desc:"The moment you start preparing you are close to the goal." },
     { id:4,  title:"Post-Production Survival Guide",     duration:"30 min", free:false, desc:"The way to picture lock is never straight." },
@@ -502,6 +502,7 @@ function About() {
 // ── LIBRARY ───────────────────────────────────────────────────────────────────
 function Library({ user, isPremium, setPage, progressMap, saveProgress }) {
   const [activeTab, setActiveTab] = useState("Filmmaking")
+  const [activeVideo, setActiveVideo] = useState(null)
 
   return (
     <div className="library" style={{ paddingTop:'6rem' }}>
@@ -511,28 +512,6 @@ function Library({ user, isPremium, setPage, progressMap, saveProgress }) {
         <p style={{ color:'var(--mist)', marginBottom:'2.5rem', fontSize:'0.9rem', maxWidth:520 }}>
           Free episodes available to all. Premium content unlocks with Professional membership.
         </p>
-
-        {user && (
-          <div style={{
-            marginBottom:'2rem',
-            padding:'1rem 1.2rem',
-            border:'1px solid var(--border)',
-            background:'var(--slate)'
-          }}>
-            <div style={{
-              fontFamily:'DM Mono',
-              fontSize:'0.72rem',
-              letterSpacing:'0.08em',
-              color:'var(--gold)',
-              marginBottom:'0.4rem'
-            }}>
-              Your progress
-            </div>
-            <div style={{ color:'var(--mist)', fontSize:'0.85rem' }}>
-              Your video progress is now saved automatically.
-            </div>
-          </div>
-        )}
 
         <div className="course-tabs">
           {Object.keys(courses).map(tab => (
@@ -560,14 +539,20 @@ function Library({ user, isPremium, setPage, progressMap, saveProgress }) {
                   cursor: locked ? 'default' : 'pointer'
                 }}
                 onClick={() => {
-                  if (locked || !user) return
+                  if (locked) return
 
-                  const nextProgress =
-                    currentProgress >= 100 ? 100 :
-                    currentProgress > 0 ? currentProgress :
-                    10
+                  if (user) {
+                    const nextProgress =
+                      currentProgress >= 100 ? 100 :
+                      currentProgress > 0 ? currentProgress :
+                      10
 
-                  saveProgress(String(v.id), nextProgress)
+                    saveProgress(String(v.id), nextProgress)
+                  }
+
+                  if (v.url) {
+                    setActiveVideo(v)
+                  }
                 }}
               >
                 <div className="video-thumb">
@@ -581,18 +566,6 @@ function Library({ user, isPremium, setPage, progressMap, saveProgress }) {
                   <div className="video-duration">{v.duration}</div>
                   <div className="video-title">{v.title}</div>
                   <div className="video-desc">{v.desc}</div>
-
-                  {locked && (
-                    <div style={{
-                      marginTop:'0.6rem',
-                      fontSize:'0.72rem',
-                      color:'var(--gold)',
-                      fontFamily:'DM Mono',
-                      letterSpacing:'0.08em'
-                    }}>
-                      → Join Professional to unlock
-                    </div>
-                  )}
 
                   {user && !locked && currentProgress > 0 && (
                     <div style={{ marginTop:'0.8rem' }}>
@@ -682,6 +655,42 @@ function Library({ user, isPremium, setPage, progressMap, saveProgress }) {
             <button className="btn-primary" onClick={() => setPage('home')}>
               View Membership Plans
             </button>
+          </div>
+        )}
+
+        {activeVideo && (
+          <div
+            style={{
+              position:'fixed',
+              inset:0,
+              background:'rgba(0,0,0,0.9)',
+              zIndex:999,
+              display:'flex',
+              alignItems:'center',
+              justifyContent:'center',
+              padding:'2rem'
+            }}
+            onClick={() => setActiveVideo(null)}
+          >
+            <div
+              style={{
+                width:'100%',
+                maxWidth:'960px',
+                aspectRatio:'16/9',
+                background:'#000',
+                position:'relative'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <iframe
+                src={activeVideo.url}
+                width="100%"
+                height="100%"
+                frameBorder="0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
           </div>
         )}
       </div>
