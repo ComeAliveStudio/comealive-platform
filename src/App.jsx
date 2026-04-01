@@ -1120,7 +1120,15 @@ useEffect(() => {
           </footer>
         </>
       )}
-      {page==='library'   && <Library isPremium={isPremium} setPage={setPage} />}
+      {page==='library' && (
+        <Library
+          user={user}
+          isPremium={isPremium}
+          setPage={setPage}
+          progressMap={progressMap}
+          saveProgress={saveProgress}
+        />
+      )}
       {page==='booking'   && <Booking isPremium={isPremium} />}
       {page==='contact'   && <Contact />}
       {page==='dashboard' && (
