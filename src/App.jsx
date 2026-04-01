@@ -258,6 +258,73 @@ function useAuth() {
 
   return { user, plan, planStatus, isPremium, loading, fetchPlan }
 }
+function useVideoProgress(user) {
+  const [progressMap, setProgressMap] = useState({})
+  const [progressLoading, setProgressLoading] = useState(false)
+
+  const fetchProgress = async () => {
+    if (!user?.email) {
+      setProgressMap({})
+      return
+    }
+
+    setProgressLoading(true)
+
+    const { data, error } = await supabase
+      .from("video_progress")
+      .select("video_id, progress, updated_at")
+      .eq("user_email", user.email)
+
+    if (!error && data) {
+      const map = {}
+      data.forEach((row) => {
+        map[row.video_id] = {
+          progress: row.progress ?? 0,
+          updated_at: row.updated_at ?? null
+        }
+      })
+      setProgressMap(map)
+    }
+
+    setProgressLoading(false)
+  }
+
+  const saveProgress = async (videoId, progress) => {
+    if (!user?.email || !videoId) return
+
+    const safeProgress = Math.max(0, Math.min(100, progress))
+
+    const { error } = await supabase
+      .from("video_progress")
+      .upsert(
+        {
+          user_email: user.email,
+          video_id: String(videoId),
+          progress: safeProgress,
+          updated_at: new Date().toISOString()
+        },
+        {
+          onConflict: "user_email,video_id"
+        }
+      )
+
+    if (!error) {
+      setProgressMap((prev) => ({
+        ...prev,
+        [videoId]: {
+          progress: safeProgress,
+          updated_at: new Date().toISOString()
+        }
+      }))
+    }
+  }
+
+  useEffect(() => {
+    fetchProgress()
+  }, [user?.email])
+
+  return { progressMap, progressLoading, fetchProgress, saveProgress }
+}
 
 // ── AUTH MODAL ────────────────────────────────────────────────────────────────
 function AuthModal({ onClose, defaultMode = "signin" }) {
