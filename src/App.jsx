@@ -149,7 +149,7 @@ const css = `
 
 const courses = {
   "Filmmaking": [
-    { id:1,  title:"The Myth of the Budget",             duration:"18 min", free:true,  desc:"Why money is not the answer, and what to ask instead." },
+    { id:1,  title:"The Myth of the Budget",             duration:"18 min", free:true,  desc:"Why money is not the answer, and what to ask instead." url:"https://vimeo.com/958087223/c3900df67f" },
     { id:2,  title:"Hire for Attitude, Trade for Skill", duration:"22 min", free:true,  desc:"Building your team from scratch, find the right alchemy." },
     { id:3,  title:"Preparation is Key",                 duration:"25 min", free:false, desc:"The moment you start preparing you are close to the goal." },
     { id:4,  title:"Post-Production Survival Guide",     duration:"30 min", free:false, desc:"The way to picture lock is never straight." },
