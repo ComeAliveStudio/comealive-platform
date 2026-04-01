@@ -500,45 +500,188 @@ function About() {
 }
 
 // ── LIBRARY ───────────────────────────────────────────────────────────────────
-function Library({ isPremium, setPage }) {
+function Library({ user, isPremium, setPage, progressMap, saveProgress }) {
   const [activeTab, setActiveTab] = useState("Filmmaking")
+
   return (
-    <div className="library" style={{paddingTop:'6rem'}}>
-      <div className="max-w" style={{padding:'0 3rem'}}>
+    <div className="library" style={{ paddingTop:'6rem' }}>
+      <div className="max-w" style={{ padding:'0 3rem' }}>
         <div className="section-label">Course Library</div>
         <h2>Everything in one place.<br /><em>Organised by track.</em></h2>
-        <p style={{color:'var(--mist)', marginBottom:'2.5rem', fontSize:'0.9rem', maxWidth:520}}>
+        <p style={{ color:'var(--mist)', marginBottom:'2.5rem', fontSize:'0.9rem', maxWidth:520 }}>
           Free episodes available to all. Premium content unlocks with Professional membership.
         </p>
+
+        {user && (
+          <div style={{
+            marginBottom:'2rem',
+            padding:'1rem 1.2rem',
+            border:'1px solid var(--border)',
+            background:'var(--slate)'
+          }}>
+            <div style={{
+              fontFamily:'DM Mono',
+              fontSize:'0.72rem',
+              letterSpacing:'0.08em',
+              color:'var(--gold)',
+              marginBottom:'0.4rem'
+            }}>
+              Your progress
+            </div>
+            <div style={{ color:'var(--mist)', fontSize:'0.85rem' }}>
+              Your video progress is now saved automatically.
+            </div>
+          </div>
+        )}
+
         <div className="course-tabs">
           {Object.keys(courses).map(tab => (
-            <button key={tab} className={`course-tab ${activeTab===tab?'active':''}`} onClick={() => setActiveTab(tab)}>{tab}</button>
+            <button
+              key={tab}
+              className={`course-tab ${activeTab===tab ? 'active' : ''}`}
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab}
+            </button>
           ))}
         </div>
+
         <div className="videos-grid">
           {courses[activeTab].map(v => {
             const locked = !v.free && !isPremium
+            const currentProgress = progressMap?.[String(v.id)]?.progress ?? 0
+
             return (
-              <div className="video-card" key={v.id} style={{opacity: locked ? 0.45 : 1, cursor: locked ? 'default' : 'pointer'}}>
+              <div
+                className="video-card"
+                key={v.id}
+                style={{
+                  opacity: locked ? 0.45 : 1,
+                  cursor: locked ? 'default' : 'pointer'
+                }}
+                onClick={() => {
+                  if (locked || !user) return
+
+                  const nextProgress =
+                    currentProgress >= 100 ? 100 :
+                    currentProgress > 0 ? currentProgress :
+                    10
+
+                  saveProgress(String(v.id), nextProgress)
+                }}
+              >
                 <div className="video-thumb">
                   <div className="video-thumb-icon">{locked ? '🔒' : '▶'}</div>
-                  <div className={`video-lock ${v.free?'video-free':''}`}>{v.free?'Free':'Premium'}</div>
+                  <div className={`video-lock ${v.free ? 'video-free' : ''}`}>
+                    {v.free ? 'Free' : 'Premium'}
+                  </div>
                 </div>
+
                 <div className="video-info">
                   <div className="video-duration">{v.duration}</div>
                   <div className="video-title">{v.title}</div>
                   <div className="video-desc">{v.desc}</div>
-                  {locked && <div style={{marginTop:'0.6rem', fontSize:'0.72rem', color:'var(--gold)', fontFamily:'DM Mono', letterSpacing:'0.08em'}}>→ Join Professional to unlock</div>}
+
+                  {locked && (
+                    <div style={{
+                      marginTop:'0.6rem',
+                      fontSize:'0.72rem',
+                      color:'var(--gold)',
+                      fontFamily:'DM Mono',
+                      letterSpacing:'0.08em'
+                    }}>
+                      → Join Professional to unlock
+                    </div>
+                  )}
+
+                  {user && !locked && currentProgress > 0 && (
+                    <div style={{ marginTop:'0.8rem' }}>
+                      <div style={{
+                        fontSize:'0.72rem',
+                        color:'var(--gold)',
+                        fontFamily:'DM Mono',
+                        letterSpacing:'0.08em',
+                        marginBottom:'0.35rem'
+                      }}>
+                        Progress: {currentProgress}%
+                      </div>
+
+                      <div style={{
+                        height:'4px',
+                        background:'var(--border)',
+                        borderRadius:'999px',
+                        overflow:'hidden'
+                      }}>
+                        <div style={{
+                          width:`${currentProgress}%`,
+                          height:'100%',
+                          background:'var(--gold)'
+                        }} />
+                      </div>
+                    </div>
+                  )}
+
+                  {user && !locked && currentProgress < 100 && (
+                    <button
+                      style={{
+                        marginTop:'0.8rem',
+                        background:'none',
+                        border:'1px solid var(--border)',
+                        color:'var(--mist)',
+                        padding:'0.45rem 0.75rem',
+                        cursor:'pointer',
+                        fontSize:'0.7rem',
+                        letterSpacing:'0.06em',
+                        textTransform:'uppercase'
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        saveProgress(String(v.id), 100)
+                      }}
+                    >
+                      Mark complete
+                    </button>
+                  )}
+
+                  {user && !locked && currentProgress >= 100 && (
+                    <div style={{
+                      marginTop:'0.8rem',
+                      fontSize:'0.72rem',
+                      color:'var(--gold)',
+                      fontFamily:'DM Mono',
+                      letterSpacing:'0.08em'
+                    }}>
+                      ✓ Completed
+                    </div>
+                  )}
                 </div>
               </div>
             )
           })}
         </div>
+
         {!isPremium && (
-          <div style={{marginTop:'3rem', padding:'2rem', border:'1px solid var(--border)', textAlign:'center', background:'var(--slate)'}}>
-            <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.4rem', color:'var(--parchment)', marginBottom:'0.8rem'}}>Ready to go deeper?</div>
-            <p style={{color:'var(--mist)', fontSize:'0.88rem', marginBottom:'1.5rem'}}>Join Professional to unlock all premium episodes across every track.</p>
-            <button className="btn-primary" onClick={() => setPage('home')}>View Membership Plans</button>
+          <div style={{
+            marginTop:'3rem',
+            padding:'2rem',
+            border:'1px solid var(--border)',
+            textAlign:'center',
+            background:'var(--slate)'
+          }}>
+            <div style={{
+              fontFamily:'Cormorant Garamond',
+              fontSize:'1.4rem',
+              color:'var(--parchment)',
+              marginBottom:'0.8rem'
+            }}>
+              Ready to go deeper?
+            </div>
+            <p style={{ color:'var(--mist)', fontSize:'0.88rem', marginBottom:'1.5rem' }}>
+              Join Professional to unlock all premium episodes across every track.
+            </p>
+            <button className="btn-primary" onClick={() => setPage('home')}>
+              View Membership Plans
+            </button>
           </div>
         )}
       </div>
