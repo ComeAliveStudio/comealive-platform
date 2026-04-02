@@ -8,9 +8,15 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 )
 
-const PRICE_TO_PLAN = {
-  'price_1TGMXNE72B8UAf4G0JSemNG5': 'professional',
-  'price_1TGMaOE72B8UAf4Gjks176aW': 'mastery'
+function getPlanFromAmount(amount) {
+  if (amount === 2900) return 'professional'
+  if (amount === 9700) return 'mastery'
+  return 'explorer'
+}
+
+function toIsoDate(unixSeconds) {
+  if (!unixSeconds) return null
+  return new Date(unixSeconds * 1000).toISOString()
 }
 
 async function getRawBody(req) {
@@ -21,65 +27,6 @@ async function getRawBody(req) {
   }
 
   return Buffer.concat(chunks)
-}
-
-function toIsoOrNull(unixSeconds) {
-  return unixSeconds ? new Date(unixSeconds * 1000).toISOString() : null
-}
-
-async function findMemberByEmail(email) {
-  if (!email) return { data: null, error: null }
-
-  const normalizedEmail = email.trim().toLowerCase()
-
-  return await supabase
-    .from('members')
-    .select('id, email, plan, stripe_customer_id, stripe_session_id')
-    .ilike('email', normalizedEmail)
-    .maybeSingle()
-}
-
-async function findMemberByCustomerId(customerId) {
-  if (!customerId) return { data: null, error: null }
-
-  return await supabase
-    .from('members')
-    .select('id, email, plan, stripe_customer_id, stripe_session_id')
-    .eq('stripe_customer_id', customerId)
-    .maybeSingle()
-}
-
-async function updateMemberById(id, updates) {
-  return await supabase
-    .from('members')
-    .update(updates)
-    .eq('id', id)
-}
-
-async function insertMember(payload) {
-  return await supabase
-    .from('members')
-    .insert(payload)
-}
-
-async function upsertMemberByEmail(email, updates) {
-  const normalizedEmail = email.trim().toLowerCase()
-  const { data: existing, error: findError } = await findMemberByEmail(normalizedEmail)
-
-  if (findError) return { error: findError }
-
-  if (existing) {
-    return await updateMemberById(existing.id, updates)
-  }
-
-  return await insertMember({
-    email: normalizedEmail,
-    ...updates
-  })
-}
-
-function getPlanFromPriceId(priceId) {
-  return PRICE_TO_PLAN[priceId] || null
 }
 
 export default async function handler(req, res) {
@@ -104,7 +51,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1) Checkout completed
+    // CHECKOUT COMPLETED
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object
 
@@ -118,201 +65,214 @@ export default async function handler(req, res) {
         session.metadata?.email ||
         null
 
-      const normalizedEmail = email?.trim().toLowerCase() || null
+      if (!email) {
+        return res.status(200).json({ skipped: 'no email' })
+      }
+
+      const normalizedEmail = email.trim().toLowerCase()
+      const plan = session.metadata?.plan || getPlanFromAmount(session.amount_total)
       const stripeCustomerId = session.customer || null
-      const stripeSessionId = session.id || null
-      const stripeSubscriptionId = session.subscription || null
 
-      let plan = null
+      const { data: existing, error: findError } = await supabase
+        .from('members')
+        .select('id, email')
+        .ilike('email', normalizedEmail)
+        .maybeSingle()
 
-      if (session.metadata?.plan) {
-        plan = session.metadata.plan
-      } else {
-        const lineItems = await stripe.checkout.sessions.listLineItems(session.id, {
-          limit: 10
-        })
-
-        const firstPriceId = lineItems.data?.[0]?.price?.id || null
-        plan = getPlanFromPriceId(firstPriceId)
+      if (findError) {
+        console.error('Find member error:', findError.message)
+        return res.status(500).json({ error: findError.message })
       }
 
-      if (!normalizedEmail || !plan) {
-        return res.status(200).json({
-          received: true,
-          skipped: 'missing email or plan'
-        })
-      }
-
-      const { error } = await upsertMemberByEmail(normalizedEmail, {
+      const payload = {
+        email: normalizedEmail,
         plan,
         plan_status: 'active',
-        stripe_customer_id: stripeCustomerId,
-        stripe_session_id: stripeSessionId,
-        plan_expires_at: null
-      })
+        stripe_customer_id: stripeCustomerId
+      }
 
-      if (error) {
-        console.error('Checkout update error:', error.message)
-        return res.status(500).json({ error: error.message })
+      let updateError = null
+
+      if (existing) {
+        const { error } = await supabase
+          .from('members')
+          .update(payload)
+          .eq('id', existing.id)
+
+        updateError = error
+      } else {
+        const { error } = await supabase
+          .from('members')
+          .insert(payload)
+
+        updateError = error
+      }
+
+      if (updateError) {
+        console.error('Checkout update error:', updateError.message)
+        return res.status(500).json({ error: updateError.message })
       }
 
       console.log(`Checkout completed: ${normalizedEmail} -> ${plan}`)
     }
 
-    // 2) Subscription created or updated
+    // SUBSCRIPTION CREATED / UPDATED
     if (
       event.type === 'customer.subscription.created' ||
       event.type === 'customer.subscription.updated'
     ) {
       const subscription = event.data.object
+      const customerId = subscription.customer
 
-      const stripeCustomerId = subscription.customer
-      const stripeSubscriptionId = subscription.id
-      const planStatus = subscription.status
+      const amount =
+        subscription.items?.data?.[0]?.price?.unit_amount || null
+
+      const plan = getPlanFromAmount(amount)
+      const planStatus = subscription.status || null
+      const planExpiresAt = toIsoDate(subscription.current_period_end)
+      const trialEndsAt = toIsoDate(subscription.trial_end)
       const cancelAtPeriodEnd = subscription.cancel_at_period_end || false
-      const trialEndsAt = toIsoOrNull(subscription.trial_end)
-      const planExpiresAt = toIsoOrNull(subscription.current_period_end)
 
-      const priceId = subscription.items?.data?.[0]?.price?.id || null
-      const plan = getPlanFromPriceId(priceId)
-
-      const { data: member, error: findError } = await findMemberByCustomerId(stripeCustomerId)
+      const { data: existing, error: findError } = await supabase
+        .from('members')
+        .select('id, email')
+        .eq('stripe_customer_id', customerId)
+        .maybeSingle()
 
       if (findError) {
         console.error('Subscription find error:', findError.message)
         return res.status(500).json({ error: findError.message })
       }
 
-      if (!member) {
-        console.log('No member found for subscription event', {
-          stripeCustomerId,
-          stripeSubscriptionId
+      if (!existing) {
+        console.log('No member found for customer:', customerId)
+        return res.status(200).json({ skipped: 'member not found' })
+      }
+
+      const { error: updateError } = await supabase
+        .from('members')
+        .update({
+          plan,
+          plan_status: planStatus,
+          plan_expires_at: planExpiresAt,
+          trial_ends_at: trialEndsAt,
+          cancel_at_period_end: cancelAtPeriodEnd
         })
-        return res.status(200).json({ skipped: 'member not found for customer' })
+        .eq('id', existing.id)
+
+      if (updateError) {
+        console.error('Subscription update error:', updateError.message)
+        return res.status(500).json({ error: updateError.message })
       }
 
-      const updates = {
-        stripe_customer_id: stripeCustomerId,
-        stripe_session_id: stripeSubscriptionId,
-        plan_status: planStatus,
-        cancel_at_period_end: cancelAtPeriodEnd,
-        trial_ends_at: trialEndsAt,
-        plan_expires_at: planExpiresAt
-      }
-
-      if (plan) {
-        updates.plan = plan
-      }
-
-      if (planStatus === 'canceled' || event.type === 'customer.subscription.deleted') {
-        updates.plan = 'explorer'
-      }
-
-      const { error } = await updateMemberById(member.id, updates)
-
-      if (error) {
-        console.error('Subscription update error:', error.message)
-        return res.status(500).json({ error: error.message })
-      }
-
-      console.log(`Subscription synced: ${member.email} -> ${updates.plan || member.plan} (${planStatus})`)
+      console.log(`Subscription synced: ${existing.email} -> ${plan} (${planStatus})`)
     }
 
-    // 3) Subscription deleted
+    // SUBSCRIPTION DELETED
     if (event.type === 'customer.subscription.deleted') {
       const subscription = event.data.object
-      const stripeCustomerId = subscription.customer
+      const customerId = subscription.customer
 
-      const { data: member, error: findError } = await findMemberByCustomerId(stripeCustomerId)
+      const { data: existing, error: findError } = await supabase
+        .from('members')
+        .select('id, email')
+        .eq('stripe_customer_id', customerId)
+        .maybeSingle()
 
       if (findError) {
-        console.error('Subscription delete find error:', findError.message)
+        console.error('Delete find error:', findError.message)
         return res.status(500).json({ error: findError.message })
       }
 
-      if (!member) {
-        return res.status(200).json({ skipped: 'member not found for delete' })
+      if (!existing) {
+        return res.status(200).json({ skipped: 'member not found' })
       }
 
-      const { error } = await updateMemberById(member.id, {
-        plan: 'explorer',
-        plan_status: 'canceled',
-        stripe_session_id: null,
-        cancel_at_period_end: false,
-        trial_ends_at: null
-      })
+      const { error: updateError } = await supabase
+        .from('members')
+        .update({
+          plan: 'explorer',
+          plan_status: 'canceled',
+          cancel_at_period_end: false
+        })
+        .eq('id', existing.id)
 
-      if (error) {
-        console.error('Subscription delete update error:', error.message)
-        return res.status(500).json({ error: error.message })
+      if (updateError) {
+        console.error('Delete update error:', updateError.message)
+        return res.status(500).json({ error: updateError.message })
       }
 
-      console.log(`Subscription deleted: ${member.email} -> explorer`)
+      console.log(`Subscription deleted: ${existing.email} -> explorer`)
     }
 
-    // 4) Invoice paid (renewal success)
-    if (event.type === 'invoice.paid') {
-      const invoice = event.data.object
-      const stripeCustomerId = invoice.customer
-      const stripeSubscriptionId = invoice.subscription || null
-
-      const { data: member, error: findError } = await findMemberByCustomerId(stripeCustomerId)
-
-      if (findError) {
-        console.error('Invoice paid find error:', findError.message)
-        return res.status(500).json({ error: findError.message })
-      }
-
-      if (!member) {
-        return res.status(200).json({ skipped: 'member not found for invoice.paid' })
-      }
-
-      let planExpiresAt = null
-
-      if (stripeSubscriptionId) {
-        const subscription = await stripe.subscriptions.retrieve(stripeSubscriptionId)
-        planExpiresAt = toIsoOrNull(subscription.current_period_end)
-      }
-
-      const { error } = await updateMemberById(member.id, {
-        plan_status: 'active',
-        plan_expires_at: planExpiresAt
-      })
-
-      if (error) {
-        console.error('Invoice paid update error:', error.message)
-        return res.status(500).json({ error: error.message })
-      }
-
-      console.log(`Invoice paid: ${member.email} remains active`)
-    }
-
-    // 5) Invoice payment failed
+    // PAYMENT FAILED
     if (event.type === 'invoice.payment_failed') {
       const invoice = event.data.object
-      const stripeCustomerId = invoice.customer
+      const customerId = invoice.customer
 
-      const { data: member, error: findError } = await findMemberByCustomerId(stripeCustomerId)
+      const { data: existing, error: findError } = await supabase
+        .from('members')
+        .select('id, email')
+        .eq('stripe_customer_id', customerId)
+        .maybeSingle()
 
       if (findError) {
         console.error('Invoice failed find error:', findError.message)
         return res.status(500).json({ error: findError.message })
       }
 
-      if (!member) {
-        return res.status(200).json({ skipped: 'member not found for invoice.payment_failed' })
+      if (!existing) {
+        return res.status(200).json({ skipped: 'member not found' })
       }
 
-      const { error } = await updateMemberById(member.id, {
-        plan_status: 'past_due'
-      })
+      const { error: updateError } = await supabase
+        .from('members')
+        .update({
+          plan_status: 'past_due'
+        })
+        .eq('id', existing.id)
 
-      if (error) {
-        console.error('Invoice failed update error:', error.message)
-        return res.status(500).json({ error: error.message })
+      if (updateError) {
+        console.error('Invoice failed update error:', updateError.message)
+        return res.status(500).json({ error: updateError.message })
       }
 
-      console.log(`Invoice failed: ${member.email} -> past_due`)
+      console.log(`Invoice failed: ${existing.email} -> past_due`)
+    }
+
+    // PAYMENT SUCCEEDED / RENEWAL
+    if (event.type === 'invoice.paid') {
+      const invoice = event.data.object
+      const customerId = invoice.customer
+
+      const { data: existing, error: findError } = await supabase
+        .from('members')
+        .select('id, email')
+        .eq('stripe_customer_id', customerId)
+        .maybeSingle()
+
+      if (findError) {
+        console.error('Invoice paid find error:', findError.message)
+        return res.status(500).json({ error: findError.message })
+      }
+
+      if (!existing) {
+        return res.status(200).json({ skipped: 'member not found' })
+      }
+
+      const { error: updateError } = await supabase
+        .from('members')
+        .update({
+          plan_status: 'active'
+        })
+        .eq('id', existing.id)
+
+      if (updateError) {
+        console.error('Invoice paid update error:', updateError.message)
+        return res.status(500).json({ error: updateError.message })
+      }
+
+      console.log(`Invoice paid: ${existing.email} -> active`)
     }
 
     return res.status(200).json({ received: true })
