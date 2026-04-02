@@ -244,46 +244,42 @@ export default async function handler(req, res) {
     if (event.type === 'invoice.paid') {
   const invoice = event.data.object
   const customerId = invoice.customer
-
   const subscriptionId = invoice.subscription
 
-  let planExpires
-      const invoice = event.data.object
-      const customerId = invoice.customer
+  let planExpiresAt = null
 
-      const { data: existing, error: findError } = await supabase
-        .from('members')
-        .select('id, email')
-        .eq('stripe_customer_id', customerId)
-        .maybeSingle()
-
-      if (findError) {
-        console.error('Invoice paid find error:', findError.message)
-        return res.status(500).json({ error: findError.message })
-      }
-
-      if (!existing) {
-        return res.status(200).json({ skipped: 'member not found' })
-      }
-
-      const { error: updateError } = await supabase
-        .from('members')
-        .update({
-          plan_status: 'active'
-        })
-        .eq('id', existing.id)
-
-      if (updateError) {
-        console.error('Invoice paid update error:', updateError.message)
-        return res.status(500).json({ error: updateError.message })
-      }
-
-      console.log(`Invoice paid: ${existing.email} -> active`)
-    }
-
-    return res.status(200).json({ received: true })
-  } catch (err) {
-    console.error('Handler error:', err.message)
-    return res.status(500).json({ error: err.message })
+  if (subscriptionId) {
+    const subscription = await stripe.subscriptions.retrieve(subscriptionId)
+    planExpiresAt = toIsoDate(subscription.current_period_end)
   }
+
+  const { data: existing, error: findError } = await supabase
+    .from('members')
+    .select('id, email')
+    .eq('stripe_customer_id', customerId)
+    .maybeSingle()
+
+  if (findError) {
+    console.error('Invoice paid find error:', findError.message)
+    return res.status(500).json({ error: findError.message })
+  }
+
+  if (!existing) {
+    return res.status(200).json({ skipped: 'member not found' })
+  }
+
+  const { error: updateError } = await supabase
+    .from('members')
+    .update({
+      plan_status: 'active',
+      plan_expires_at: planExpiresAt
+    })
+    .eq('id', existing.id)
+
+  if (updateError) {
+    console.error('Invoice paid update error:', updateError.message)
+    return res.status(500).json({ error: updateError.message })
+  }
+
+  console.log(`Invoice paid: ${existing.email} -> active`)
 }
