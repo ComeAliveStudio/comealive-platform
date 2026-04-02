@@ -670,7 +670,17 @@ function Library({ user, isPremium, setPage, progressMap, saveProgress }) {
               justifyContent:'center',
               padding:'2rem'
             }}
-            onClick={() => setActiveVideo(null)}
+            onClick={() => {
+              if (user && activeVideo) {
+                const currentProgress = progressMap?.[String(activeVideo.id)]?.progress ?? 0
+
+                const nextProgress = Math.min(currentProgress + 30, 100)
+
+                saveProgress(String(activeVideo.id), nextProgress)
+               }
+
+              setActiveVideo(null)
+            }}
           >
             <div
               style={{
