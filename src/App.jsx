@@ -853,12 +853,23 @@ function Contact() {
 }
 
 // ── DASHBOARD ─────────────────────────────────────────────────────────────────
-function Dashboard({ user, plan, progressMap, saveProgress, isPremium }) {
+function Dashboard({
+  user,
+  plan,
+  planStatus,
+  planExpiresAt,
+  trialEndsAt,
+  cancelAtPeriodEnd,
+  progressMap,
+  saveProgress,
+  isPremium
+}) {
   const [activeSection, setActiveSection] = useState('overview')
 
   const navItems = [
     { id:'overview', label:'Overview', icon:'◈' },
     { id:'courses', label:'My Courses', icon:'▤' },
+    { id:'billing', label:'Billing', icon:'◧' },
     { id:'sessions', label:'Sessions', icon:'◷' },
     { id:'profile', label:'Profile', icon:'◯' }
   ]
@@ -891,6 +902,34 @@ function Dashboard({ user, plan, progressMap, saveProgress, isPremium }) {
     })
     .slice(0, 6)
 
+  const formatDate = (value) => {
+    if (!value) return "—"
+    try {
+      return new Date(value).toLocaleDateString()
+    } catch {
+      return "—"
+    }
+  }
+
+  const billingMessage = () => {
+    if (planStatus === 'trialing') {
+      return `Trial active until ${formatDate(trialEndsAt)}`
+    }
+    if (planStatus === 'past_due') {
+      return "Payment issue detected. Please update billing."
+    }
+    if (planStatus === 'canceled') {
+      return "Subscription canceled."
+    }
+    if (cancelAtPeriodEnd) {
+      return `Access will end on ${formatDate(planExpiresAt)}`
+    }
+    if (planStatus === 'active') {
+      return `Renews on ${formatDate(planExpiresAt)}`
+    }
+    return "No active subscription"
+  }
+
   return (
     <div className="dashboard">
       <div style={{
@@ -911,7 +950,7 @@ function Dashboard({ user, plan, progressMap, saveProgress, isPremium }) {
           letterSpacing:'0.1em',
           textTransform:'uppercase'
         }}>
-          {plan} Plan · {isPremium ? 'Active' : 'Free'}
+          {plan} Plan · {planStatus || 'free'}
         </div>
       </div>
 
@@ -952,7 +991,7 @@ function Dashboard({ user, plan, progressMap, saveProgress, isPremium }) {
                   <div className="dash-card-value" style={{fontSize:'1.4rem', marginTop:'0.3rem', textTransform:'capitalize'}}>
                     {plan}
                   </div>
-                  <div className="dash-card-sub">{isPremium ? 'Premium access enabled' : 'Upgrade to unlock more'}</div>
+                  <div className="dash-card-sub">{billingMessage()}</div>
                 </div>
               </div>
 
@@ -1062,6 +1101,75 @@ function Dashboard({ user, plan, progressMap, saveProgress, isPremium }) {
                   })}
                 </div>
               )}
+            </>
+          )}
+
+          {activeSection==='billing' && (
+            <>
+              <div className="section-label">Billing</div>
+
+              <div style={{
+                border:'1px solid var(--border)',
+                background:'var(--slate)',
+                padding:'2rem',
+                maxWidth:'720px'
+              }}>
+                <div style={{
+                  fontFamily:'Cormorant Garamond',
+                  fontSize:'1.8rem',
+                  color:'var(--parchment)',
+                  marginBottom:'1.2rem'
+                }}>
+                  Your subscription
+                </div>
+
+                <div style={{display:'grid', gap:'1rem'}}>
+                  <div>
+                    <div className="form-label">Plan</div>
+                    <div style={{color:'var(--parchment)', textTransform:'capitalize'}}>{plan}</div>
+                  </div>
+
+                  <div>
+                    <div className="form-label">Status</div>
+                    <div style={{color:'var(--parchment)', textTransform:'capitalize'}}>{planStatus || 'free'}</div>
+                  </div>
+
+                  <div>
+                    <div className="form-label">Renews / Expires</div>
+                    <div style={{color:'var(--parchment)'}}>{formatDate(planExpiresAt)}</div>
+                  </div>
+
+                  <div>
+                    <div className="form-label">Trial ends</div>
+                    <div style={{color:'var(--parchment)'}}>{formatDate(trialEndsAt)}</div>
+                  </div>
+
+                  <div>
+                    <div className="form-label">Cancel at period end</div>
+                    <div style={{color:'var(--parchment)'}}>{cancelAtPeriodEnd ? 'Yes' : 'No'}</div>
+                  </div>
+                </div>
+
+                <div style={{
+                  marginTop:'1.5rem',
+                  padding:'1rem 1.2rem',
+                  border:'1px solid var(--border)',
+                  background:'var(--ink)'
+                }}>
+                  <div style={{
+                    fontFamily:'DM Mono',
+                    fontSize:'0.72rem',
+                    color:'var(--gold)',
+                    letterSpacing:'0.08em',
+                    marginBottom:'0.4rem'
+                  }}>
+                    Subscription message
+                  </div>
+                  <div style={{color:'var(--mist)', fontSize:'0.9rem'}}>
+                    {billingMessage()}
+                  </div>
+                </div>
+              </div>
             </>
           )}
 
