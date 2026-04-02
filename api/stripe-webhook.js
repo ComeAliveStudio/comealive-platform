@@ -242,6 +242,12 @@ export default async function handler(req, res) {
 
     // PAYMENT SUCCEEDED / RENEWAL
     if (event.type === 'invoice.paid') {
+  const invoice = event.data.object
+  const customerId = invoice.customer
+
+  const subscriptionId = invoice.subscription
+
+  let planExpires
       const invoice = event.data.object
       const customerId = invoice.customer
 
