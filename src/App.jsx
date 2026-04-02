@@ -1179,6 +1179,10 @@ useEffect(() => {
     <Dashboard
       user={user}
       plan={plan}
+      planStatus={planStatus}
+      planExpiresAt={planExpiresAt}
+      trialEndsAt={trialEndsAt}
+      cancelAtPeriodEnd={cancelAtPeriodEnd}
       progressMap={progressMap}
       saveProgress={saveProgress}
       isPremium={isPremium}
