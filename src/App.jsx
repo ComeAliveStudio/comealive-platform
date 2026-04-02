@@ -1105,7 +1105,17 @@ function Dashboard({ user, plan, progressMap, saveProgress, isPremium }) {
 export default function App() {
   const [page, setPage]         = useState('home')
   const [showAuth, setShowAuth] = useState(false)
-  const { user, plan, planStatus, isPremium, loading, fetchPlan } = useAuth()
+  const {
+  user,
+  plan,
+  planStatus,
+  planExpiresAt,
+  trialEndsAt,
+  cancelAtPeriodEnd,
+  isPremium,
+  loading,
+  fetchPlan
+} = useAuth()
   const { progressMap, saveProgress } = useVideoProgress(user)
 
 useEffect(() => {
