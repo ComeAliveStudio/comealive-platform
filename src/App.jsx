@@ -278,7 +278,7 @@ function useVideoProgress(user) {
     if (!error && data) {
       const map = {}
       data.forEach((row) => {
-        map[row.video_id] = {
+        map[String(row.video_id)] = {
           progress: row.progress ?? 0,
           updated_at: row.updated_at ?? null
         }
