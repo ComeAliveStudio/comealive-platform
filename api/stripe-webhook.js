@@ -296,7 +296,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: updateError.message })
   }
 
-  console.log(`Invoice paid: ${existing.email} -> active`)
+  console.log(`Invoice paid v2: ${existing.email} -> active`)
 }
     
 return res.status(200).json({ received: true })
