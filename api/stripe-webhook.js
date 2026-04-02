@@ -241,7 +241,7 @@ export default async function handler(req, res) {
     }
 
     // PAYMENT SUCCEEDED / RENEWAL
-   if (event.type === 'invoice.paid') {
+  if (event.type === 'invoice.paid') {
   const invoice = event.data.object
   const customerId = invoice.customer
 
@@ -296,7 +296,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: updateError.message })
   }
 
-  console.log(`Invoice paid v2: ${existing.email} -> active`)
+  console.log(`Invoice paid v3: ${existing.email} -> active`)
 }
     
 return res.status(200).json({ received: true })
