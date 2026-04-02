@@ -208,21 +208,30 @@ function useAuth() {
   const [user, setUser] = useState(null)
   const [plan, setPlan] = useState("explorer")
   const [planStatus, setPlanStatus] = useState(null)
+  const [planExpiresAt, setPlanExpiresAt] = useState(null)
+  const [trialEndsAt, setTrialEndsAt] = useState(null)
+  const [cancelAtPeriodEnd, setCancelAtPeriodEnd] = useState(false)
   const [loading, setLoading] = useState(true)
 
   const fetchPlan = async (email) => {
     const { data, error } = await supabase
       .from("members")
-      .select("plan, plan_status")
+      .select("plan, plan_status, plan_expires_at, trial_ends_at, cancel_at_period_end")
       .eq("email", email)
       .single()
 
     if (!error && data) {
       setPlan(data.plan ?? "explorer")
       setPlanStatus(data.plan_status ?? null)
+      setPlanExpiresAt(data.plan_expires_at ?? null)
+      setTrialEndsAt(data.trial_ends_at ?? null)
+      setCancelAtPeriodEnd(data.cancel_at_period_end ?? false)
     } else {
       setPlan("explorer")
       setPlanStatus(null)
+      setPlanExpiresAt(null)
+      setTrialEndsAt(null)
+      setCancelAtPeriodEnd(false)
     }
 
     setLoading(false)
@@ -245,6 +254,9 @@ function useAuth() {
       else {
         setPlan("explorer")
         setPlanStatus(null)
+        setPlanExpiresAt(null)
+        setTrialEndsAt(null)
+        setCancelAtPeriodEnd(false)
         setLoading(false)
       }
     })
@@ -256,8 +268,19 @@ function useAuth() {
     (plan === "professional" || plan === "mastery") &&
     (planStatus === "active" || planStatus === "trialing")
 
-  return { user, plan, planStatus, isPremium, loading, fetchPlan }
+  return {
+    user,
+    plan,
+    planStatus,
+    planExpiresAt,
+    trialEndsAt,
+    cancelAtPeriodEnd,
+    isPremium,
+    loading,
+    fetchPlan
+  }
 }
+
 function useVideoProgress(user) {
   const [progressMap, setProgressMap] = useState({})
   const [progressLoading, setProgressLoading] = useState(false)
