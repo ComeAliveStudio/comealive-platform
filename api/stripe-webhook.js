@@ -241,10 +241,14 @@ export default async function handler(req, res) {
     }
 
     // PAYMENT SUCCEEDED / RENEWAL
-    if (event.type === 'invoice.paid') {
+   if (event.type === 'invoice.paid') {
   const invoice = event.data.object
   const customerId = invoice.customer
-  const subscriptionId = invoice.subscription
+
+  const subscriptionId =
+    invoice.subscription ||
+    invoice.lines?.data?.[0]?.subscription ||
+    null
 
   let planExpiresAt = null
 
@@ -252,6 +256,12 @@ export default async function handler(req, res) {
     const subscription = await stripe.subscriptions.retrieve(subscriptionId)
     planExpiresAt = toIsoDate(subscription.current_period_end)
   }
+
+  console.log('Invoice paid debug:', {
+    customerId,
+    subscriptionId,
+    planExpiresAt
+  })
 
   const { data: existing, error: findError } = await supabase
     .from('members')
@@ -268,12 +278,17 @@ export default async function handler(req, res) {
     return res.status(200).json({ skipped: 'member not found' })
   }
 
+  const updatePayload = {
+    plan_status: 'active'
+  }
+
+  if (planExpiresAt) {
+    updatePayload.plan_expires_at = planExpiresAt
+  }
+
   const { error: updateError } = await supabase
     .from('members')
-    .update({
-      plan_status: 'active',
-      plan_expires_at: planExpiresAt
-    })
+    .update(updatePayload)
     .eq('id', existing.id)
 
   if (updateError) {
