@@ -871,6 +871,7 @@ function Dashboard({
   isPremium
 }) {
   const [activeSection, setActiveSection] = useState('overview')
+  console.log('DEBUG billing', { plan, planStatus, stripeCustomerId })
 
   const navItems = [
     { id:'overview', label:'Overview', icon:'◈' },
