@@ -203,13 +203,13 @@ export default async function handler(req, res) {
       const { error: updateError } = await supabase
         .from('members')
         .update({
-          plan,
-          plan_status: planStatus,
-          plan_expires_at: planExpiresAt,
-          trial_ends_at: trialEndsAt,
-          cancel_at_period_end: cancelAtPeriodEnd,
-          stripe_customer_id: customerId
-        })
+        plan,
+        plan_status: planStatus,
+        plan_expires_at: cancelAt || planExpiresAt,
+        trial_ends_at: trialEndsAt,
+        cancel_at_period_end: isScheduledToCancel,
+        stripe_customer_id: customerId
+      })
         .eq('id', existing.id)
 
       if (updateError) {
