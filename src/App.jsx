@@ -211,13 +211,12 @@ function useAuth() {
   const [planExpiresAt, setPlanExpiresAt] = useState(null)
   const [trialEndsAt, setTrialEndsAt] = useState(null)
   const [cancelAtPeriodEnd, setCancelAtPeriodEnd] = useState(false)
-  const [stripeCustomerId, setStripeCustomerId] = useState(null)
   const [loading, setLoading] = useState(true)
 
   const fetchPlan = async (email) => {
     const { data, error } = await supabase
       .from("members")
-      .select("plan, plan_status, plan_expires_at, trial_ends_at, cancel_at_period_end, stripe_customer_id")
+      .select("plan, plan_status, plan_expires_at, trial_ends_at, cancel_at_period_end")
       .eq("email", email)
       .single()
 
@@ -227,14 +226,12 @@ function useAuth() {
       setPlanExpiresAt(data.plan_expires_at ?? null)
       setTrialEndsAt(data.trial_ends_at ?? null)
       setCancelAtPeriodEnd(data.cancel_at_period_end ?? false)
-      setStripeCustomerId(data.stripe_customer_id ?? null)
     } else {
       setPlan("explorer")
       setPlanStatus(null)
       setPlanExpiresAt(null)
       setTrialEndsAt(null)
       setCancelAtPeriodEnd(false)
-      setStripeCustomerId(null)
     }
 
     setLoading(false)
@@ -260,7 +257,6 @@ function useAuth() {
         setPlanExpiresAt(null)
         setTrialEndsAt(null)
         setCancelAtPeriodEnd(false)
-        setStripeCustomerId(null)
         setLoading(false)
       }
     })
@@ -279,7 +275,6 @@ function useAuth() {
     planExpiresAt,
     trialEndsAt,
     cancelAtPeriodEnd,
-    stripeCustomerId,
     isPremium,
     loading,
     fetchPlan
@@ -865,6 +860,7 @@ function Dashboard({
   planExpiresAt,
   trialEndsAt,
   cancelAtPeriodEnd,
+  stripeCustomerId,
   progressMap,
   saveProgress,
   isPremium
@@ -933,6 +929,33 @@ function Dashboard({
       return `Renews on ${formatDate(planExpiresAt)}`
     }
     return "No active subscription"
+  }
+
+  const [openingPortal, setOpeningPortal] = useState(false)
+
+  const openBillingPortal = async () => {
+    try {
+      setOpeningPortal(true)
+
+      const res = await fetch('/api/create-portal-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: user?.email })
+      })
+
+      const data = await res.json()
+
+      if (!res.ok || !data?.url) {
+        throw new Error(data?.error || 'Unable to open billing portal')
+      }
+
+      window.location.href = data.url
+    } catch (err) {
+      console.error(err)
+      alert('Unable to open billing portal')
+    } finally {
+      setOpeningPortal(false)
+    }
   }
 
   return (
@@ -1131,27 +1154,39 @@ function Dashboard({
                 <div style={{display:'grid', gap:'1rem'}}>
                   <div>
                     <div className="form-label">Plan</div>
-                    <div style={{color:'var(--parchment)', textTransform:'capitalize'}}>{plan}</div>
+                    <div style={{color:'var(--parchment)', textTransform:'capitalize'}}>
+                      {plan}
+                    </div>
                   </div>
 
                   <div>
                     <div className="form-label">Status</div>
-                    <div style={{color:'var(--parchment)', textTransform:'capitalize'}}>{planStatus || 'free'}</div>
+                    <div style={{color:'var(--parchment)', textTransform:'capitalize'}}>
+                      {planStatus || 'free'}
+                    </div>
                   </div>
 
                   <div>
                     <div className="form-label">Renews / Expires</div>
-                    <div style={{color:'var(--parchment)'}}>{formatDate(planExpiresAt)}</div>
+                    <div style={{color:'var(--parchment)'}}>
+                      {formatDate(planExpiresAt)}
+                    </div>
                   </div>
 
-                  <div>
-                    <div className="form-label">Trial ends</div>
-                    <div style={{color:'var(--parchment)'}}>{formatDate(trialEndsAt)}</div>
-                  </div>
+                  {trialEndsAt && (
+                    <div>
+                      <div className="form-label">Trial ends</div>
+                      <div style={{color:'var(--parchment)'}}>
+                        {formatDate(trialEndsAt)}
+                      </div>
+                    </div>
+                  )}
 
                   <div>
                     <div className="form-label">Cancel at period end</div>
-                    <div style={{color:'var(--parchment)'}}>{cancelAtPeriodEnd ? 'Yes' : 'No'}</div>
+                    <div style={{color:'var(--parchment)'}}>
+                      {cancelAtPeriodEnd ? 'Yes' : 'No'}
+                    </div>
                   </div>
                 </div>
 
@@ -1173,6 +1208,55 @@ function Dashboard({
                   <div style={{color:'var(--mist)', fontSize:'0.9rem'}}>
                     {billingMessage()}
                   </div>
+                </div>
+
+                <div style={{
+                  display:'flex',
+                  flexDirection:'column',
+                  gap:'0.8rem',
+                  marginTop:'1.5rem'
+                }}>
+                  {plan === 'explorer' && (
+                    <button
+                      className="btn-primary"
+                      onClick={() => goToStripe('professional')}
+                      style={{width:'100%'}}
+                    >
+                      Upgrade to Professional
+                    </button>
+                  )}
+
+                  {plan !== 'mastery' && (
+                    <button
+                      className="btn-ghost"
+                      onClick={() => goToStripe('mastery')}
+                      style={{width:'100%'}}
+                    >
+                      Upgrade to Mastery
+                    </button>
+                  )}
+
+                  {!!stripeCustomerId && (
+                    <button
+                      className="btn-ghost"
+                      onClick={openBillingPortal}
+                      disabled={openingPortal}
+                      style={{width:'100%'}}
+                    >
+                      {openingPortal ? 'Opening…' : 'Manage subscription'}
+                    </button>
+                  )}
+
+                  {!stripeCustomerId && (
+                    <div style={{
+                      padding:'0.9rem 1rem',
+                      border:'1px solid var(--border)',
+                      color:'var(--mist)',
+                      fontSize:'0.82rem'
+                    }}>
+                      No billing account connected yet.
+                    </div>
+                  )}
                 </div>
               </div>
             </>
@@ -1225,6 +1309,7 @@ export default function App() {
   planExpiresAt,
   trialEndsAt,
   cancelAtPeriodEnd,
+  stripeCustomerId,
   isPremium,
   loading,
   fetchPlan
@@ -1288,24 +1373,25 @@ useEffect(() => {
       {page==='booking'   && <Booking isPremium={isPremium} />}
       {page==='contact'   && <Contact />}
       {page==='dashboard' && (
-  user ? (
-    <Dashboard
-      user={user}
-      plan={plan}
-      planStatus={planStatus}
-      planExpiresAt={planExpiresAt}
-      trialEndsAt={trialEndsAt}
-      cancelAtPeriodEnd={cancelAtPeriodEnd}
-      progressMap={progressMap}
-      saveProgress={saveProgress}
-      isPremium={isPremium}
-    />
-  ) : (
-    <div style={{paddingTop:'8rem', textAlign:'center', color:'var(--mist)'}}>
-      Please sign in to access your dashboard.
-    </div>
-  )
-)}
+        user ? (
+          <Dashboard
+            user={user}
+            plan={plan}
+            planStatus={planStatus}
+            planExpiresAt={planExpiresAt}
+            trialEndsAt={trialEndsAt}
+            cancelAtPeriodEnd={cancelAtPeriodEnd}
+            stripeCustomerId={stripeCustomerId}
+            progressMap={progressMap}
+            saveProgress={saveProgress}
+            isPremium={isPremium}
+          />
+        ) : (
+          <div style={{paddingTop:'8rem', textAlign:'center', color:'var(--mist)'}}>
+            Please sign in to access your dashboard.
+          </div>
+        )
+      )}
     </>
   )
 }
