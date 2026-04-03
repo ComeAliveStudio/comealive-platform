@@ -919,7 +919,7 @@ function Dashboard({
 
   const billingMessage = () => {
     if (cancelAtPeriodEnd) {
-      return `Your subscription is set to end on ${formatDate(planExpiresAt)}`
+      return `Your subscription will end on ${formatDate(planExpiresAt)}`
     }
 
     if (planStatus === 'trialing') {
@@ -927,11 +927,11 @@ function Dashboard({
     }
 
     if (planStatus === 'past_due') {
-      return "Payment failed — please update your billing method"
+      return "Payment failed - please update your billing method"
     }
 
     if (planStatus === 'canceled') {
-      return "Your subscription has been canceled"
+      return "Your subscription has been cancelled"
     }
 
     if (planStatus === 'active') {
