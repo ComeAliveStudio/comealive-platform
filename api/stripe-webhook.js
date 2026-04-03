@@ -135,6 +135,13 @@ export default async function handler(req, res) {
       const planExpiresAt = getSubscriptionPeriodEnd(subscription)
       const trialEndsAt = toIsoDate(subscription.trial_end)
       const cancelAtPeriodEnd = subscription.cancel_at_period_end || false
+      console.log('SUBSCRIPTION UPDATED DEBUG', {
+        customerId,
+        planStatus,
+        planExpiresAt,
+        trialEndsAt,
+        cancelAtPeriodEnd
+      })
 
       let existing = null
       let findError = null
