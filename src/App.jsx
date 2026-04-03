@@ -1326,9 +1326,9 @@ useEffect(() => {
   const params = new URLSearchParams(window.location.search)
   const pageParam = params.get('page')
 
-  if (pageParam) {
-    setPage(pageParam)
-    window.history.replaceState({}, '', window.location.pathname)
+  if (pageParam && ['home','library','booking','contact','dashboard'].includes(pageParam)) {
+  setPage(pageParam)
+  window.history.replaceState({}, '', window.location.pathname)
   }
 }, [])
 
