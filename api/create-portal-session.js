@@ -39,7 +39,7 @@ export default async function handler(req, res) {
 
     const session = await stripe.billingPortal.sessions.create({
       customer: member.stripe_customer_id,
-           return_url: `${req.headers.origin || process.env.APP_URL || 'https://app.comealive.vision'}/?page=dashboard&section=billing`
+           return_url: `${req.headers.origin || process.env.APP_URL || 'https://app.comealive.vision'}/?page=dashboard`
     })
 
     return res.status(200).json({ url: session.url })
