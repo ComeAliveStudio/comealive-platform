@@ -138,12 +138,14 @@ export default async function handler(req, res) {
       const cancelAtPeriodEnd = subscription.cancel_at_period_end || false
       const isScheduledToCancel = cancelAtPeriodEnd || !!cancelAt
       console.log('SUBSCRIPTION UPDATED DEBUG', {
-        customerId,
-        planStatus,
-        planExpiresAt,
-        trialEndsAt,
-        cancelAtPeriodEnd
-      })
+      customerId,
+      planStatus,
+      planExpiresAt,
+      trialEndsAt,
+      cancelAt,
+      cancelAtPeriodEnd,
+      isScheduledToCancel
+    })
 
       let existing = null
       let findError = null
