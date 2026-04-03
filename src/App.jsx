@@ -950,9 +950,9 @@ function Dashboard({
       }
 
       window.location.href = data.url
-    } catch (err) {
+        } catch (err) {
       console.error(err)
-      alert('Unable to open billing portal')
+      alert(err?.message || 'Unable to open billing portal')
     } finally {
       setOpeningPortal(false)
     }
