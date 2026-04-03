@@ -211,12 +211,13 @@ function useAuth() {
   const [planExpiresAt, setPlanExpiresAt] = useState(null)
   const [trialEndsAt, setTrialEndsAt] = useState(null)
   const [cancelAtPeriodEnd, setCancelAtPeriodEnd] = useState(false)
+  const [stripeCustomerId, setStripeCustomerId] = useState(null)
   const [loading, setLoading] = useState(true)
 
   const fetchPlan = async (email) => {
     const { data, error } = await supabase
       .from("members")
-      .select("plan, plan_status, plan_expires_at, trial_ends_at, cancel_at_period_end")
+      .select("plan, plan_status, plan_expires_at, trial_ends_at, cancel_at_period_end, stripe_customer_id")
       .eq("email", email)
       .single()
 
@@ -226,12 +227,14 @@ function useAuth() {
       setPlanExpiresAt(data.plan_expires_at ?? null)
       setTrialEndsAt(data.trial_ends_at ?? null)
       setCancelAtPeriodEnd(data.cancel_at_period_end ?? false)
+      setStripeCustomerId(data.stripe_customer_id ?? null)
     } else {
       setPlan("explorer")
       setPlanStatus(null)
       setPlanExpiresAt(null)
       setTrialEndsAt(null)
       setCancelAtPeriodEnd(false)
+      setStripeCustomerId(null)
     }
 
     setLoading(false)
@@ -257,6 +260,7 @@ function useAuth() {
         setPlanExpiresAt(null)
         setTrialEndsAt(null)
         setCancelAtPeriodEnd(false)
+        setStripeCustomerId(null)
         setLoading(false)
       }
     })
@@ -275,6 +279,7 @@ function useAuth() {
     planExpiresAt,
     trialEndsAt,
     cancelAtPeriodEnd,
+    stripeCustomerId,
     isPremium,
     loading,
     fetchPlan
