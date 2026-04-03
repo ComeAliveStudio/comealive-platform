@@ -134,7 +134,9 @@ export default async function handler(req, res) {
       const planStatus = subscription.status || null
       const planExpiresAt = getSubscriptionPeriodEnd(subscription)
       const trialEndsAt = toIsoDate(subscription.trial_end)
+      const cancelAt = toIsoDate(subscription.cancel_at)
       const cancelAtPeriodEnd = subscription.cancel_at_period_end || false
+      const isScheduledToCancel = cancelAtPeriodEnd || !!cancelAt
       console.log('SUBSCRIPTION UPDATED DEBUG', {
         customerId,
         planStatus,
