@@ -124,28 +124,65 @@ export default async function handler(req, res) {
       const subscription = event.data.object
       const customerId = subscription.customer
 
-      const amount =
-        subscription.items?.data?.[0]?.price?.unit_amount || null
-
+      const amount = subscription.items?.data?.[0]?.price?.unit_amount || null
       const plan = getPlanFromAmount(amount)
       const planStatus = subscription.status || null
       const planExpiresAt = toIsoDate(subscription.current_period_end)
       const trialEndsAt = toIsoDate(subscription.trial_end)
       const cancelAtPeriodEnd = subscription.cancel_at_period_end || false
 
-      const { data: existing, error: findError } = await supabase
+      let existing = null
+      let findError = null
+
+      // 1) prova prima con stripe_customer_id
+      const customerLookup = await supabase
         .from('members')
         .select('id, email')
         .eq('stripe_customer_id', customerId)
         .maybeSingle()
 
+      existing = customerLookup.data
+      findError = customerLookup.error
+
       if (findError) {
-        console.error('Subscription find error:', findError.message)
+        console.error('Subscription find by customer_id error:', findError.message)
         return res.status(500).json({ error: findError.message })
       }
 
+      // 2) se non trova nulla, recupera email da Stripe e prova con email
       if (!existing) {
-        console.log('No member found for customer:', customerId)
+        const customer = await stripe.customers.retrieve(customerId)
+        const customerEmail =
+          typeof customer === 'object' && !('deleted' in customer)
+            ? customer.email?.trim().toLowerCase()
+            : null
+
+        console.log('Subscription fallback lookup:', {
+          customerId,
+          customerEmail,
+          planStatus,
+          planExpiresAt
+        })
+
+        if (customerEmail) {
+          const emailLookup = await supabase
+            .from('members')
+            .select('id, email')
+            .ilike('email', customerEmail)
+            .maybeSingle()
+
+          existing = emailLookup.data
+          findError = emailLookup.error
+
+          if (findError) {
+            console.error('Subscription find by email error:', findError.message)
+            return res.status(500).json({ error: findError.message })
+          }
+        }
+      }
+
+      if (!existing) {
+        console.log('No member found for subscription customer:', customerId)
         return res.status(200).json({ skipped: 'member not found' })
       }
 
@@ -156,7 +193,8 @@ export default async function handler(req, res) {
           plan_status: planStatus,
           plan_expires_at: planExpiresAt,
           trial_ends_at: trialEndsAt,
-          cancel_at_period_end: cancelAtPeriodEnd
+          cancel_at_period_end: cancelAtPeriodEnd,
+          stripe_customer_id: customerId
         })
         .eq('id', existing.id)
 
@@ -165,7 +203,15 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: updateError.message })
       }
 
-      console.log(`Subscription synced: ${existing.email} -> ${plan} (${planStatus})`)
+      console.log('Subscription synced debug:', {
+        email: existing.email,
+        customerId,
+        plan,
+        planStatus,
+        planExpiresAt,
+        trialEndsAt,
+        cancelAtPeriodEnd
+      })
     }
 
     // SUBSCRIPTION DELETED
@@ -241,41 +287,41 @@ export default async function handler(req, res) {
     }
 
     // PAYMENT SUCCEEDED / RENEWAL
-  if (event.type === 'invoice.paid') {
-  const invoice = event.data.object
-  const customerId = invoice.customer
+    if (event.type === 'invoice.paid') {
+      const invoice = event.data.object
+      const customerId = invoice.customer
 
-  const { data: existing, error: findError } = await supabase
-    .from('members')
-    .select('id, email')
-    .eq('stripe_customer_id', customerId)
-    .maybeSingle()
+      const { data: existing, error: findError } = await supabase
+        .from('members')
+        .select('id, email')
+        .eq('stripe_customer_id', customerId)
+        .maybeSingle()
 
-  if (findError) {
-    console.error('Invoice paid find error:', findError.message)
-    return res.status(500).json({ error: findError.message })
-  }
+      if (findError) {
+        console.error('Invoice paid find error:', findError.message)
+        return res.status(500).json({ error: findError.message })
+      }
 
-  if (!existing) {
-    return res.status(200).json({ skipped: 'member not found' })
-  }
+      if (!existing) {
+        return res.status(200).json({ skipped: 'member not found' })
+      }
 
-  const { error: updateError } = await supabase
-    .from('members')
-    .update({
-      plan_status: 'active'
-    })
-    .eq('id', existing.id)
+      const { error: updateError } = await supabase
+        .from('members')
+        .update({
+          plan_status: 'active'
+        })
+        .eq('id', existing.id)
 
-  if (updateError) {
-    console.error('Invoice paid update error:', updateError.message)
-    return res.status(500).json({ error: updateError.message })
-  }
+      if (updateError) {
+        console.error('Invoice paid update error:', updateError.message)
+        return res.status(500).json({ error: updateError.message })
+      }
 
-  console.log(`Invoice paid: ${existing.email} -> active`)
-}
-    
-return res.status(200).json({ received: true })
+      console.log(`Invoice paid: ${existing.email} -> active`)
+    }
+
+    return res.status(200).json({ received: true })
   } catch (err) {
     console.error('Handler error:', err.message)
     return res.status(500).json({ error: err.message })
