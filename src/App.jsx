@@ -918,22 +918,27 @@ function Dashboard({
   }
 
   const billingMessage = () => {
-    if (planStatus === 'trialing') {
-      return `Trial active until ${formatDate(trialEndsAt)}`
-    }
-    if (planStatus === 'past_due') {
-      return "Payment issue detected. Please update billing."
-    }
-    if (planStatus === 'canceled') {
-      return "Subscription canceled."
-    }
     if (cancelAtPeriodEnd) {
-      return `Access will end on ${formatDate(planExpiresAt)}`
+      return `Your subscription is set to end on ${formatDate(planExpiresAt)}`
     }
+
+    if (planStatus === 'trialing') {
+      return `You're on a trial until ${formatDate(trialEndsAt)}`
+    }
+
+    if (planStatus === 'past_due') {
+      return "Payment failed — please update your billing method"
+    }
+
+    if (planStatus === 'canceled') {
+      return "Your subscription has been canceled"
+    }
+
     if (planStatus === 'active') {
-      return `Renews on ${formatDate(planExpiresAt)}`
+      return `Your plan renews on ${formatDate(planExpiresAt)}`
     }
-    return "No active subscription"
+
+    return "You are currently on the free plan"
   }
 
   const [openingPortal, setOpeningPortal] = useState(false)
