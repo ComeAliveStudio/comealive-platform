@@ -1351,6 +1351,15 @@ useEffect(() => {
     }
   }, [])
 
+   useEffect(() => {
+     const params = new URLSearchParams(window.location.search)
+     const pageParam = params.get('page')
+
+     if (pageParam === 'dashboard' && user?.email) {
+     fetchPlan(user.email)
+    }
+  }, [user?.email, fetchPlan])
+
   const signOut = () => supabase.auth.signOut()
 
   if (loading) return <div style={{minHeight:'100vh', background:'var(--ink)', display:'flex', alignItems:'center', justifyContent:'center', color:'var(--gold)', fontFamily:'Cormorant Garamond', fontSize:'1.4rem'}}>Loading…</div>
