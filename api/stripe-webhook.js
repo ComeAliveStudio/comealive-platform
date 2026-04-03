@@ -19,6 +19,11 @@ function toIsoDate(unixSeconds) {
   return new Date(unixSeconds * 1000).toISOString()
 }
 
+function getSubscriptionPeriodEnd(subscription) {
+  const itemPeriodEnd = subscription?.items?.data?.[0]?.current_period_end
+  return toIsoDate(itemPeriodEnd)
+}
+
 async function getRawBody(req) {
   const chunks = []
 
@@ -127,14 +132,13 @@ export default async function handler(req, res) {
       const amount = subscription.items?.data?.[0]?.price?.unit_amount || null
       const plan = getPlanFromAmount(amount)
       const planStatus = subscription.status || null
-      const planExpiresAt = toIsoDate(subscription.current_period_end)
+      const planExpiresAt = getSubscriptionPeriodEnd(subscription)
       const trialEndsAt = toIsoDate(subscription.trial_end)
       const cancelAtPeriodEnd = subscription.cancel_at_period_end || false
 
       let existing = null
       let findError = null
 
-      // 1) prova prima con stripe_customer_id
       const customerLookup = await supabase
         .from('members')
         .select('id, email')
@@ -149,7 +153,6 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: findError.message })
       }
 
-      // 2) se non trova nulla, recupera email da Stripe e prova con email
       if (!existing) {
         const customer = await stripe.customers.retrieve(customerId)
         const customerEmail =
