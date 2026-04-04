@@ -1345,11 +1345,24 @@ useEffect(() => {
   // Handle Stripe success redirect
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
+
     if (params.get('payment') === 'success') {
-      setPage('dashboard')
-      window.history.replaceState({}, '', '/')
+      const refreshPlan = async () => {
+        setPage('dashboard')
+
+        if (user?.email) {
+          setTimeout(async () => {
+            await fetchPlan(user.email)
+            window.history.replaceState({}, '', '/')
+          }, 1500)
+        } else {
+          window.history.replaceState({}, '', '/')
+        }
+      }
+
+      refreshPlan()
     }
-  }, [])
+  }, [user?.email])
 
    useEffect(() => {
      const params = new URLSearchParams(window.location.search)
