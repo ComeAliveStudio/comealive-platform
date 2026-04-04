@@ -769,7 +769,6 @@ function Booking({ isPremium }) {
     setSending(true)
     const s = sessions[selected]
     if (s.planKey) {
-      const addons = COURSE_ADDONS[s.planKey] || []
       goToStripe(s.planKey)
       return
     }
