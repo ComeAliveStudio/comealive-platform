@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const SUPABASE_URL  = import.meta.env.VITE_SUPABASE_URL
@@ -214,7 +214,8 @@ function useAuth() {
   const [stripeCustomerId, setStripeCustomerId] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  const fetchPlan = async (email) => {
+  // useCallback gives a stable reference — prevents infinite loops in useEffect deps
+  const fetchPlan = useCallback(async (email) => {
     const { data, error } = await supabase
       .from("members")
       .select("plan, plan_status, plan_expires_at, trial_ends_at, cancel_at_period_end, stripe_customer_id")
@@ -238,13 +239,12 @@ function useAuth() {
     }
 
     setLoading(false)
-  }
+  }, [])
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       const currentUser = data.session?.user ?? null
       setUser(currentUser)
-
       if (currentUser?.email) fetchPlan(currentUser.email)
       else setLoading(false)
     })
@@ -252,7 +252,6 @@ function useAuth() {
     const { data: listener } = supabase.auth.onAuthStateChange((_e, session) => {
       const currentUser = session?.user ?? null
       setUser(currentUser)
-
       if (currentUser?.email) fetchPlan(currentUser.email)
       else {
         setPlan("explorer")
@@ -266,11 +265,10 @@ function useAuth() {
     })
 
     return () => listener.subscription.unsubscribe()
-  }, [])
+  }, [fetchPlan])
 
-  const isPremium =
-    (plan === "professional" || plan === "mastery") &&
-    (planStatus === "active" || planStatus === "trialing")
+  // isPremium: check plan field only — planStatus may be null if webhook is slow
+  const isPremium = plan === "professional" || plan === "mastery"
 
   return {
     user,
@@ -1342,35 +1340,32 @@ useEffect(() => {
   }
 }, [])
 
-  // Handle Stripe success redirect
+  // Handle Stripe success redirect — retry fetchPlan up to 8x with 2s intervals
+  // to give the webhook enough time to write to Supabase
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
+    if (params.get('payment') !== 'success') return
+    window.history.replaceState({}, '', '/')
+    setPage('dashboard')
+    if (!user?.email) return
 
-    if (params.get('payment') === 'success') {
-      const refreshPlan = async () => {
-        setPage('dashboard')
-
-        if (user?.email) {
-          setTimeout(async () => {
-            await fetchPlan(user.email)
-            window.history.replaceState({}, '', '/')
-          }, 1500)
-        } else {
-          window.history.replaceState({}, '', '/')
-        }
+    let attempts = 0
+    const maxAttempts = 8
+    const interval = setInterval(async () => {
+      attempts++
+      const { data } = await supabase
+        .from("members")
+        .select("plan")
+        .eq("email", user.email)
+        .single()
+      const newPlan = data?.plan ?? "explorer"
+      if (newPlan !== "explorer" || attempts >= maxAttempts) {
+        clearInterval(interval)
+        if (newPlan !== "explorer") fetchPlan(user.email)
       }
+    }, 2000)
 
-      refreshPlan()
-    }
-  }, [user?.email])
-
-   useEffect(() => {
-     const params = new URLSearchParams(window.location.search)
-     const pageParam = params.get('page')
-
-     if (pageParam === 'dashboard' && user?.email) {
-     fetchPlan(user.email)
-    }
+    return () => clearInterval(interval)
   }, [user?.email, fetchPlan])
 
   const signOut = () => supabase.auth.signOut()
