@@ -855,6 +855,129 @@ function Contact() {
   )
 }
 
+// ── DOWNLOADS SECTION ─────────────────────────────────────────────────────────────────
+function DownloadsSection({ plan }) {
+  const [assets, setAssets] = useState([])
+  const [loadingAssets, setLoadingAssets] = useState(true)
+
+  useEffect(() => {
+    const fetchAssets = async () => {
+      setLoadingAssets(true)
+
+      const { data, error } = await supabase
+        .from('digital_assets')
+        .select('id, title, description, file_url, plan_required, category')
+        .order('created_at', { ascending: false })
+
+      if (!error && data) {
+        setAssets(data)
+      }
+
+      setLoadingAssets(false)
+    }
+
+    fetchAssets()
+  }, [])
+
+  const canAccess = (requiredPlan) => {
+    if (requiredPlan === 'explorer') return true
+    if (requiredPlan === 'professional') return plan === 'professional' || plan === 'mastery'
+    if (requiredPlan === 'mastery') return plan === 'mastery'
+    return false
+  }
+
+  if (loadingAssets) {
+    return (
+      <div style={{padding:'2rem', border:'1px solid var(--border)', color:'var(--mist)'}}>
+        Loading downloads...
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <div className="section-label">Downloads</div>
+
+      {assets.length === 0 ? (
+        <div style={{padding:'2rem', border:'1px solid var(--border)', color:'var(--mist)'}}>
+          No files available yet.
+        </div>
+      ) : (
+        <div style={{display:'grid', gap:'1rem', maxWidth:'820px'}}>
+          {assets.map((asset) => {
+            const locked = !canAccess(asset.plan_required)
+
+            return (
+              <div
+                key={asset.id}
+                style={{
+                  border:'1px solid var(--border)',
+                  background:'var(--slate)',
+                  padding:'1.4rem'
+                }}
+              >
+                <div style={{
+                  display:'flex',
+                  justifyContent:'space-between',
+                  alignItems:'flex-start',
+                  gap:'1rem'
+                }}>
+                  <div>
+                    <div style={{
+                      fontFamily:'Cormorant Garamond',
+                      fontSize:'1.4rem',
+                      color:'var(--parchment)',
+                      marginBottom:'0.35rem'
+                    }}>
+                      {asset.title}
+                    </div>
+
+                    {asset.description && (
+                      <div style={{color:'var(--mist)', fontSize:'0.88rem'}}>
+                        {asset.description}
+                      </div>
+                    )}
+
+                    <div style={{
+                      marginTop:'0.55rem',
+                      fontFamily:'DM Mono',
+                      fontSize:'0.65rem',
+                      color:'var(--gold)',
+                      letterSpacing:'0.08em',
+                      textTransform:'uppercase'
+                    }}>
+                      {asset.plan_required}
+                    </div>
+                  </div>
+
+                  {locked ? (
+                    <button
+                      className="btn-ghost"
+                      onClick={() => window.alert('Upgrade your membership to unlock this download.')}
+                    >
+                      Locked
+                    </button>
+                  ) : (
+                    <a
+                      href={asset.file_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="btn-primary"
+                      style={{textDecoration:'none', display:'inline-flex', alignItems:'center'}}
+                    >
+                      Download
+                    </a>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ── DASHBOARD ─────────────────────────────────────────────────────────────────
 function Dashboard({
   user,
