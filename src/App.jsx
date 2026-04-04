@@ -873,6 +873,7 @@ function Dashboard({
   const navItems = [
     { id:'overview', label:'Overview', icon:'◈' },
     { id:'courses', label:'My Courses', icon:'▤' },
+    { id:'downloads', label:'Downloads', icon:'⇩' },
     { id:'billing', label:'Billing', icon:'◧' },
     { id:'sessions', label:'Sessions', icon:'◷' },
     { id:'profile', label:'Profile', icon:'◯' }
