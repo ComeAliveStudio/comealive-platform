@@ -210,13 +210,21 @@ const PAYMENT_LINKS = {
   mindset:      "https://buy.stripe.com/test_bJe3cv7Ez587djs0TggUM04",
 }
 
-function goToStripe(planKey) {
+function goToStripe(planKey, addons = []) {
   const url = PAYMENT_LINKS[planKey]
+
   if (!url || url.includes("REPLACE")) {
-    alert("Payment link not configured yet. Please add your Stripe Payment Links.")
+    alert("Payment link not configured yet.")
     return
   }
-  window.location.href = url + "?success_url=" + encodeURIComponent(window.location.origin + "/?payment=success") + "&cancel_url=" + encodeURIComponent(window.location.origin)
+
+  const params = new URLSearchParams({
+    addons: addons.join(','),
+    success_url: window.location.origin + "/?payment=success",
+    cancel_url: window.location.origin
+  })
+
+  window.location.href = url + "&" + params.toString()
 }
 
 // ── AUTH ──────────────────────────────────────────────────────────────────────
