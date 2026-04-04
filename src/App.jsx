@@ -191,6 +191,14 @@ const sessions = [
   { id:4, name:"Mindset Coaching",     meta:"60 min · €120",  planKey: 'mindset' },
 ]
 
+const COURSE_ADDONS = {
+  filmmaking: [1],
+  relationship: [3, 5],
+  mindset: [2, 4],
+  professional: [2],
+  mastery: [2]
+}
+
 // ── STRIPE PAYMENT LINKS ─────────────────────────────────────────────────────
 // Replace these with your actual Stripe Payment Links
 // Stripe Dashboard → Products → [product] → "Create payment link"
