@@ -122,6 +122,7 @@ export default async function handler(req, res) {
     }
 
     // SUBSCRIPTION CREATED / UPDATED
+        // SUBSCRIPTION CREATED / UPDATED
     if (
       event.type === 'customer.subscription.created' ||
       event.type === 'customer.subscription.updated'
@@ -132,20 +133,36 @@ export default async function handler(req, res) {
       const amount = subscription.items?.data?.[0]?.price?.unit_amount || null
       const plan = getPlanFromAmount(amount)
       const planStatus = subscription.status || null
-      const planExpiresAt = getSubscriptionPeriodEnd(subscription)
+      const currentPeriodEnd = getSubscriptionPeriodEnd(subscription)
       const trialEndsAt = toIsoDate(subscription.trial_end)
+
+      // Stripe sandbox can surface scheduled cancellation in different fields.
       const cancelAt = toIsoDate(subscription.cancel_at)
-      const cancelAtPeriodEnd = subscription.cancel_at_period_end || false
-      const isScheduledToCancel = cancelAtPeriodEnd || !!cancelAt
+      const canceledAt = toIsoDate(subscription.canceled_at)
+      const cancelAtPeriodEndRaw = subscription.cancel_at_period_end === true
+
+      // Single UI flag for your app
+      const isScheduledToCancel =
+        cancelAtPeriodEndRaw ||
+        !!cancelAt ||
+        !!canceledAt ||
+        subscription?.cancellation_details?.reason === 'cancellation_requested'
+
+      // If cancellation is scheduled, prefer cancel_at as the visible end date.
+      const effectivePlanExpiresAt = cancelAt || currentPeriodEnd
+
       console.log('SUBSCRIPTION UPDATED DEBUG', {
-      customerId,
-      planStatus,
-      planExpiresAt,
-      trialEndsAt,
-      cancelAt,
-      cancelAtPeriodEnd,
-      isScheduledToCancel
-    })
+        customerId,
+        planStatus,
+        currentPeriodEnd,
+        effectivePlanExpiresAt,
+        trialEndsAt,
+        cancelAt,
+        canceledAt,
+        cancelAtPeriodEndRaw,
+        isScheduledToCancel,
+        cancellationReason: subscription?.cancellation_details?.reason || null
+      })
 
       let existing = null
       let findError = null
@@ -170,13 +187,6 @@ export default async function handler(req, res) {
           typeof customer === 'object' && !('deleted' in customer)
             ? customer.email?.trim().toLowerCase()
             : null
-
-        console.log('Subscription fallback lookup:', {
-          customerId,
-          customerEmail,
-          planStatus,
-          planExpiresAt
-        })
 
         if (customerEmail) {
           const emailLookup = await supabase
@@ -203,13 +213,13 @@ export default async function handler(req, res) {
       const { error: updateError } = await supabase
         .from('members')
         .update({
-        plan,
-        plan_status: planStatus,
-        plan_expires_at: cancelAt || planExpiresAt,
-        trial_ends_at: trialEndsAt,
-        cancel_at_period_end: isScheduledToCancel,
-        stripe_customer_id: customerId
-      })
+          plan,
+          plan_status: planStatus,
+          plan_expires_at: effectivePlanExpiresAt,
+          trial_ends_at: trialEndsAt,
+          cancel_at_period_end: isScheduledToCancel,
+          stripe_customer_id: customerId
+        })
         .eq('id', existing.id)
 
       if (updateError) {
@@ -222,12 +232,12 @@ export default async function handler(req, res) {
         customerId,
         plan,
         planStatus,
-        planExpiresAt,
+        effectivePlanExpiresAt,
         trialEndsAt,
-        cancelAtPeriodEnd
+        isScheduledToCancel
       })
     }
-
+    
     // SUBSCRIPTION DELETED
     if (event.type === 'customer.subscription.deleted') {
       const subscription = event.data.object
