@@ -1264,6 +1264,10 @@ function Dashboard({
             </>
           )}
 
+          {activeSection==='downloads' && (
+            <DownloadsSection plan={plan} />
+          )}
+
           {activeSection==='billing' && (
             <>
               <div className="section-label">Billing</div>
