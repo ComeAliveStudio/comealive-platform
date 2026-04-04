@@ -76,6 +76,9 @@ export default async function handler(req, res) {
 
       const normalizedEmail = email.trim().toLowerCase()
       const plan = session.metadata?.plan || getPlanFromAmount(session.amount_total)
+      const addons = session.metadata?.addons
+        ? session.metadata.addons.split(',')
+        : []
       const stripeCustomerId = session.customer || null
 
       const { data: existing, error: findError } = await supabase
