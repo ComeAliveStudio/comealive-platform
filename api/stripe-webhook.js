@@ -92,11 +92,16 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: findError.message })
       }
 
+      const addons = session.metadata?.addons
+        ? session.metadata.addons.split(',')
+        : []
+      
       const payload = {
         email: normalizedEmail,
         plan,
         plan_status: 'active',
         stripe_customer_id: stripeCustomerId
+        addons
       }
 
       let updateError = null
