@@ -8,6 +8,14 @@ const FORMSPREE     = "https://formspree.io/f/xgopawdr"
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 
+const ADDONS = {
+  1: "filmmaking_book",
+  2: "pro_growth_book",
+  3: "relationship_book",
+  4: "mindset_book",
+  5: "advanced_relationship_book"
+}
+
 const PRICES = {
   professional: "price_1TGMXNE72B8UAf4G0JSemNG5",
   mastery:      "price_1TGMaOE72B8UAf4Gjks176aW",
