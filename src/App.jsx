@@ -786,7 +786,7 @@ function Booking({ isPremium }) {
         <h2>Work directly <em>with Angelo</em></h2>
         <div className="booking-grid">
           <div>
-            <p style={{color:'var(--mist)', fontSize:'0.88rem', marginBottom:'1.5rem'}}>The Discovery call is always free. Paid sessions open Stripe checkout directly.</p>
+            <p style={{color:'var(--mist)', fontSize:'0.88rem', marginBottom:'1.5rem'}}>The Discovery call is always free. Paid sessions open Stripe checkout directly. Feel free to contact me first and discuss the best option for you after the free sesssion.</p>
             <div>
               {sessions.map((s,i) => {
                 const locked = s.planKey && !isPremium
