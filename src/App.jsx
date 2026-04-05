@@ -5,6 +5,7 @@ const SUPABASE_URL  = import.meta.env.VITE_SUPABASE_URL
 const SUPABASE_KEY  = import.meta.env.VITE_SUPABASE_ANON_KEY
 const STRIPE_KEY    = import.meta.env.VITE_STRIPE_KEY
 const FORMSPREE     = "https://formspree.io/f/xgopawdr"
+const SPOTIFY_URL = "PASTE_YOUR_SPOTIFY_SHOW_LINK_HERE"
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 
