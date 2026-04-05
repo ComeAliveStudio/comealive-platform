@@ -4,8 +4,6 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const SUPABASE_URL  = import.meta.env.VITE_SUPABASE_URL
 const SUPABASE_KEY  = import.meta.env.VITE_SUPABASE_ANON_KEY
 const STRIPE_KEY    = import.meta.env.VITE_STRIPE_KEY
-const FORMSPREE     = "https://formspree.io/f/xgopawdr"
-const SPOTIFY_URL = "https://player.vimeo.com/video/958087223?h=c3900df67f"
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 
