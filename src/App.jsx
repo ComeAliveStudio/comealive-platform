@@ -532,7 +532,7 @@ function About() {
           <div className="section-label">About</div>
           <h2>My experience ranges from<br /><em>consultancy to film production</em></h2>
           <p>My experience ranges from consultancy to film production and mentoring. Having lived across two continents, I completed my engineering thesis in California before working as sales trainer and consultant in the automotive business.</p>
-          <p>As my career evolved into film production, I moved to Vienna where I worked as film & media producer, participating in 10 consecutive Cannes and Berlin Film Festivals and 6 editions of the World Public Forum in Rhodes — recording more than 150 interviews and 200 hours of conferences.</p>
+          <p>As my career evolved into film production, I moved to Vienna where I worked as film & media producer, participating in 10 consecutive Cannes and Berlin Film Festivals and 6 editions of the World Public Forum in Rhodes - recording more than 150 interviews and 200 hours of conferences.</p>
           <p>In recent years I developed a deep interest in personal growth and relationship psychology, while completing an MBA in Vienna and a coaching certification with MindValley.</p>
           <div className="about-stats">
             <div className="stat"><div className="stat-num">20+</div><div className="stat-label">Years international experience</div></div>
