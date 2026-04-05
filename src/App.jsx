@@ -456,7 +456,7 @@ function Hero({ setPage }) {
       <div className="hero-content">
         <div className="hero-eyebrow">Come Alive Studio · Vienna</div>
         <h1>Make it<br /><em>Happen.</em></h1>
-        <p className="hero-sub">Coaching, courses, and frameworks for independent filmmakers, creative professionals, and anyone ready to stop waiting for permission.</p>
+        <p className="hero-sub">Coaching, courses, and frameworks for independent filmmakers, creative professionals, and anyone ready to stop waiting for permission. Book a free session now for an introductory overview.</p>
         <div className="hero-actions">
           <button className="btn-primary" onClick={() => setPage('library')}>Explore Courses</button>
           <button className="btn-ghost" onClick={() => setPage('booking')}>Book a Session</button>
