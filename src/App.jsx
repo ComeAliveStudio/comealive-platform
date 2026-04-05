@@ -1534,8 +1534,7 @@ useEffect(() => {
           <section style={{background:'var(--slate)', padding:'5rem 3rem', textAlign:'center'}}>
             <div className="section-label" style={{justifyContent:'center'}}>Podcast</div>
             <h2>Make It Happen<br /><em>premieres May 2026</em></h2>
-            <p style={{color:'var(--mist)', maxWidth:460, margin:'0 auto 2rem', fontSize:'0.9rem'}}>The independent filmmaker's survival guide. 
-              New episodes every week on Spotify.</p>
+            <p style={{color:'var(--mist)', maxWidth:460, margin:'0 auto 2rem', fontSize:'0.9rem'}}>The independent filmmaker's survival guide. <br /> New episodes every week on Spotify.</p>
             <button className="btn-primary">Follow on Spotify</button>
           </section>
           <footer>
