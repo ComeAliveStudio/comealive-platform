@@ -1539,7 +1539,13 @@ useEffect(() => {
               The independent filmmaker's survival guide.<br />
               New episodes every week on Spotify.
             </p>
-            <button className="btn-primary">Follow on Spotify</button>
+            <a
+              href={SPOTIFY_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="btn-primary"
+              style={{textDecoration:'none', display:'inline-block'}}
+            >
               Follow on Spotify
             </a>
           </section>
