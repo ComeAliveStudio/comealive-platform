@@ -218,13 +218,10 @@ function goToStripe(planKey, addons = []) {
     return
   }
 
-  const params = new URLSearchParams({
-    addons: addons.join(','),
-    success_url: window.location.origin + "/?payment=success",
-    cancel_url: window.location.origin
-  })
-
-  window.location.href = url + "&" + params.toString()
+  // Stripe Payment Links do not support success_url / cancel_url as query params
+  // Those must be configured directly in the Stripe dashboard per payment link
+  // We just redirect cleanly to the payment link URL
+  window.location.href = url
 }
 
 // ── AUTH ──────────────────────────────────────────────────────────────────────
