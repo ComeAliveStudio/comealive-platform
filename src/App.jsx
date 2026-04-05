@@ -1543,7 +1543,7 @@ useEffect(() => {
           <footer>
             <div className="footer-logo">Come Alive Studio</div>
             <div className="footer-links">
-              {['Library','Booking','Contact'].map(l => <a key={l} onClick={() => setPage(l.toLowerCase())}>{l}</a>)}
+              {['Library','Booking','Contact','Dashboard'].map(l => <a key={l} onClick={() => setPage(l.toLowerCase())}>{l}</a>)}
             </div>
             <div className="footer-copy">© 2026 Come Alive Vision · Vienna</div>
           </footer>
