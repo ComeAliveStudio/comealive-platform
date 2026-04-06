@@ -558,7 +558,8 @@ function Library({ user, isPremium, setPage, progressMap, saveProgress }) {
         <div className="section-label">Course Library</div>
         <h2>Everything in one place.<br /><em>Organised by track.</em></h2>
         <p style={{ color:'var(--mist)', marginBottom:'2.5rem', fontSize:'0.9rem', maxWidth:520 }}>
-          Free episodes available to all. Premium content unlocks with Professional membership.
+          Free episodes available to all. <br />
+          Premium content unlocks with Professional membership.
         </p>
 
         <div className="course-tabs">
