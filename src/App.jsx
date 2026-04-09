@@ -855,7 +855,7 @@ function Contact() {
         <h2>Let's start a <em>conversation</em></h2>
         <div className="contact-grid">
           <div>
-            <p style={{color:'var(--mist)', fontSize:'0.92rem', marginBottom:'2rem'}}>Whether you have a question about the courses, want to collaborate on a film project, or just want to say hello — the door is open.</p>
+            <p style={{color:'var(--mist)', fontSize:'0.92rem', marginBottom:'2rem'}}>Whether you have a question about the courses, want to collaborate on a film project, or just want to say hello, the door is open.</p>
             {[{icon:'✉',label:'Email',value:'office@comealive.vision'},{icon:'🌐',label:'Website',value:'comealive.vision'},{icon:'📍',label:'Based in',value:'Vienna, Austria'},{icon:'📸',label:'Instagram',value:'@comealivestudio'}].map(d => (
               <div className="contact-detail" key={d.label}>
                 <div className="contact-detail-icon">{d.icon}</div>
