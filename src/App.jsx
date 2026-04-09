@@ -60,6 +60,13 @@ const css = `
   .hero-scroll { position: absolute; bottom: 2.5rem; left: 3rem; font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--mist); text-transform: uppercase; display: flex; align-items: center; gap: 0.8rem; }
   .hero-scroll::before { content: ''; display: block; width: 1px; height: 40px; background: var(--mist); animation: scrollPulse 2s ease-in-out infinite; }
   @keyframes scrollPulse { 0%,100%{opacity:0.3}50%{opacity:1} }
+  @keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
+  @keyframes slideUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes shimmerPulse { 0%,100%{opacity:0.3;transform:scaleX(0.92)} 50%{opacity:1;transform:scaleX(1)} }
+  @keyframes badgeSheen { 0%{background-position:100% 0} 50%{background-position:0% 0} 100%{background-position:100% 0} }
+  .loading-screen { min-height:100vh; background:var(--ink); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.6rem; }
+  .loading-wordmark { font-family:'Cormorant Garamond', serif; font-size:1.2rem; letter-spacing:0.28em; color:var(--gold-dim); text-transform:uppercase; }
+  .loading-bar { width:120px; height:1px; background:var(--gold); animation:shimmerPulse 1.8s ease-in-out infinite; transform-origin:center; }
   section { padding: 6rem 3rem; }
   .section-label { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 3rem; display: flex; align-items: center; gap: 1rem; }
   .section-label::after { content: ''; flex: 1; max-width: 60px; height: 1px; background: var(--border); }
@@ -79,7 +86,7 @@ const css = `
   .tier-card { border: 1px solid var(--border); padding: 2.5rem; position: relative; transition: border-color 0.2s; background: var(--slate); }
   .tier-card:hover { border-color: var(--gold); }
   .tier-card.featured { border-color: var(--gold); background: #1e1c18; }
-  .tier-card.featured::before { content: 'Most Popular'; position: absolute; top: -1px; left: 50%; transform: translateX(-50%); background: var(--gold); color: var(--ink); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.3rem 1rem; font-weight: 500; white-space: nowrap; }
+  .tier-card.featured::before { content: 'Most Popular'; position: absolute; top: -1px; left: 50%; transform: translateX(-50%); background: linear-gradient(90deg, var(--gold-dim) 0%, var(--gold) 40%, var(--gold-light) 60%, var(--gold) 100%); background-size: 200% 100%; animation: badgeSheen 3s ease-in-out infinite; color: var(--ink); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.3rem 1rem; font-weight: 500; white-space: nowrap; }
   .tier-name { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--parchment); margin-bottom: 0.5rem; }
   .tier-price { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; color: var(--gold); font-weight: 300; line-height: 1; margin: 1rem 0 0.3rem; }
   .tier-price span { font-size: 1rem; color: var(--mist); }
@@ -98,7 +105,7 @@ const css = `
   .course-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
   .videos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
   .video-card { background: var(--slate); border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: all 0.2s; }
-  .video-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .video-card:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(184,149,90,0.12); }
   .video-thumb { aspect-ratio: 16/9; background: linear-gradient(135deg, #1a1713 0%, #2a2825 100%); display: flex; align-items: center; justify-content: center; position: relative; }
   .video-thumb-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(184,149,90,0.15); border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 1rem; }
   .video-lock { position: absolute; top: 0.8rem; right: 0.8rem; background: rgba(14,13,11,0.8); padding: 0.3rem 0.6rem; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mist); border: 1px solid var(--border); font-family: 'DM Mono', monospace; }
@@ -137,7 +144,9 @@ const css = `
   .dash-card-value { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; color: var(--gold); font-weight: 300; line-height: 1; }
   .dash-card-sub { font-size: 0.75rem; color: var(--mist); margin-top: 0.4rem; }
   .progress-bar { height: 3px; background: var(--border); margin-top: 1rem; border-radius: 2px; }
-  .progress-fill { height: 100%; background: var(--gold); border-radius: 2px; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dim), var(--gold)); border-radius: 2px; transition: width 0.6s ease; box-shadow: 0 0 6px rgba(184,149,90,0.4); }
+  .plan-badge { display:inline-flex; align-items:center; padding:0.3rem 0.8rem; border:1px solid var(--border); font-family:'DM Mono', monospace; font-size:0.62rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--mist); }
+  .plan-badge.active { border-color:var(--gold); color:var(--gold); background:rgba(184,149,90,0.06); }
   footer { padding: 3rem; background: var(--slate); border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
   .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
   .footer-links { display: flex; gap: 2rem; }
@@ -145,8 +154,8 @@ const css = `
   .footer-links a:hover { color: var(--gold); }
   .footer-copy { font-size: 0.7rem; color: var(--mist); }
   .success-msg { background: rgba(184,149,90,0.1); border: 1px solid var(--gold); padding: 2rem; text-align: center; font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--gold); }
-  .modal-overlay { position: fixed; inset: 0; background: rgba(14,13,11,0.92); z-index: 200; display: flex; align-items: center; justify-content: center; }
-  .modal-box { background: var(--slate); border: 1px solid var(--gold); padding: 3rem; max-width: 420px; width: 90%; }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(14,13,11,0.92); z-index: 200; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s ease; }
+  .modal-box { background: var(--slate); border: 1px solid var(--gold); padding: 3rem; max-width: 420px; width: 90%; animation: slideUp 0.25s ease; }
   .max-w { max-width: 1100px; margin: 0 auto; }
   .text-center { text-align: center; }
   @media (max-width: 768px) {
@@ -634,10 +643,9 @@ function Library({ user, isPremium, setPage, progressMap, saveProgress }) {
                         borderRadius:'999px',
                         overflow:'hidden'
                       }}>
-                        <div style={{
+                        <div className="progress-fill" style={{
                           width:`${currentProgress}%`,
-                          height:'100%',
-                          background:'var(--gold)'
+                          height:'100%'
                         }} />
                       </div>
                     </div>
@@ -1126,14 +1134,8 @@ function Dashboard({
         <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.6rem', fontWeight:300}}>
           Welcome back, <span style={{color:'var(--gold)'}}>{user?.email?.split('@')[0]}</span>
         </div>
-        <div style={{
-          fontFamily:'DM Mono',
-          fontSize:'0.65rem',
-          color:'var(--mist)',
-          letterSpacing:'0.1em',
-          textTransform:'uppercase'
-        }}>
-          {plan} Plan · {planStatus || 'free'}
+        <div className={`plan-badge ${planStatus==='active'||planStatus==='trialing'?'active':''}`}>
+          {plan} · {planStatus || 'free'}
         </div>
       </div>
 
@@ -1240,10 +1242,9 @@ function Dashboard({
                               borderRadius:'999px',
                               overflow:'hidden'
                             }}>
-                              <div style={{
+                              <div className="progress-fill" style={{
                                 width:`${currentProgress}%`,
-                                height:'100%',
-                                background:'var(--gold)'
+                                height:'100%'
                               }} />
                             </div>
                           </div>
@@ -1521,7 +1522,15 @@ useEffect(() => {
 
   const signOut = () => supabase.auth.signOut()
 
-  if (loading) return <div style={{minHeight:'100vh', background:'var(--ink)', display:'flex', alignItems:'center', justifyContent:'center', color:'var(--gold)', fontFamily:'Cormorant Garamond', fontSize:'1.4rem'}}>Loading…</div>
+  if (loading) return (
+    <>
+      <style>{css}</style>
+      <div className="loading-screen">
+        <div className="loading-wordmark">Come Alive Studio</div>
+        <div className="loading-bar" />
+      </div>
+    </>
+  )
 
   return (
     <>
