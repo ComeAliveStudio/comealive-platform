@@ -506,7 +506,7 @@ function Tiers({ setPage }) {
               <li>All free + premium episodes</li>
               <li>Monthly group live Q&A</li>
               <li>Downloadable frameworks & PDFs</li>
-              <li>Priority booking — 20% discount</li>
+              <li>Priority booking & 20% discount</li>
               <li>Progress tracking dashboard</li>
             </ul>
             <button className="tier-btn tier-btn-filled" onClick={() => handleJoin('professional')}>Join Professional</button>
