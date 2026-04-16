@@ -26,6 +26,21 @@ const PRICES = {
   mindset:      "price_1TGMggE72B8UAf4GWCzUx3gF",
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// BRAND PALETTE
+//   Deep Teal    #005575  — Pantone 7707 CP  — primary accent
+//   Signal Teal  #4f889f  — lighter accent / hover states
+//   Come Alive Black #1d1d1b — warm near-black body background
+//   Off-white    #e8eff2  — light text on dark (replaces parchment)
+//   Slate        #0e2530  — section alternation (deep teal-tinted dark)
+//   Mist         #7fa5b5  — subdued text (teal-grey)
+//   Border       rgba(0,85,117,0.3)
+// TYPOGRAPHY
+//   Cormorant Garamond — elegant serif, all headings / display
+//   Barlow Condensed   — precise UI body / labels / buttons
+//   DM Mono            — mono utility labels (kept for data cadence)
+// ─────────────────────────────────────────────────────────────────────────────
+
 const css = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Outfit:wght@300;400;500&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
