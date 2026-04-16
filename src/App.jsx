@@ -42,137 +42,173 @@ const PRICES = {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const css = `
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Outfit:wght@300;400;500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Barlow+Condensed:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --ink: #0e0d0b; --parchment: #f5f0e8; --warm-white: #faf8f3;
-    --gold: #b8955a; --gold-light: #d4b07a; --gold-dim: #7a5f35;
-    --slate: #2a2825; --mist: #9e9890; --border: rgba(184,149,90,0.25);
+    --ink:       #1d1d1b;
+    --parchment: #e8eff2;
+    --warm-white:#f0f5f7;
+    --gold:      #005575;
+    --gold-light:#4f889f;
+    --gold-dim:  #003d55;
+    --slate:     #0e2530;
+    --mist:      #7fa5b5;
+    --border:    rgba(0,85,117,0.3);
   }
   html { scroll-behavior: smooth; }
-  body { font-family: 'Outfit', sans-serif; background: var(--ink); color: var(--parchment); font-weight: 300; line-height: 1.6; overflow-x: hidden; }
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 3rem; background: rgba(14,13,11,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
-  .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 400; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; cursor: pointer; }
+  body { font-family: 'Barlow Condensed', sans-serif; background: var(--ink); color: var(--parchment); font-weight: 300; line-height: 1.6; overflow-x: hidden; }
+
+  /* ── NAV ── */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 3rem; background: rgba(29,29,27,0.94); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 400; letter-spacing: 0.15em; color: var(--gold-light); text-transform: uppercase; cursor: pointer; }
   .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-  .nav-links a { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mist); text-decoration: none; transition: color 0.2s; cursor: pointer; }
-  .nav-links a:hover { color: var(--gold); }
-  .nav-cta { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.6rem 1.4rem; border: 1px solid var(--gold); background: transparent; color: var(--gold); cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif; }
-  .nav-cta:hover { background: var(--gold); color: var(--ink); }
+  .nav-links a { font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mist); text-decoration: none; transition: color 0.2s; cursor: pointer; font-family: 'Barlow Condensed', sans-serif; }
+  .nav-links a:hover { color: var(--gold-light); }
+  .nav-cta { font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; padding: 0.6rem 1.4rem; border: 1px solid var(--gold); background: transparent; color: var(--gold-light); cursor: pointer; transition: all 0.2s; font-family: 'Barlow Condensed', sans-serif; }
+  .nav-cta:hover { background: var(--gold); color: var(--warm-white); }
+
+  /* ── HERO ── */
   .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 8rem 3rem 4rem; position: relative; overflow: hidden; }
-  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(184,149,90,0.06) 0%, transparent 70%), linear-gradient(160deg, #0e0d0b 0%, #1a1713 50%, #0e0d0b 100%); }
-  .hero-grain { position: absolute; inset: 0; opacity: 0.035; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(0,85,117,0.08) 0%, transparent 70%), linear-gradient(160deg, #1d1d1b 0%, #0e2530 50%, #1d1d1b 100%); }
+  .hero-grain { position: absolute; inset: 0; opacity: 0.03; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); }
   .hero-content { position: relative; z-index: 1; max-width: 760px; }
-  .hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
+  .hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
   .hero-eyebrow::after { content: ''; display: block; width: 40px; height: 1px; background: var(--gold); }
   .hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(3.2rem, 7vw, 6rem); font-weight: 300; line-height: 1.05; color: var(--parchment); margin-bottom: 1rem; }
-  .hero h1 em { font-style: italic; color: var(--gold); }
-  .hero-sub { font-size: 1rem; color: var(--mist); max-width: 480px; margin-bottom: 2.5rem; font-weight: 300; line-height: 1.7; }
+  .hero h1 em { font-style: italic; color: var(--gold-light); }
+  .hero-sub { font-size: 1.05rem; color: var(--mist); max-width: 480px; margin-bottom: 2.5rem; font-weight: 300; line-height: 1.7; font-family: 'Barlow Condensed', sans-serif; }
   .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
-  .btn-primary { padding: 0.9rem 2.2rem; background: var(--gold); color: var(--ink); border: none; cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; transition: all 0.2s; }
+
+  /* ── BUTTONS ── */
+  .btn-primary { padding: 0.9rem 2.2rem; background: var(--gold); color: var(--warm-white); border: none; cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-size: 0.82rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 500; transition: all 0.2s; }
   .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
-  .btn-ghost { padding: 0.9rem 2.2rem; background: transparent; color: var(--parchment); border: 1px solid rgba(245,240,232,0.3); cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 300; transition: all 0.2s; }
-  .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-ghost { padding: 0.9rem 2.2rem; background: transparent; color: var(--parchment); border: 1px solid rgba(232,239,242,0.25); cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-size: 0.82rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 300; transition: all 0.2s; }
+  .btn-ghost:hover { border-color: var(--gold-light); color: var(--gold-light); }
+
+  /* ── HERO SCROLL INDICATOR ── */
   .hero-scroll { position: absolute; bottom: 2.5rem; left: 3rem; font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--mist); text-transform: uppercase; display: flex; align-items: center; gap: 0.8rem; }
   .hero-scroll::before { content: ''; display: block; width: 1px; height: 40px; background: var(--mist); animation: scrollPulse 2s ease-in-out infinite; }
-  @keyframes scrollPulse { 0%,100%{opacity:0.3}50%{opacity:1} }
-  @keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
-  @keyframes slideUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
-  @keyframes shimmerPulse { 0%,100%{opacity:0.3;transform:scaleX(0.92)} 50%{opacity:1;transform:scaleX(1)} }
-  @keyframes badgeSheen { 0%{background-position:100% 0} 50%{background-position:0% 0} 100%{background-position:100% 0} }
+
+  /* ── ANIMATIONS ── */
+  @keyframes scrollPulse    { 0%,100%{opacity:0.3}50%{opacity:1} }
+  @keyframes fadeIn         { from { opacity:0; } to { opacity:1; } }
+  @keyframes slideUp        { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes shimmerPulse   { 0%,100%{opacity:0.3;transform:scaleX(0.92)} 50%{opacity:1;transform:scaleX(1)} }
+  @keyframes badgeSheen     { 0%{background-position:100% 0} 50%{background-position:0% 0} 100%{background-position:100% 0} }
+
+  /* ── LOADING ── */
   .loading-screen { min-height:100vh; background:var(--ink); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.6rem; }
   .loading-wordmark { font-family:'Cormorant Garamond', serif; font-size:1.2rem; letter-spacing:0.28em; color:var(--gold-dim); text-transform:uppercase; }
   .loading-bar { width:120px; height:1px; background:var(--gold); animation:shimmerPulse 1.8s ease-in-out infinite; transform-origin:center; }
+
+  /* ── SECTIONS ── */
   section { padding: 6rem 3rem; }
-  .section-label { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 3rem; display: flex; align-items: center; gap: 1rem; }
+  .section-label { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 3rem; display: flex; align-items: center; gap: 1rem; }
   .section-label::after { content: ''; flex: 1; max-width: 60px; height: 1px; background: var(--border); }
   h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 300; color: var(--parchment); line-height: 1.15; margin-bottom: 1.2rem; }
-  h2 em { font-style: italic; color: var(--gold); }
+  h2 em { font-style: italic; color: var(--gold-light); }
+
+  /* ── ABOUT ── */
   .about { background: var(--slate); }
   .about-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 5rem; align-items: center; max-width: 1100px; margin: 0 auto; }
   .about-portrait { aspect-ratio: 3/4; background: var(--ink); border: 1px solid var(--border); position: relative; overflow: hidden; }
-  .about-portrait-inner { width: 100%; height: 100%; background: linear-gradient(160deg, #2a2825 0%, #1a1713 100%); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 4rem; color: var(--gold-dim); }
+  .about-portrait-inner { width: 100%; height: 100%; background: linear-gradient(160deg, #0e2530 0%, #1d1d1b 100%); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 4rem; color: var(--gold-dim); }
   .about-portrait::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 40%; background: linear-gradient(transparent, var(--slate)); }
-  .about-text p { color: var(--mist); margin-bottom: 1.2rem; font-size: 0.95rem; }
+  .about-text p { color: var(--mist); margin-bottom: 1.2rem; font-size: 1rem; font-family: 'Barlow Condensed', sans-serif; }
   .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2.5rem; }
   .stat { border-left: 1px solid var(--border); padding-left: 1.2rem; }
-  .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; color: var(--gold); font-weight: 300; line-height: 1; }
-  .stat-label { font-size: 0.72rem; color: var(--mist); letter-spacing: 0.08em; margin-top: 0.3rem; }
+  .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; color: var(--gold-light); font-weight: 300; line-height: 1; }
+  .stat-label { font-size: 0.78rem; color: var(--mist); letter-spacing: 0.08em; margin-top: 0.3rem; font-family: 'Barlow Condensed', sans-serif; }
+
+  /* ── TIERS ── */
   .tiers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1000px; margin: 3rem auto 0; }
   .tier-card { border: 1px solid var(--border); padding: 2.5rem; position: relative; transition: border-color 0.2s; background: var(--slate); }
-  .tier-card:hover { border-color: var(--gold); }
-  .tier-card.featured { border-color: var(--gold); background: #1e1c18; }
-  .tier-card.featured::before { content: 'Most Popular'; position: absolute; top: -1px; left: 50%; transform: translateX(-50%); background: linear-gradient(90deg, var(--gold-dim) 0%, var(--gold) 40%, var(--gold-light) 60%, var(--gold) 100%); background-size: 200% 100%; animation: badgeSheen 3s ease-in-out infinite; color: var(--ink); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.3rem 1rem; font-weight: 500; white-space: nowrap; }
+  .tier-card:hover { border-color: var(--gold-light); }
+  .tier-card.featured { border-color: var(--gold); background: #0a1e2b; }
+  .tier-card.featured::before { content: 'Most Popular'; position: absolute; top: -1px; left: 50%; transform: translateX(-50%); background: linear-gradient(90deg, var(--gold-dim) 0%, var(--gold) 40%, var(--gold-light) 60%, var(--gold) 100%); background-size: 200% 100%; animation: badgeSheen 3s ease-in-out infinite; color: var(--warm-white); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.3rem 1rem; font-weight: 500; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; }
   .tier-name { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--parchment); margin-bottom: 0.5rem; }
-  .tier-price { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; color: var(--gold); font-weight: 300; line-height: 1; margin: 1rem 0 0.3rem; }
-  .tier-price span { font-size: 1rem; color: var(--mist); }
-  .tier-desc { font-size: 0.82rem; color: var(--mist); margin-bottom: 1.8rem; }
+  .tier-price { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; color: var(--gold-light); font-weight: 300; line-height: 1; margin: 1rem 0 0.3rem; }
+  .tier-price span { font-size: 1rem; color: var(--mist); font-family: 'Barlow Condensed', sans-serif; }
+  .tier-desc { font-size: 0.88rem; color: var(--mist); margin-bottom: 1.8rem; font-family: 'Barlow Condensed', sans-serif; }
   .tier-features { list-style: none; margin-bottom: 2rem; }
-  .tier-features li { font-size: 0.83rem; color: var(--mist); padding: 0.5rem 0; border-bottom: 1px solid rgba(184,149,90,0.1); display: flex; align-items: center; gap: 0.6rem; }
-  .tier-features li::before { content: '→'; color: var(--gold); font-size: 0.7rem; }
-  .tier-btn { width: 100%; padding: 0.85rem; font-family: 'Outfit', sans-serif; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+  .tier-features li { font-size: 0.88rem; color: var(--mist); padding: 0.5rem 0; border-bottom: 1px solid rgba(0,85,117,0.15); display: flex; align-items: center; gap: 0.6rem; font-family: 'Barlow Condensed', sans-serif; }
+  .tier-features li::before { content: '→'; color: var(--gold-light); font-size: 0.7rem; }
+  .tier-btn { width: 100%; padding: 0.85rem; font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
   .tier-btn-outline { background: transparent; border: 1px solid var(--border); color: var(--mist); }
-  .tier-btn-outline:hover { border-color: var(--gold); color: var(--gold); }
-  .tier-btn-filled { background: var(--gold); border: 1px solid var(--gold); color: var(--ink); font-weight: 500; }
+  .tier-btn-outline:hover { border-color: var(--gold-light); color: var(--gold-light); }
+  .tier-btn-filled { background: var(--gold); border: 1px solid var(--gold); color: var(--warm-white); font-weight: 500; }
   .tier-btn-filled:hover { background: var(--gold-light); }
+
+  /* ── LIBRARY ── */
   .library { background: var(--ink); }
   .course-tabs { display: flex; gap: 0; margin-bottom: 3rem; border-bottom: 1px solid var(--border); }
-  .course-tab { padding: 0.8rem 1.8rem; background: none; border: none; font-family: 'Outfit', sans-serif; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; color: var(--mist); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s; }
-  .course-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .course-tab { padding: 0.8rem 1.8rem; background: none; border: none; font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; color: var(--mist); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s; }
+  .course-tab.active { color: var(--gold-light); border-bottom-color: var(--gold-light); }
   .videos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
   .video-card { background: var(--slate); border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: all 0.2s; }
-  .video-card:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(184,149,90,0.12); }
-  .video-thumb { aspect-ratio: 16/9; background: linear-gradient(135deg, #1a1713 0%, #2a2825 100%); display: flex; align-items: center; justify-content: center; position: relative; }
-  .video-thumb-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(184,149,90,0.15); border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 1rem; }
-  .video-lock { position: absolute; top: 0.8rem; right: 0.8rem; background: rgba(14,13,11,0.8); padding: 0.3rem 0.6rem; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mist); border: 1px solid var(--border); font-family: 'DM Mono', monospace; }
-  .video-free { background: rgba(184,149,90,0.15); color: var(--gold); border-color: var(--gold-dim); }
+  .video-card:hover { border-color: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,85,117,0.18); }
+  .video-thumb { aspect-ratio: 16/9; background: linear-gradient(135deg, #0e2530 0%, #1d1d1b 100%); display: flex; align-items: center; justify-content: center; position: relative; }
+  .video-thumb-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(0,85,117,0.18); border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; color: var(--gold-light); font-size: 1rem; }
+  .video-lock { position: absolute; top: 0.8rem; right: 0.8rem; background: rgba(29,29,27,0.85); padding: 0.3rem 0.6rem; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mist); border: 1px solid var(--border); font-family: 'DM Mono', monospace; }
+  .video-free { background: rgba(0,85,117,0.18); color: var(--gold-light); border-color: var(--gold-dim); }
   .video-info { padding: 1.2rem; }
   .video-duration { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--mist); letter-spacing: 0.1em; margin-bottom: 0.4rem; }
   .video-title { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--parchment); line-height: 1.3; margin-bottom: 0.4rem; }
-  .video-desc { font-size: 0.78rem; color: var(--mist); }
+  .video-desc { font-size: 0.85rem; color: var(--mist); font-family: 'Barlow Condensed', sans-serif; }
+
+  /* ── BOOKING / CONTACT FORMS ── */
   .booking-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; max-width: 900px; margin: 2rem auto 0; }
   .session-type { border: 1px solid var(--border); padding: 1.5rem; cursor: pointer; transition: all 0.2s; background: var(--ink); margin-bottom: 1rem; }
-  .session-type:hover, .session-type.active { border-color: var(--gold); }
-  .session-type.active { background: rgba(184,149,90,0.05); }
+  .session-type:hover, .session-type.active { border-color: var(--gold-light); }
+  .session-type.active { background: rgba(0,85,117,0.07); }
   .session-name { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--parchment); margin-bottom: 0.3rem; }
-  .session-meta { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--gold); letter-spacing: 0.1em; }
+  .session-meta { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--gold-light); letter-spacing: 0.1em; }
   .booking-form { display: flex; flex-direction: column; gap: 1rem; }
   .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
-  .form-label { font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mist); font-family: 'DM Mono', monospace; }
-  .form-input, .form-select, .form-textarea { background: var(--ink); border: 1px solid var(--border); color: var(--parchment); padding: 0.75rem 1rem; font-family: 'Outfit', sans-serif; font-size: 0.88rem; font-weight: 300; transition: border-color 0.2s; width: 100%; }
-  .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--gold); }
+  .form-label { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mist); font-family: 'DM Mono', monospace; }
+  .form-input, .form-select, .form-textarea { background: var(--ink); border: 1px solid var(--border); color: var(--parchment); padding: 0.75rem 1rem; font-family: 'Barlow Condensed', sans-serif; font-size: 0.95rem; font-weight: 300; transition: border-color 0.2s; width: 100%; }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--gold-light); }
   .form-textarea { resize: vertical; min-height: 100px; }
   .contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 5rem; max-width: 950px; margin: 2rem auto 0; align-items: start; }
   .contact-detail { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
-  .contact-detail-icon { width: 36px; height: 36px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 0.9rem; flex-shrink: 0; }
-  .contact-detail-text { font-size: 0.85rem; color: var(--mist); }
+  .contact-detail-icon { width: 36px; height: 36px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--gold-light); font-size: 0.9rem; flex-shrink: 0; }
+  .contact-detail-text { font-size: 0.92rem; color: var(--mist); font-family: 'Barlow Condensed', sans-serif; }
   .contact-detail-text strong { color: var(--parchment); display: block; font-weight: 400; }
+
+  /* ── DASHBOARD ── */
   .dashboard { min-height: 100vh; background: var(--ink); padding-top: 5rem; }
   .dash-grid { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 5rem); }
   .dash-sidebar { background: var(--slate); border-right: 1px solid var(--border); padding: 2rem 0; }
-  .dash-nav-item { display: flex; align-items: center; gap: 0.8rem; padding: 0.9rem 1.8rem; cursor: pointer; transition: all 0.15s; font-size: 0.8rem; letter-spacing: 0.08em; color: var(--mist); border-left: 2px solid transparent; }
-  .dash-nav-item:hover { color: var(--parchment); background: rgba(184,149,90,0.05); }
-  .dash-nav-item.active { color: var(--gold); border-left-color: var(--gold); background: rgba(184,149,90,0.05); }
+  .dash-nav-item { display: flex; align-items: center; gap: 0.8rem; padding: 0.9rem 1.8rem; cursor: pointer; transition: all 0.15s; font-size: 0.85rem; letter-spacing: 0.08em; color: var(--mist); border-left: 2px solid transparent; font-family: 'Barlow Condensed', sans-serif; }
+  .dash-nav-item:hover { color: var(--parchment); background: rgba(0,85,117,0.07); }
+  .dash-nav-item.active { color: var(--gold-light); border-left-color: var(--gold-light); background: rgba(0,85,117,0.07); }
   .dash-content { padding: 2.5rem 3rem; }
   .dash-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 3rem; }
   .dash-card { background: var(--slate); border: 1px solid var(--border); padding: 1.8rem; }
   .dash-card-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mist); margin-bottom: 0.8rem; }
-  .dash-card-value { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; color: var(--gold); font-weight: 300; line-height: 1; }
-  .dash-card-sub { font-size: 0.75rem; color: var(--mist); margin-top: 0.4rem; }
+  .dash-card-value { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; color: var(--gold-light); font-weight: 300; line-height: 1; }
+  .dash-card-sub { font-size: 0.82rem; color: var(--mist); margin-top: 0.4rem; font-family: 'Barlow Condensed', sans-serif; }
   .progress-bar { height: 3px; background: var(--border); margin-top: 1rem; border-radius: 2px; }
-  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dim), var(--gold)); border-radius: 2px; transition: width 0.6s ease; box-shadow: 0 0 6px rgba(184,149,90,0.4); }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dim), var(--gold-light)); border-radius: 2px; transition: width 0.6s ease; box-shadow: 0 0 6px rgba(0,85,117,0.5); }
   .plan-badge { display:inline-flex; align-items:center; padding:0.3rem 0.8rem; border:1px solid var(--border); font-family:'DM Mono', monospace; font-size:0.62rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--mist); }
-  .plan-badge.active { border-color:var(--gold); color:var(--gold); background:rgba(184,149,90,0.06); }
+  .plan-badge.active { border-color:var(--gold-light); color:var(--gold-light); background:rgba(0,85,117,0.08); }
+
+  /* ── FOOTER ── */
   footer { padding: 3rem; background: var(--slate); border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
-  .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
+  .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-light); }
   .footer-links { display: flex; gap: 2rem; }
-  .footer-links a { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mist); text-decoration: none; transition: color 0.2s; cursor: pointer; }
-  .footer-links a:hover { color: var(--gold); }
-  .footer-copy { font-size: 0.7rem; color: var(--mist); }
-  .success-msg { background: rgba(184,149,90,0.1); border: 1px solid var(--gold); padding: 2rem; text-align: center; font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--gold); }
-  .modal-overlay { position: fixed; inset: 0; background: rgba(14,13,11,0.92); z-index: 200; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s ease; }
+  .footer-links a { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mist); text-decoration: none; transition: color 0.2s; cursor: pointer; font-family: 'Barlow Condensed', sans-serif; }
+  .footer-links a:hover { color: var(--gold-light); }
+  .footer-copy { font-size: 0.75rem; color: var(--mist); font-family: 'Barlow Condensed', sans-serif; }
+
+  /* ── MISC ── */
+  .success-msg { background: rgba(0,85,117,0.12); border: 1px solid var(--gold-light); padding: 2rem; text-align: center; font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--gold-light); }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(29,29,27,0.92); z-index: 200; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s ease; }
   .modal-box { background: var(--slate); border: 1px solid var(--gold); padding: 3rem; max-width: 420px; width: 90%; animation: slideUp 0.25s ease; }
   .max-w { max-width: 1100px; margin: 0 auto; }
   .text-center { text-align: center; }
+
+  /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
     nav { padding: 1rem 1.5rem; } .nav-links { display: none; } section { padding: 4rem 1.5rem; }
     .about-grid, .booking-grid, .contact-grid, .tiers-grid, .dash-grid { grid-template-columns: 1fr; }
@@ -224,9 +260,6 @@ const COURSE_ADDONS = {
   mastery: [2]
 }
 
-// ── STRIPE PAYMENT LINKS ─────────────────────────────────────────────────────
-// Replace these with your actual Stripe Payment Links
-// Stripe Dashboard → Products → [product] → "Create payment link"
 const PAYMENT_LINKS = {
   professional: "https://buy.stripe.com/test_dRmeVd8IDdED5R00TggUM00",
   mastery:      "https://buy.stripe.com/test_6oUbJ15wr8kjenwgSegUM01",
@@ -237,15 +270,10 @@ const PAYMENT_LINKS = {
 
 function goToStripe(planKey, addons = []) {
   const url = PAYMENT_LINKS[planKey]
-
   if (!url || url.includes("REPLACE")) {
     alert("Payment link not configured yet.")
     return
   }
-
-  // Stripe Payment Links do not support success_url / cancel_url as query params
-  // Those must be configured directly in the Stripe dashboard per payment link
-  // We just redirect cleanly to the payment link URL
   window.location.href = url
 }
 
@@ -260,7 +288,6 @@ function useAuth() {
   const [stripeCustomerId, setStripeCustomerId] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  // useCallback gives a stable reference — prevents infinite loops in useEffect deps
   const fetchPlan = useCallback(async (email) => {
     const { data, error } = await supabase
       .from("members")
@@ -283,7 +310,6 @@ function useAuth() {
       setCancelAtPeriodEnd(false)
       setStripeCustomerId(null)
     }
-
     setLoading(false)
   }, [])
 
@@ -313,21 +339,9 @@ function useAuth() {
     return () => listener.subscription.unsubscribe()
   }, [fetchPlan])
 
-  // isPremium: check plan field only — planStatus may be null if webhook is slow
   const isPremium = plan === "professional" || plan === "mastery"
 
-  return {
-    user,
-    plan,
-    planStatus,
-    planExpiresAt,
-    trialEndsAt,
-    cancelAtPeriodEnd,
-    stripeCustomerId,
-    isPremium,
-    loading,
-    fetchPlan
-  }
+  return { user, plan, planStatus, planExpiresAt, trialEndsAt, cancelAtPeriodEnd, stripeCustomerId, isPremium, loading, fetchPlan }
 }
 
 function useVideoProgress(user) {
@@ -335,65 +349,40 @@ function useVideoProgress(user) {
   const [progressLoading, setProgressLoading] = useState(false)
 
   const fetchProgress = async () => {
-    if (!user?.email) {
-      setProgressMap({})
-      return
-    }
-
+    if (!user?.email) { setProgressMap({}); return }
     setProgressLoading(true)
-
     const { data, error } = await supabase
       .from("video_progress")
       .select("video_id, progress, updated_at")
       .eq("user_email", user.email)
-
     if (!error && data) {
       const map = {}
       data.forEach((row) => {
-        map[String(row.video_id)] = {
-          progress: row.progress ?? 0,
-          updated_at: row.updated_at ?? null
-        }
+        map[String(row.video_id)] = { progress: row.progress ?? 0, updated_at: row.updated_at ?? null }
       })
       setProgressMap(map)
     }
-
     setProgressLoading(false)
   }
 
   const saveProgress = async (videoId, progress) => {
     if (!user?.email || !videoId) return
-
     const safeProgress = Math.max(0, Math.min(100, progress))
-
     const { error } = await supabase
       .from("video_progress")
       .upsert(
-        {
-          user_email: user.email,
-          video_id: String(videoId),
-          progress: safeProgress,
-          updated_at: new Date().toISOString()
-        },
-        {
-          onConflict: "user_email,video_id"
-        }
+        { user_email: user.email, video_id: String(videoId), progress: safeProgress, updated_at: new Date().toISOString() },
+        { onConflict: "user_email,video_id" }
       )
-
     if (!error) {
       setProgressMap((prev) => ({
         ...prev,
-        [videoId]: {
-          progress: safeProgress,
-          updated_at: new Date().toISOString()
-        }
+        [videoId]: { progress: safeProgress, updated_at: new Date().toISOString() }
       }))
     }
   }
 
-  useEffect(() => {
-    fetchProgress()
-  }, [user?.email])
+  useEffect(() => { fetchProgress() }, [user?.email])
 
   return { progressMap, progressLoading, fetchProgress, saveProgress }
 }
@@ -422,16 +411,16 @@ function AuthModal({ onClose, defaultMode = "signin" }) {
       <div className="modal-box" onClick={e => e.stopPropagation()}>
         {sent ? (
           <div style={{textAlign:'center'}}>
-            <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.8rem', color:'var(--gold)', marginBottom:'1rem'}}>Check your email.</div>
-            <p style={{color:'var(--mist)', fontSize:'0.88rem'}}>We sent a magic link to <strong style={{color:'var(--parchment)'}}>{email}</strong>. Click it to sign in — no password needed.</p>
+            <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.8rem', color:'var(--gold-light)', marginBottom:'1rem'}}>Check your email.</div>
+            <p style={{color:'var(--mist)', fontSize:'0.9rem', fontFamily:'Barlow Condensed'}}>We sent a magic link to <strong style={{color:'var(--parchment)'}}>{email}</strong>. Click it to sign in — no password needed.</p>
           </div>
         ) : (
           <>
             <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.6rem', color:'var(--parchment)', marginBottom:'0.4rem'}}>
               {mode === "signin" ? "Sign in" : "Create account"}
             </div>
-            <p style={{color:'var(--mist)', fontSize:'0.82rem', marginBottom:'1.5rem'}}>We'll send a magic link to your email — no password needed.</p>
-            {err && <p style={{color:'#e24b4a', fontSize:'0.82rem', marginBottom:'1rem'}}>{err}</p>}
+            <p style={{color:'var(--mist)', fontSize:'0.88rem', marginBottom:'1.5rem', fontFamily:'Barlow Condensed'}}>We'll send a magic link to your email — no password needed.</p>
+            {err && <p style={{color:'#e24b4a', fontSize:'0.88rem', marginBottom:'1rem', fontFamily:'Barlow Condensed'}}>{err}</p>}
             <div className="form-group" style={{marginBottom:'1rem'}}>
               <label className="form-label">Email</label>
               <input className="form-input" type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="your@email.com" onKeyDown={e=>e.key==='Enter'&&handle()} />
@@ -439,7 +428,7 @@ function AuthModal({ onClose, defaultMode = "signin" }) {
             <button className="btn-primary" style={{width:'100%'}} onClick={handle}>
               {mode === "signin" ? "Send magic link" : "Create account"}
             </button>
-            <button onClick={onClose} style={{width:'100%', marginTop:'0.8rem', background:'none', border:'none', color:'var(--mist)', cursor:'pointer', fontSize:'0.78rem'}}>Cancel</button>
+            <button onClick={onClose} style={{width:'100%', marginTop:'0.8rem', background:'none', border:'none', color:'var(--mist)', cursor:'pointer', fontSize:'0.82rem', fontFamily:'Barlow Condensed'}}>Cancel</button>
           </>
         )}
       </div>
@@ -452,19 +441,12 @@ function NavBar({ setPage, user, onSignIn, onSignOut }) {
   return (
     <nav>
       <span className="nav-logo" onClick={() => setPage('home')}>Come Alive Studio</span>
-     <ul className="nav-links">
-  {['Library','Booking','Contact'].map(p => (
-    <li key={p}>
-      <a onClick={() => setPage(p.toLowerCase())}>{p}</a>
-    </li>
-  ))}
-
-  {user && (
-    <li>
-      <a onClick={() => setPage('dashboard')}>Dashboard</a>
-    </li>
-  )}
-</ul>
+      <ul className="nav-links">
+        {['Library','Booking','Contact'].map(p => (
+          <li key={p}><a onClick={() => setPage(p.toLowerCase())}>{p}</a></li>
+        ))}
+        {user && <li><a onClick={() => setPage('dashboard')}>Dashboard</a></li>}
+      </ul>
       {user
         ? <button className="nav-cta" onClick={onSignOut}>Sign Out</button>
         : <button className="nav-cta" onClick={onSignIn}>Member Area</button>
@@ -500,7 +482,7 @@ function Tiers({ setPage }) {
       <div className="max-w text-center">
         <div className="section-label" style={{justifyContent:'center'}}>Membership</div>
         <h2>Choose your <em>level of access</em></h2>
-        <p style={{color:'var(--mist)', maxWidth:480, margin:'0 auto', fontSize:'0.9rem'}}>Free content to start. Premium when you're ready to go deeper.</p>
+        <p style={{color:'var(--mist)', maxWidth:480, margin:'0 auto', fontSize:'1rem', fontFamily:'Barlow Condensed'}}>Free content to start. Premium when you're ready to go deeper.</p>
         <div className="tiers-grid">
           <div className="tier-card">
             <div className="tier-name">Explorer</div>
@@ -519,9 +501,9 @@ function Tiers({ setPage }) {
             <div className="tier-desc">Full library access plus monthly live session.</div>
             <ul className="tier-features">
               <li>All free + premium episodes</li>
-              <li>Monthly group live Q&A</li>
-              <li>Downloadable frameworks & PDFs</li>
-              <li>Priority booking & 20% discount</li>
+              <li>Monthly group live Q&amp;A</li>
+              <li>Downloadable frameworks &amp; PDFs</li>
+              <li>Priority booking &amp; 20% discount</li>
               <li>Progress tracking dashboard</li>
             </ul>
             <button className="tier-btn tier-btn-filled" onClick={() => handleJoin('professional')}>Join Professional</button>
@@ -557,7 +539,7 @@ function About() {
           <div className="section-label">About</div>
           <h2>My experience ranges from<br /><em>consultancy to film production</em></h2>
           <p>My experience ranges from consultancy to film production and mentoring. Having lived across two continents, I completed my engineering thesis in California before working as sales trainer and consultant in the automotive business.</p>
-          <p>As my career evolved into film production, I moved to Vienna where I worked as film & media producer, participating in 10 consecutive Cannes and Berlin Film Festivals and 6 editions of the World Public Forum in Rhodes, recording more than 150 interviews and 200 hours of live conferences.</p>
+          <p>As my career evolved into film production, I moved to Vienna where I worked as film &amp; media producer, participating in 10 consecutive Cannes and Berlin Film Festivals and 6 editions of the World Public Forum in Rhodes, recording more than 150 interviews and 200 hours of live conferences.</p>
           <p>In recent years I developed a deep interest in personal growth and relationship psychology, while finishing an MBA in Entrepreneurship, Innovation and Leadership in Vienna, and a coaching certification with MindValley University.</p>
           <div className="about-stats">
             <div className="stat"><div className="stat-num">20+</div><div className="stat-label">Years international experience</div></div>
@@ -581,18 +563,14 @@ function Library({ user, isPremium, setPage, progressMap, saveProgress }) {
       <div className="max-w" style={{ padding:'0 3rem' }}>
         <div className="section-label">Course Library</div>
         <h2>Everything in one place.<br /><em>Organised by track.</em></h2>
-        <p style={{ color:'var(--mist)', marginBottom:'2.5rem', fontSize:'0.9rem', maxWidth:520 }}>
+        <p style={{ color:'var(--mist)', marginBottom:'2.5rem', fontSize:'1rem', maxWidth:520, fontFamily:'Barlow Condensed' }}>
           Free episodes available to all. <br />
           Premium content unlocks with Professional membership.
         </p>
 
         <div className="course-tabs">
           {Object.keys(courses).map(tab => (
-            <button
-              key={tab}
-              className={`course-tab ${activeTab===tab ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab)}
-            >
+            <button key={tab} className={`course-tab ${activeTab===tab ? 'active' : ''}`} onClick={() => setActiveTab(tab)}>
               {tab}
             </button>
           ))}
@@ -607,32 +585,19 @@ function Library({ user, isPremium, setPage, progressMap, saveProgress }) {
               <div
                 className="video-card"
                 key={v.id}
-                style={{
-                  opacity: locked ? 0.45 : 1,
-                  cursor: locked ? 'default' : 'pointer'
-                }}
+                style={{ opacity: locked ? 0.45 : 1, cursor: locked ? 'default' : 'pointer' }}
                 onClick={() => {
                   if (locked) return
-
                   if (user) {
-                    const nextProgress =
-                      currentProgress >= 100 ? 100 :
-                      currentProgress > 0 ? currentProgress :
-                      10
-
+                    const nextProgress = currentProgress >= 100 ? 100 : currentProgress > 0 ? currentProgress : 10
                     saveProgress(String(v.id), nextProgress)
                   }
-
-                  if (v.url) {
-                    setActiveVideo(v)
-                  }
+                  if (v.url) setActiveVideo(v)
                 }}
               >
                 <div className="video-thumb">
                   <div className="video-thumb-icon">{locked ? '🔒' : '▶'}</div>
-                  <div className={`video-lock ${v.free ? 'video-free' : ''}`}>
-                    {v.free ? 'Free' : 'Premium'}
-                  </div>
+                  <div className={`video-lock ${v.free ? 'video-free' : ''}`}>{v.free ? 'Free' : 'Premium'}</div>
                 </div>
 
                 <div className="video-info">
@@ -642,60 +607,26 @@ function Library({ user, isPremium, setPage, progressMap, saveProgress }) {
 
                   {user && !locked && currentProgress > 0 && (
                     <div style={{ marginTop:'0.8rem' }}>
-                      <div style={{
-                        fontSize:'0.72rem',
-                        color:'var(--gold)',
-                        fontFamily:'DM Mono',
-                        letterSpacing:'0.08em',
-                        marginBottom:'0.35rem'
-                      }}>
+                      <div style={{ fontSize:'0.72rem', color:'var(--gold-light)', fontFamily:'DM Mono', letterSpacing:'0.08em', marginBottom:'0.35rem' }}>
                         Progress: {currentProgress}%
                       </div>
-
-                      <div style={{
-                        height:'4px',
-                        background:'var(--border)',
-                        borderRadius:'999px',
-                        overflow:'hidden'
-                      }}>
-                        <div className="progress-fill" style={{
-                          width:`${currentProgress}%`,
-                          height:'100%'
-                        }} />
+                      <div style={{ height:'4px', background:'var(--border)', borderRadius:'999px', overflow:'hidden' }}>
+                        <div className="progress-fill" style={{ width:`${currentProgress}%`, height:'100%' }} />
                       </div>
                     </div>
                   )}
 
                   {user && !locked && currentProgress < 100 && (
                     <button
-                      style={{
-                        marginTop:'0.8rem',
-                        background:'none',
-                        border:'1px solid var(--border)',
-                        color:'var(--mist)',
-                        padding:'0.45rem 0.75rem',
-                        cursor:'pointer',
-                        fontSize:'0.7rem',
-                        letterSpacing:'0.06em',
-                        textTransform:'uppercase'
-                      }}
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        saveProgress(String(v.id), 100)
-                      }}
+                      style={{ marginTop:'0.8rem', background:'none', border:'1px solid var(--border)', color:'var(--mist)', padding:'0.45rem 0.75rem', cursor:'pointer', fontSize:'0.75rem', letterSpacing:'0.06em', textTransform:'uppercase', fontFamily:'Barlow Condensed' }}
+                      onClick={(e) => { e.stopPropagation(); saveProgress(String(v.id), 100) }}
                     >
                       Mark complete
                     </button>
                   )}
 
                   {user && !locked && currentProgress >= 100 && (
-                    <div style={{
-                      marginTop:'0.8rem',
-                      fontSize:'0.72rem',
-                      color:'var(--gold)',
-                      fontFamily:'DM Mono',
-                      letterSpacing:'0.08em'
-                    }}>
+                    <div style={{ marginTop:'0.8rem', fontSize:'0.75rem', color:'var(--gold-light)', fontFamily:'DM Mono', letterSpacing:'0.08em' }}>
                       ✓ Completed
                     </div>
                   )}
@@ -706,72 +637,33 @@ function Library({ user, isPremium, setPage, progressMap, saveProgress }) {
         </div>
 
         {!isPremium && (
-          <div style={{
-            marginTop:'3rem',
-            padding:'2rem',
-            border:'1px solid var(--border)',
-            textAlign:'center',
-            background:'var(--slate)'
-          }}>
-            <div style={{
-              fontFamily:'Cormorant Garamond',
-              fontSize:'1.4rem',
-              color:'var(--parchment)',
-              marginBottom:'0.8rem'
-            }}>
+          <div style={{ marginTop:'3rem', padding:'2rem', border:'1px solid var(--border)', textAlign:'center', background:'var(--slate)' }}>
+            <div style={{ fontFamily:'Cormorant Garamond', fontSize:'1.4rem', color:'var(--parchment)', marginBottom:'0.8rem' }}>
               Ready to go deeper?
             </div>
-            <p style={{ color:'var(--mist)', fontSize:'0.88rem', marginBottom:'1.5rem' }}>
+            <p style={{ color:'var(--mist)', fontSize:'1rem', marginBottom:'1.5rem', fontFamily:'Barlow Condensed' }}>
               Join Professional to unlock all premium episodes across every track.
             </p>
-            <button className="btn-primary" onClick={() => setPage('home')}>
-              View Membership Plans
-            </button>
+            <button className="btn-primary" onClick={() => setPage('home')}>View Membership Plans</button>
           </div>
         )}
 
         {activeVideo && (
           <div
-            style={{
-              position:'fixed',
-              inset:0,
-              background:'rgba(0,0,0,0.9)',
-              zIndex:999,
-              display:'flex',
-              alignItems:'center',
-              justifyContent:'center',
-              padding:'2rem'
-            }}
+            style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.92)', zIndex:999, display:'flex', alignItems:'center', justifyContent:'center', padding:'2rem' }}
             onClick={() => {
               if (user && activeVideo) {
                 const currentProgress = progressMap?.[String(activeVideo.id)]?.progress ?? 0
-
-                const nextProgress = Math.min(currentProgress + 30, 100)
-
-                saveProgress(String(activeVideo.id), nextProgress)
-               }
-
+                saveProgress(String(activeVideo.id), Math.min(currentProgress + 30, 100))
+              }
               setActiveVideo(null)
             }}
           >
             <div
-              style={{
-                width:'100%',
-                maxWidth:'960px',
-                aspectRatio:'16/9',
-                background:'#000',
-                position:'relative'
-              }}
+              style={{ width:'100%', maxWidth:'960px', aspectRatio:'16/9', background:'#000', position:'relative' }}
               onClick={(e) => e.stopPropagation()}
             >
-              <iframe
-                src={activeVideo.url}
-                width="100%"
-                height="100%"
-                frameBorder="0"
-                allow="autoplay; fullscreen; picture-in-picture"
-                allowFullScreen
-              />
+              <iframe src={activeVideo.url} width="100%" height="100%" frameBorder="0" allow="autoplay; fullscreen; picture-in-picture" allowFullScreen />
             </div>
           </div>
         )}
@@ -790,10 +682,7 @@ function Booking({ isPremium }) {
   const handleSubmit = async () => {
     setSending(true)
     const s = sessions[selected]
-    if (s.planKey) {
-      goToStripe(s.planKey)
-      return
-    }
+    if (s.planKey) { goToStripe(s.planKey); return }
     try {
       await fetch(FORMSPREE, {
         method:'POST',
@@ -811,7 +700,7 @@ function Booking({ isPremium }) {
         <h2>Work directly <em>with Angelo</em></h2>
         <div className="booking-grid">
           <div>
-            <p style={{color:'var(--mist)', fontSize:'0.88rem', marginBottom:'1.5rem'}}>The Discovery call is always free. Contact me first and we can discuss the best option for you during the introductory sesssion. Paid sessions open Stripe checkout directly. </p>
+            <p style={{color:'var(--mist)', fontSize:'1rem', marginBottom:'1.5rem', fontFamily:'Barlow Condensed'}}>The Discovery call is always free. Contact me first and we can discuss the best option for you during the introductory session. Paid sessions open Stripe checkout directly.</p>
             <div>
               {sessions.map((s,i) => {
                 const locked = s.planKey && !isPremium
@@ -822,7 +711,7 @@ function Booking({ isPremium }) {
                     style={{opacity: locked ? 0.4 : 1, cursor: locked ? 'default' : 'pointer'}}>
                     <div className="session-name">{s.name}</div>
                     <div className="session-meta">{s.meta}</div>
-                    {locked && <div style={{fontSize:'0.7rem', color:'var(--gold)', fontFamily:'DM Mono', marginTop:'0.4rem'}}>→ Register to unlock</div>}
+                    {locked && <div style={{fontSize:'0.75rem', color:'var(--gold-light)', fontFamily:'DM Mono', marginTop:'0.4rem'}}>→ Register to unlock</div>}
                   </div>
                 )
               })}
@@ -830,7 +719,7 @@ function Booking({ isPremium }) {
           </div>
           <div>
             {submitted ? (
-              <div className="success-msg">Request received.<br /><span style={{fontSize:'1rem', color:'var(--mist)'}}>Angelo will be in touch within 24 hours.</span></div>
+              <div className="success-msg">Request received.<br /><span style={{fontSize:'1rem', color:'var(--mist)', fontFamily:'Barlow Condensed'}}>Angelo will be in touch within 24 hours.</span></div>
             ) : (
               <div className="booking-form">
                 <div className="form-group"><label className="form-label">Your Name</label><input className="form-input" value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="Full name" /></div>
@@ -870,7 +759,7 @@ function Contact() {
         <h2>Let's start a <em>conversation</em></h2>
         <div className="contact-grid">
           <div>
-            <p style={{color:'var(--mist)', fontSize:'0.92rem', marginBottom:'2rem'}}>Whether you have a question about the courses, want to collaborate on a film project, or just want to say hello, the door is open.</p>
+            <p style={{color:'var(--mist)', fontSize:'1rem', marginBottom:'2rem', fontFamily:'Barlow Condensed'}}>Whether you have a question about the courses, want to collaborate on a film project, or just want to say hello, the door is open.</p>
             {[{icon:'✉',label:'Email',value:'office@comealive.vision'},{icon:'🌐',label:'Website',value:'comealive.vision'},{icon:'📍',label:'Based in',value:'Vienna, Austria'},{icon:'📸',label:'Instagram',value:'@comealivestudio'}].map(d => (
               <div className="contact-detail" key={d.label}>
                 <div className="contact-detail-icon">{d.icon}</div>
@@ -880,7 +769,7 @@ function Contact() {
           </div>
           <div>
             {submitted ? (
-              <div className="success-msg">Message sent.<br /><span style={{fontSize:'1rem', color:'var(--mist)'}}>I'll reply within 48 hours.</span></div>
+              <div className="success-msg">Message sent.<br /><span style={{fontSize:'1rem', color:'var(--mist)', fontFamily:'Barlow Condensed'}}>I'll reply within 48 hours.</span></div>
             ) : (
               <div style={{display:'flex', flexDirection:'column', gap:'1rem'}}>
                 <div className="form-group"><label className="form-label">Name</label><input className="form-input" value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="Your name" /></div>
@@ -909,19 +798,13 @@ function DownloadsSection({ plan }) {
   useEffect(() => {
     const fetchAssets = async () => {
       setLoadingAssets(true)
-
       const { data, error } = await supabase
         .from('digital_assets')
         .select('id, title, description, file_url, plan_required, category')
         .order('created_at', { ascending: false })
-
-      if (!error && data) {
-        setAssets(data)
-      }
-
+      if (!error && data) setAssets(data)
       setLoadingAssets(false)
     }
-
     fetchAssets()
   }, [])
 
@@ -933,86 +816,36 @@ function DownloadsSection({ plan }) {
   }
 
   if (loadingAssets) {
-    return (
-      <div style={{padding:'2rem', border:'1px solid var(--border)', color:'var(--mist)'}}>
-        Loading downloads...
-      </div>
-    )
+    return <div style={{padding:'2rem', border:'1px solid var(--border)', color:'var(--mist)', fontFamily:'Barlow Condensed'}}>Loading downloads...</div>
   }
 
   return (
     <div>
       <div className="section-label">Downloads</div>
-
       {assets.length === 0 ? (
-        <div style={{padding:'2rem', border:'1px solid var(--border)', color:'var(--mist)'}}>
-          No files available yet.
-        </div>
+        <div style={{padding:'2rem', border:'1px solid var(--border)', color:'var(--mist)', fontFamily:'Barlow Condensed'}}>No files available yet.</div>
       ) : (
         <div style={{display:'grid', gap:'1rem', maxWidth:'820px'}}>
           {assets.map((asset) => {
             const locked = !canAccess(asset.plan_required)
-
             return (
-              <div
-                key={asset.id}
-                style={{
-                  border:'1px solid var(--border)',
-                  background:'var(--slate)',
-                  padding:'1.4rem'
-                }}
-              >
-                <div style={{
-                  display:'flex',
-                  justifyContent:'space-between',
-                  alignItems:'flex-start',
-                  gap:'1rem'
-                }}>
+              <div key={asset.id} style={{ border:'1px solid var(--border)', background:'var(--slate)', padding:'1.4rem' }}>
+                <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:'1rem' }}>
                   <div>
-                    <div style={{
-                      fontFamily:'Cormorant Garamond',
-                      fontSize:'1.4rem',
-                      color:'var(--parchment)',
-                      marginBottom:'0.35rem'
-                    }}>
+                    <div style={{ fontFamily:'Cormorant Garamond', fontSize:'1.4rem', color:'var(--parchment)', marginBottom:'0.35rem' }}>
                       {asset.title}
                     </div>
-
                     {asset.description && (
-                      <div style={{color:'var(--mist)', fontSize:'0.88rem'}}>
-                        {asset.description}
-                      </div>
+                      <div style={{color:'var(--mist)', fontSize:'0.95rem', fontFamily:'Barlow Condensed'}}>{asset.description}</div>
                     )}
-
-                    <div style={{
-                      marginTop:'0.55rem',
-                      fontFamily:'DM Mono',
-                      fontSize:'0.65rem',
-                      color:'var(--gold)',
-                      letterSpacing:'0.08em',
-                      textTransform:'uppercase'
-                    }}>
+                    <div style={{ marginTop:'0.55rem', fontFamily:'DM Mono', fontSize:'0.65rem', color:'var(--gold-light)', letterSpacing:'0.08em', textTransform:'uppercase' }}>
                       {asset.plan_required}
                     </div>
                   </div>
-
                   {locked ? (
-                    <button
-                      className="btn-ghost"
-                      onClick={() => window.alert('Upgrade your membership to unlock this download.')}
-                    >
-                      Locked
-                    </button>
+                    <button className="btn-ghost" onClick={() => window.alert('Upgrade your membership to unlock this download.')}>Locked</button>
                   ) : (
-                    <a
-                      href={asset.file_url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="btn-primary"
-                      style={{textDecoration:'none', display:'inline-flex', alignItems:'center'}}
-                    >
-                      Download
-                    </a>
+                    <a href={asset.file_url} target="_blank" rel="noreferrer" className="btn-primary" style={{textDecoration:'none', display:'inline-flex', alignItems:'center'}}>Download</a>
                   )}
                 </div>
               </div>
@@ -1025,44 +858,29 @@ function DownloadsSection({ plan }) {
 }
 
 // ── DASHBOARD ─────────────────────────────────────────────────────────────────
-function Dashboard({
-  user,
-  plan,
-  planStatus,
-  planExpiresAt,
-  trialEndsAt,
-  cancelAtPeriodEnd,
-  stripeCustomerId,
-  progressMap,
-  saveProgress,
-  isPremium
-}) {
+function Dashboard({ user, plan, planStatus, planExpiresAt, trialEndsAt, cancelAtPeriodEnd, stripeCustomerId, progressMap, saveProgress, isPremium }) {
   const [activeSection, setActiveSection] = useState('overview')
 
   const navItems = [
-    { id:'overview', label:'Overview', icon:'◈' },
-    { id:'courses', label:'My Courses', icon:'▤' },
-    { id:'downloads', label:'Downloads', icon:'⇩' },
-    { id:'billing', label:'Billing', icon:'◧' },
-    { id:'sessions', label:'Sessions', icon:'◷' },
-    { id:'profile', label:'Profile', icon:'◯' }
+    { id:'overview',  label:'Overview',    icon:'◈' },
+    { id:'courses',   label:'My Courses',  icon:'▤' },
+    { id:'downloads', label:'Downloads',   icon:'⇩' },
+    { id:'billing',   label:'Billing',     icon:'◧' },
+    { id:'sessions',  label:'Sessions',    icon:'◷' },
+    { id:'profile',   label:'Profile',     icon:'◯' }
   ]
 
   const allVideos = Object.values(courses).flat()
-  const watchedVideos = allVideos.filter(v => (progressMap?.[String(v.id)]?.progress ?? 0) > 0)
+  const watchedVideos   = allVideos.filter(v => (progressMap?.[String(v.id)]?.progress ?? 0) > 0)
   const completedVideos = allVideos.filter(v => (progressMap?.[String(v.id)]?.progress ?? 0) >= 100)
-  const totalProgress = allVideos.length
-    ? Math.round(
-        allVideos.reduce((sum, v) => sum + (progressMap?.[String(v.id)]?.progress ?? 0), 0) / allVideos.length
-      )
+  const totalProgress   = allVideos.length
+    ? Math.round(allVideos.reduce((sum, v) => sum + (progressMap?.[String(v.id)]?.progress ?? 0), 0) / allVideos.length)
     : 0
 
   const trackProgress = Object.fromEntries(
     Object.entries(courses).map(([track, items]) => {
       const pct = items.length
-        ? Math.round(
-            items.reduce((sum, v) => sum + (progressMap?.[String(v.id)]?.progress ?? 0), 0) / items.length
-          )
+        ? Math.round(items.reduce((sum, v) => sum + (progressMap?.[String(v.id)]?.progress ?? 0), 0) / items.length)
         : 0
       return [track, pct]
     })
@@ -1078,34 +896,15 @@ function Dashboard({
 
   const formatDate = (value) => {
     if (!value) return "—"
-    try {
-      return new Date(value).toLocaleDateString()
-    } catch {
-      return "—"
-    }
+    try { return new Date(value).toLocaleDateString() } catch { return "—" }
   }
 
   const billingMessage = () => {
-    if (cancelAtPeriodEnd) {
-      return `Your subscription will end on ${formatDate(planExpiresAt)}`
-    }
-
-    if (planStatus === 'trialing') {
-      return `You're on a trial until ${formatDate(trialEndsAt)}`
-    }
-
-    if (planStatus === 'past_due') {
-      return "Payment failed - please update your billing method"
-    }
-
-    if (planStatus === 'canceled') {
-      return "Your subscription has been cancelled"
-    }
-
-    if (planStatus === 'active') {
-      return `Your plan renews on ${formatDate(planExpiresAt)}`
-    }
-
+    if (cancelAtPeriodEnd) return `Your subscription will end on ${formatDate(planExpiresAt)}`
+    if (planStatus === 'trialing')  return `You're on a trial until ${formatDate(trialEndsAt)}`
+    if (planStatus === 'past_due')  return "Payment failed - please update your billing method"
+    if (planStatus === 'canceled')  return "Your subscription has been cancelled"
+    if (planStatus === 'active')    return `Your plan renews on ${formatDate(planExpiresAt)}`
     return "You are currently on the free plan"
   }
 
@@ -1114,21 +913,11 @@ function Dashboard({
   const openBillingPortal = async () => {
     try {
       setOpeningPortal(true)
-
-      const res = await fetch('/api/create-portal-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: user?.email })
-      })
-
+      const res  = await fetch('/api/create-portal-session', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email: user?.email }) })
       const data = await res.json()
-
-      if (!res.ok || !data?.url) {
-        throw new Error(data?.error || 'Unable to open billing portal')
-      }
-
+      if (!res.ok || !data?.url) throw new Error(data?.error || 'Unable to open billing portal')
       window.location.href = data.url
-        } catch (err) {
+    } catch (err) {
       console.error(err)
       alert(err?.message || 'Unable to open billing portal')
     } finally {
@@ -1138,16 +927,9 @@ function Dashboard({
 
   return (
     <div className="dashboard">
-      <div style={{
-        padding:'2rem 3rem',
-        borderBottom:'1px solid var(--border)',
-        background:'var(--slate)',
-        display:'flex',
-        justifyContent:'space-between',
-        alignItems:'center'
-      }}>
+      <div style={{ padding:'2rem 3rem', borderBottom:'1px solid var(--border)', background:'var(--slate)', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
         <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.6rem', fontWeight:300}}>
-          Welcome back, <span style={{color:'var(--gold)'}}>{user?.email?.split('@')[0]}</span>
+          Welcome back, <span style={{color:'var(--gold-light)'}}>{user?.email?.split('@')[0]}</span>
         </div>
         <div className={`plan-badge ${planStatus==='active'||planStatus==='trialing'?'active':''}`}>
           {plan} · {planStatus || 'free'}
@@ -1157,11 +939,7 @@ function Dashboard({
       <div className="dash-grid">
         <div className="dash-sidebar">
           {navItems.map(item => (
-            <div
-              key={item.id}
-              className={`dash-nav-item ${activeSection===item.id?'active':''}`}
-              onClick={() => setActiveSection(item.id)}
-            >
+            <div key={item.id} className={`dash-nav-item ${activeSection===item.id?'active':''}`} onClick={() => setActiveSection(item.id)}>
               <span>{item.icon}</span> {item.label}
             </div>
           ))}
@@ -1179,18 +957,14 @@ function Dashboard({
                     <div className="progress-fill" style={{width:`${Math.round((watchedVideos.length / allVideos.length) * 100 || 0)}%`}} />
                   </div>
                 </div>
-
                 <div className="dash-card">
                   <div className="dash-card-label">Completed</div>
                   <div className="dash-card-value">{completedVideos.length}</div>
                   <div className="dash-card-sub">videos completed</div>
                 </div>
-
                 <div className="dash-card">
                   <div className="dash-card-label">Membership</div>
-                  <div className="dash-card-value" style={{fontSize:'1.4rem', marginTop:'0.3rem', textTransform:'capitalize'}}>
-                    {plan}
-                  </div>
+                  <div className="dash-card-value" style={{fontSize:'1.4rem', marginTop:'0.3rem', textTransform:'capitalize'}}>{plan}</div>
                   <div className="dash-card-sub">{billingMessage()}</div>
                 </div>
               </div>
@@ -1199,8 +973,8 @@ function Dashboard({
               {Object.entries(trackProgress).map(([track, pct]) => (
                 <div key={track} style={{marginBottom:'1.5rem'}}>
                   <div style={{display:'flex', justifyContent:'space-between', marginBottom:'0.5rem'}}>
-                    <span style={{fontSize:'0.85rem', color:'var(--parchment)'}}>{track}</span>
-                    <span style={{fontFamily:'DM Mono', fontSize:'0.65rem', color:'var(--gold)'}}>{pct}%</span>
+                    <span style={{fontSize:'0.92rem', color:'var(--parchment)', fontFamily:'Barlow Condensed'}}>{track}</span>
+                    <span style={{fontFamily:'DM Mono', fontSize:'0.65rem', color:'var(--gold-light)'}}>{pct}%</span>
                   </div>
                   <div className="progress-bar" style={{height:'4px'}}>
                     <div className="progress-fill" style={{width:`${pct}%`}} />
@@ -1213,84 +987,43 @@ function Dashboard({
           {activeSection==='courses' && (
             <>
               <div className="section-label">Continue Watching</div>
-
               {continueWatching.length === 0 ? (
                 <div style={{padding:'3rem', border:'1px solid var(--border)', textAlign:'center'}}>
-                  <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.4rem', color:'var(--mist)', marginBottom:'0.8rem'}}>
-                    No progress yet
-                  </div>
-                  <p style={{fontSize:'0.82rem', color:'var(--mist)'}}>
-                    Start a course in the Library and your progress will appear here.
-                  </p>
+                  <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.4rem', color:'var(--mist)', marginBottom:'0.8rem'}}>No progress yet</div>
+                  <p style={{fontSize:'1rem', color:'var(--mist)', fontFamily:'Barlow Condensed'}}>Start a course in the Library and your progress will appear here.</p>
                 </div>
               ) : (
                 <div className="videos-grid">
                   {continueWatching.map(v => {
                     const currentProgress = progressMap?.[String(v.id)]?.progress ?? 0
                     const locked = !v.free && !isPremium
-
                     return (
                       <div className="video-card" key={v.id} style={{opacity: locked ? 0.45 : 1}}>
                         <div className="video-thumb">
                           <div className="video-thumb-icon">{locked ? '🔒' : '▶'}</div>
                         </div>
-
                         <div className="video-info">
                           <div className="video-duration">{v.duration}</div>
                           <div className="video-title">{v.title}</div>
                           <div className="video-desc">{v.desc}</div>
-
                           <div style={{ marginTop:'0.8rem' }}>
-                            <div style={{
-                              fontSize:'0.72rem',
-                              color:'var(--gold)',
-                              fontFamily:'DM Mono',
-                              letterSpacing:'0.08em',
-                              marginBottom:'0.35rem'
-                            }}>
+                            <div style={{ fontSize:'0.72rem', color:'var(--gold-light)', fontFamily:'DM Mono', letterSpacing:'0.08em', marginBottom:'0.35rem' }}>
                               Progress: {currentProgress}%
                             </div>
-
-                            <div style={{
-                              height:'4px',
-                              background:'var(--border)',
-                              borderRadius:'999px',
-                              overflow:'hidden'
-                            }}>
-                              <div className="progress-fill" style={{
-                                width:`${currentProgress}%`,
-                                height:'100%'
-                              }} />
+                            <div style={{ height:'4px', background:'var(--border)', borderRadius:'999px', overflow:'hidden' }}>
+                              <div className="progress-fill" style={{ width:`${currentProgress}%`, height:'100%' }} />
                             </div>
                           </div>
-
                           {!locked && currentProgress < 100 && (
                             <button
-                              style={{
-                                marginTop:'0.8rem',
-                                background:'none',
-                                border:'1px solid var(--border)',
-                                color:'var(--mist)',
-                                padding:'0.45rem 0.75rem',
-                                cursor:'pointer',
-                                fontSize:'0.7rem',
-                                letterSpacing:'0.06em',
-                                textTransform:'uppercase'
-                              }}
+                              style={{ marginTop:'0.8rem', background:'none', border:'1px solid var(--border)', color:'var(--mist)', padding:'0.45rem 0.75rem', cursor:'pointer', fontSize:'0.75rem', letterSpacing:'0.06em', textTransform:'uppercase', fontFamily:'Barlow Condensed' }}
                               onClick={() => saveProgress(String(v.id), 100)}
                             >
                               Mark complete
                             </button>
                           )}
-
                           {currentProgress >= 100 && (
-                            <div style={{
-                              marginTop:'0.8rem',
-                              fontSize:'0.72rem',
-                              color:'var(--gold)',
-                              fontFamily:'DM Mono',
-                              letterSpacing:'0.08em'
-                            }}>
+                            <div style={{ marginTop:'0.8rem', fontSize:'0.75rem', color:'var(--gold-light)', fontFamily:'DM Mono', letterSpacing:'0.08em' }}>
                               ✓ Completed
                             </div>
                           )}
@@ -1303,132 +1036,51 @@ function Dashboard({
             </>
           )}
 
-          {activeSection==='downloads' && (
-            <DownloadsSection plan={plan} />
-          )}
+          {activeSection==='downloads' && <DownloadsSection plan={plan} />}
 
           {activeSection==='billing' && (
             <>
               <div className="section-label">Billing</div>
-
-              <div style={{
-                border:'1px solid var(--border)',
-                background:'var(--slate)',
-                padding:'2rem',
-                maxWidth:'720px'
-              }}>
-                <div style={{
-                  fontFamily:'Cormorant Garamond',
-                  fontSize:'1.8rem',
-                  color:'var(--parchment)',
-                  marginBottom:'1.2rem'
-                }}>
-                  Your subscription
-                </div>
-
+              <div style={{ border:'1px solid var(--border)', background:'var(--slate)', padding:'2rem', maxWidth:'720px' }}>
+                <div style={{ fontFamily:'Cormorant Garamond', fontSize:'1.8rem', color:'var(--parchment)', marginBottom:'1.2rem' }}>Your subscription</div>
                 <div style={{display:'grid', gap:'1rem'}}>
-                  <div>
-                    <div className="form-label">Plan</div>
-                    <div style={{color:'var(--parchment)', textTransform:'capitalize'}}>
-                      {plan}
+                  {[['Plan', plan],['Status', planStatus || 'free'],['Renews / Expires', formatDate(planExpiresAt)]].map(([label, val]) => (
+                    <div key={label}>
+                      <div className="form-label">{label}</div>
+                      <div style={{color:'var(--parchment)', textTransform:'capitalize', fontFamily:'Barlow Condensed'}}>{val}</div>
                     </div>
-                  </div>
-
-                  <div>
-                    <div className="form-label">Status</div>
-                    <div style={{color:'var(--parchment)', textTransform:'capitalize'}}>
-                      {planStatus || 'free'}
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="form-label">Renews / Expires</div>
-                    <div style={{color:'var(--parchment)'}}>
-                      {formatDate(planExpiresAt)}
-                    </div>
-                  </div>
-
+                  ))}
                   {trialEndsAt && (
                     <div>
                       <div className="form-label">Trial ends</div>
-                      <div style={{color:'var(--parchment)'}}>
-                        {formatDate(trialEndsAt)}
-                      </div>
+                      <div style={{color:'var(--parchment)', fontFamily:'Barlow Condensed'}}>{formatDate(trialEndsAt)}</div>
                     </div>
                   )}
-
                   <div>
                     <div className="form-label">Cancel at period end</div>
-                    <div style={{color:'var(--parchment)'}}>
-                      {cancelAtPeriodEnd ? 'Yes' : 'No'}
-                    </div>
+                    <div style={{color:'var(--parchment)', fontFamily:'Barlow Condensed'}}>{cancelAtPeriodEnd ? 'Yes' : 'No'}</div>
                   </div>
                 </div>
 
-                <div style={{
-                  marginTop:'1.5rem',
-                  padding:'1rem 1.2rem',
-                  border:'1px solid var(--border)',
-                  background:'var(--ink)'
-                }}>
-                  <div style={{
-                    fontFamily:'DM Mono',
-                    fontSize:'0.72rem',
-                    color:'var(--gold)',
-                    letterSpacing:'0.08em',
-                    marginBottom:'0.4rem'
-                  }}>
-                    Subscription message
-                  </div>
-                  <div style={{color:'var(--mist)', fontSize:'0.9rem'}}>
-                    {billingMessage()}
-                  </div>
+                <div style={{ marginTop:'1.5rem', padding:'1rem 1.2rem', border:'1px solid var(--border)', background:'var(--ink)' }}>
+                  <div style={{ fontFamily:'DM Mono', fontSize:'0.72rem', color:'var(--gold-light)', letterSpacing:'0.08em', marginBottom:'0.4rem' }}>Subscription message</div>
+                  <div style={{color:'var(--mist)', fontSize:'0.95rem', fontFamily:'Barlow Condensed'}}>{billingMessage()}</div>
                 </div>
 
-                <div style={{
-                  display:'flex',
-                  flexDirection:'column',
-                  gap:'0.8rem',
-                  marginTop:'1.5rem'
-                }}>
+                <div style={{ display:'flex', flexDirection:'column', gap:'0.8rem', marginTop:'1.5rem' }}>
                   {plan === 'explorer' && (
-                    <button
-                      className="btn-primary"
-                      onClick={() => goToStripe('professional')}
-                      style={{width:'100%'}}
-                    >
-                      Upgrade to Professional
-                    </button>
+                    <button className="btn-primary" onClick={() => goToStripe('professional')} style={{width:'100%'}}>Upgrade to Professional</button>
                   )}
-
                   {plan !== 'mastery' && (
-                    <button
-                      className="btn-ghost"
-                      onClick={() => goToStripe('mastery')}
-                      style={{width:'100%'}}
-                    >
-                      Upgrade to Mastery
-                    </button>
+                    <button className="btn-ghost" onClick={() => goToStripe('mastery')} style={{width:'100%'}}>Upgrade to Mastery</button>
                   )}
-
                   {!!stripeCustomerId && (
-                    <button
-                      className="btn-ghost"
-                      onClick={openBillingPortal}
-                      disabled={openingPortal}
-                      style={{width:'100%'}}
-                    >
+                    <button className="btn-ghost" onClick={openBillingPortal} disabled={openingPortal} style={{width:'100%'}}>
                       {openingPortal ? 'Opening…' : 'Manage subscription'}
                     </button>
                   )}
-
                   {!stripeCustomerId && (
-                    <div style={{
-                      padding:'0.9rem 1rem',
-                      border:'1px solid var(--border)',
-                      color:'var(--mist)',
-                      fontSize:'0.82rem'
-                    }}>
+                    <div style={{ padding:'0.9rem 1rem', border:'1px solid var(--border)', color:'var(--mist)', fontSize:'0.9rem', fontFamily:'Barlow Condensed' }}>
                       No billing account connected yet.
                     </div>
                   )}
@@ -1439,12 +1091,8 @@ function Dashboard({
 
           {activeSection==='sessions' && (
             <div style={{padding:'3rem', border:'1px solid var(--border)', textAlign:'center'}}>
-              <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.4rem', color:'var(--mist)', marginBottom:'0.8rem'}}>
-                No sessions booked yet
-              </div>
-              <p style={{fontSize:'0.82rem', color:'var(--mist)'}}>
-                Head to the Booking page to schedule your first session.
-              </p>
+              <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.4rem', color:'var(--mist)', marginBottom:'0.8rem'}}>No sessions booked yet</div>
+              <p style={{fontSize:'1rem', color:'var(--mist)', fontFamily:'Barlow Condensed'}}>Head to the Booking page to schedule your first session.</p>
             </div>
           )}
 
@@ -1477,38 +1125,25 @@ function Dashboard({
 export default function App() {
   const [page, setPage]         = useState('home')
   const [showAuth, setShowAuth] = useState(false)
-  const {
-  user,
-  plan,
-  planStatus,
-  planExpiresAt,
-  trialEndsAt,
-  cancelAtPeriodEnd,
-  stripeCustomerId,
-  isPremium,
-  loading,
-  fetchPlan
-} = useAuth()
+  const { user, plan, planStatus, planExpiresAt, trialEndsAt, cancelAtPeriodEnd, stripeCustomerId, isPremium, loading, fetchPlan } = useAuth()
   const { progressMap, saveProgress } = useVideoProgress(user)
 
-useEffect(() => {
-  if (localStorage.getItem('justPaid')) {
-    setPage('dashboard')
-    localStorage.removeItem('justPaid')
-  }
-}, [])
   useEffect(() => {
-  const params = new URLSearchParams(window.location.search)
-  const pageParam = params.get('page')
+    if (localStorage.getItem('justPaid')) {
+      setPage('dashboard')
+      localStorage.removeItem('justPaid')
+    }
+  }, [])
 
-  if (pageParam && ['home','library','booking','contact','dashboard'].includes(pageParam)) {
-  setPage(pageParam)
-  window.history.replaceState({}, '', window.location.pathname)
-  }
-}, [])
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const pageParam = params.get('page')
+    if (pageParam && ['home','library','booking','contact','dashboard'].includes(pageParam)) {
+      setPage(pageParam)
+      window.history.replaceState({}, '', window.location.pathname)
+    }
+  }, [])
 
-  // Handle Stripe success redirect — retry fetchPlan up to 8x with 2s intervals
-  // to give the webhook enough time to write to Supabase
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     if (params.get('payment') !== 'success') return
@@ -1520,11 +1155,7 @@ useEffect(() => {
     const maxAttempts = 8
     const interval = setInterval(async () => {
       attempts++
-      const { data } = await supabase
-        .from("members")
-        .select("plan")
-        .eq("email", user.email)
-        .single()
+      const { data } = await supabase.from("members").select("plan").eq("email", user.email).single()
       const newPlan = data?.plan ?? "explorer"
       if (newPlan !== "explorer" || attempts >= maxAttempts) {
         clearInterval(interval)
@@ -1560,17 +1191,11 @@ useEffect(() => {
           <section style={{background:'var(--slate)', padding:'5rem 3rem', textAlign:'center'}}>
             <div className="section-label" style={{justifyContent:'center'}}>Podcast</div>
             <h2>Make It Happen<br /><em>premieres May 2026</em></h2>
-            <p style={{color:'var(--mist)', maxWidth:460, margin:'0 auto 2rem', fontSize:'0.9rem'}}>
+            <p style={{color:'var(--mist)', maxWidth:460, margin:'0 auto 2rem', fontSize:'1rem', fontFamily:'Barlow Condensed'}}>
               The independent filmmaker's survival guide.<br />
               New episodes every week on Spotify.
             </p>
-            <a
-              href={SPOTIFY_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="btn-primary"
-              style={{textDecoration:'none', display:'inline-block'}}
-            >
+            <a href={SPOTIFY_URL} target="_blank" rel="noreferrer" className="btn-primary" style={{textDecoration:'none', display:'inline-block'}}>
               Follow on Spotify
             </a>
           </section>
@@ -1580,42 +1205,25 @@ useEffect(() => {
               {['Library','Booking','Contact'].map(l => (
                 <a key={l} onClick={() => setPage(l.toLowerCase())}>{l}</a>
               ))}
-
-              {user && (
-                <a onClick={() => setPage('dashboard')}>Dashboard</a>
-              )}
+              {user && <a onClick={() => setPage('dashboard')}>Dashboard</a>}
             </div>
             <div className="footer-copy">© 2026 Come Alive Vision · Vienna</div>
           </footer>
         </>
       )}
-      {page==='library' && (
-        <Library
-          user={user}
-          isPremium={isPremium}
-          setPage={setPage}
-          progressMap={progressMap}
-          saveProgress={saveProgress}
-        />
-      )}
+      {page==='library'   && <Library user={user} isPremium={isPremium} setPage={setPage} progressMap={progressMap} saveProgress={saveProgress} />}
       {page==='booking'   && <Booking isPremium={isPremium} />}
       {page==='contact'   && <Contact />}
       {page==='dashboard' && (
         user ? (
           <Dashboard
-            user={user}
-            plan={plan}
-            planStatus={planStatus}
-            planExpiresAt={planExpiresAt}
-            trialEndsAt={trialEndsAt}
-            cancelAtPeriodEnd={cancelAtPeriodEnd}
-            stripeCustomerId={stripeCustomerId}
-            progressMap={progressMap}
-            saveProgress={saveProgress}
-            isPremium={isPremium}
+            user={user} plan={plan} planStatus={planStatus} planExpiresAt={planExpiresAt}
+            trialEndsAt={trialEndsAt} cancelAtPeriodEnd={cancelAtPeriodEnd}
+            stripeCustomerId={stripeCustomerId} progressMap={progressMap}
+            saveProgress={saveProgress} isPremium={isPremium}
           />
         ) : (
-          <div style={{paddingTop:'8rem', textAlign:'center', color:'var(--mist)'}}>
+          <div style={{paddingTop:'8rem', textAlign:'center', color:'var(--mist)', fontFamily:'Barlow Condensed'}}>
             Please sign in to access your dashboard.
           </div>
         )
