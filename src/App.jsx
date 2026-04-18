@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import * as React from "react";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const SUPABASE_URL  = import.meta.env.VITE_SUPABASE_URL
@@ -158,10 +159,47 @@ const css = `
   .modal-box { background: var(--slate); border: 1px solid var(--gold); padding: 3rem; max-width: 420px; width: 90%; animation: slideUp 0.25s ease; }
   .max-w { max-width: 1100px; margin: 0 auto; }
   .text-center { text-align: center; }
+  /* ── VIDEO HERO ── */
+  .hero-video-wrap { position: absolute; inset: 0; overflow: hidden; z-index: 0; }
+  .hero-video-wrap video { width: 100%; height: 100%; object-fit: cover; opacity: 0.55; }
+  .hero-video-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(29,29,27,0.82) 0%, rgba(29,29,27,0.45) 55%, rgba(29,29,27,0.25) 100%), linear-gradient(to top, rgba(29,29,27,0.7) 0%, transparent 40%); }
+  /* CSS-only animated scene for browsers where video is blocked */
+  .hero-scene { position: absolute; inset: 0; overflow: hidden; background: linear-gradient(180deg, #0a1a28 0%, #0e2530 35%, #1d2e20 65%, #0d1f18 100%); }
+  .hero-scene-sky { position: absolute; top: 0; left: 0; right: 0; height: 42%; background: linear-gradient(180deg, #050e18 0%, #0a2035 50%, #12304a 100%); }
+  .hero-scene-ocean { position: absolute; bottom: 0; left: 0; right: 0; height: 28%; background: linear-gradient(180deg, #0d2a3e 0%, #06182a 100%); }
+  .hero-scene-ocean::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(79,136,159,0.04) 3px, rgba(79,136,159,0.04) 4px); animation: oceanRipple 8s linear infinite; }
+  .hero-scene-road { position: absolute; bottom: 26%; left: 50%; transform: translateX(-50%); width: 0; border-left: 1px solid rgba(79,136,159,0.15); height: 50%; background: linear-gradient(to top, rgba(30,45,35,0.6), transparent); }
+  /* Buildings */
+  .hero-scene-city { position: absolute; bottom: 26%; left: 0; right: 0; display: flex; align-items: flex-end; justify-content: center; gap: 2px; padding: 0 8%; animation: cityPan 18s linear infinite; }
+  .bld { background: rgba(10,20,30,0.9); border-top: 1px solid rgba(0,85,117,0.2); flex-shrink: 0; }
+  .bld::before { content: ''; display: block; width: 100%; height: 100%; background: repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(79,136,159,0.04) 8px, rgba(79,136,159,0.04) 9px), repeating-linear-gradient(90deg, transparent, transparent 12px, rgba(79,136,159,0.03) 12px, rgba(79,136,159,0.03) 13px); }
+  /* Stars */
+  .hero-scene-stars { position: absolute; top: 0; left: 0; right: 0; height: 45%; overflow: hidden; }
+  .star { position: absolute; width: 1px; height: 1px; background: rgba(232,239,242,0.7); border-radius: 50%; animation: starTwinkle 3s ease-in-out infinite; }
+  /* Horizon glow */
+  .hero-scene-horizon { position: absolute; bottom: 26%; left: 0; right: 0; height: 3px; background: linear-gradient(to right, transparent, rgba(0,85,117,0.4) 20%, rgba(79,136,159,0.6) 50%, rgba(0,85,117,0.4) 80%, transparent); filter: blur(1px); }
+  @keyframes cityPan { 0%{transform:translateX(8%)} 100%{transform:translateX(-8%)} }
+  @keyframes oceanRipple { 0%{background-position:0 0} 100%{background-position:0 20px} }
+  @keyframes starTwinkle { 0%,100%{opacity:0.3} 50%{opacity:1} }
+
+  /* ── CONCIERGE SECTION ── */
+  .concierge-section { background: var(--slate); padding: 5rem 3rem; }
+  .concierge-inner { max-width: 900px; margin: 0 auto; }
+  .concierge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+  .concierge-intro p { color: var(--mist); font-size: 0.95rem; line-height: 1.75; margin-bottom: 1.2rem; }
+  .concierge-chips { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.8rem; }
+  .chip { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.55rem 1rem; border: 1px solid var(--border); background: transparent; color: var(--mist); font-family: 'Barlow Condensed', sans-serif; font-size: 0.78rem; letter-spacing: 0.08em; cursor: pointer; transition: all 0.22s; text-align: left; }
+  .chip::before { content: '→'; color: var(--gold-light); font-size: 0.7rem; flex-shrink: 0; }
+  .chip:hover { border-color: var(--gold-light); color: var(--gold-light); background: rgba(0,85,117,0.06); }
+  .widget-frame-wrap { width: 100%; }
+  .widget-frame { width: 100%; height: 520px; border: 1px solid var(--border); background: var(--ink); }
+  .form-frame { width: 100%; height: 560px; border: none; background: transparent; }
+
   @media (max-width: 768px) {
     nav { padding: 1rem 1.5rem; } .nav-links { display: none; } section { padding: 4rem 1.5rem; }
-    .about-grid, .booking-grid, .contact-grid, .tiers-grid, .dash-grid { grid-template-columns: 1fr; }
+    .about-grid, .booking-grid, .contact-grid, .tiers-grid, .dash-grid, .concierge-grid { grid-template-columns: 1fr; }
     .hero { padding: 6rem 1.5rem 3rem; } .dash-cards { grid-template-columns: 1fr; }
+    .widget-frame { height: 460px; }
   }
 `
 
@@ -459,19 +497,100 @@ function NavBar({ setPage, user, onSignIn, onSignOut }) {
 }
 
 // ── HERO ──────────────────────────────────────────────────────────────────────
+// Animated city-to-ocean scene
+// When you have the final video from HeyGen or a stock source, replace the
+// <HeroScene /> with:
+//   <div className="hero-video-wrap">
+//     <video autoPlay muted loop playsInline src="YOUR_VIDEO_URL.mp4" />
+//     <div className="hero-video-overlay" />
+//   </div>
+
+function HeroScene() {
+  // Generate deterministic stars
+  const stars = Array.from({ length: 55 }, (_, i) => ({
+    left: ((i * 137.508) % 100).toFixed(2),
+    top:  ((i * 79.37)  % 100).toFixed(2),
+    delay: ((i * 0.41)  % 3).toFixed(2),
+    size: i % 7 === 0 ? 2 : 1,
+  }))
+
+  // Buildings: [width, height] in px  — vary to create a realistic SF skyline silhouette
+  const buildings = [
+    [28,90],[18,60],[36,130],[24,80],[44,160],[20,55],[32,110],
+    [26,85],[50,180],[22,70],[38,140],[16,50],[42,155],[28,95],
+    [34,120],[20,65],[46,170],[24,75],[30,100],[18,58],[40,145],
+    [26,88],[36,125],[22,68],[48,165],[20,60],[32,105],[28,92],
+    [44,150],[18,52],[38,135],[24,78],[30,98],[46,158],[22,72],
+  ]
+
+  return (
+    <div className="hero-scene" aria-hidden="true">
+      {/* Sky gradient */}
+      <div className="hero-scene-sky" />
+
+      {/* Stars */}
+      <div className="hero-scene-stars">
+        {stars.map((s, i) => (
+          <div
+            key={i}
+            className="star"
+            style={{
+              left: `${s.left}%`,
+              top: `${s.top}%`,
+              width: `${s.size}px`,
+              height: `${s.size}px`,
+              animationDelay: `${s.delay}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Slow-panning city silhouette */}
+      <div className="hero-scene-city">
+        {buildings.map(([w, h], i) => (
+          <div
+            key={i}
+            className="bld"
+            style={{ width: `${w}px`, height: `${h}px` }}
+          />
+        ))}
+      </div>
+
+      {/* Horizon teal glow */}
+      <div className="hero-scene-horizon" />
+
+      {/* Ocean */}
+      <div className="hero-scene-ocean" />
+
+      {/* Vignette overlay so text stays legible */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: 'linear-gradient(to right, rgba(29,29,27,0.78) 0%, rgba(29,29,27,0.38) 55%, rgba(29,29,27,0.18) 100%), linear-gradient(to top, rgba(29,29,27,0.65) 0%, transparent 35%)',
+      }} />
+    </div>
+  )
+}
+
 function Hero({ setPage }) {
   return (
-    <section className="hero">
-      <div className="hero-bg" /><div className="hero-grain" />
+    <section className="hero" style={{ minHeight: '100vh', padding: '8rem 3rem 4rem' }}>
+      <HeroScene />
+      <div className="hero-grain" />
+
       <div className="hero-content">
         <div className="hero-eyebrow">Come Alive Studio · Vienna</div>
         <h1>Make it<br /><em>Happen.</em></h1>
-        <p className="hero-sub">Coaching, courses, and frameworks for independent filmmakers, creative professionals, and anyone ready to stop waiting for permission. Book a free session now for an introductory overview.</p>
+        <p className="hero-sub">
+          Coaching, courses, and frameworks for independent filmmakers, creative professionals,
+          and anyone ready to stop waiting for permission. Book a free session now for an
+          introductory overview.
+        </p>
         <div className="hero-actions">
           <button className="btn-primary" onClick={() => setPage('library')}>Explore Courses</button>
           <button className="btn-ghost" onClick={() => setPage('booking')}>Book a Session</button>
         </div>
       </div>
+
       <div className="hero-scroll">Scroll</div>
     </section>
   )
@@ -556,7 +675,78 @@ function About() {
   )
 }
 
-// ── LIBRARY ───────────────────────────────────────────────────────────────────
+// ── CONCIERGE SECTION ─────────────────────────────────────────────────────────
+const CONCIERGE_CHIPS = [
+  "What does Come Alive Studio do",
+  "What subscription options do I have",
+  "Tell me about your one-on-one program",
+  "I am looking for a film team / live streaming",
+]
+
+function ConciergeSection() {
+  const iframeRef = React.useRef(null)
+
+  const sendChip = (text) => {
+    // Post the chip text into the PaymeGPT widget via postMessage
+    if (iframeRef.current) {
+      iframeRef.current.contentWindow?.postMessage(
+        { type: 'SET_INPUT', text },
+        'https://paymegpt.com'
+      )
+    }
+  }
+
+  return (
+    <section className="concierge-section" id="concierge">
+      <div className="concierge-inner">
+        <div className="section-label">Support</div>
+        <div className="concierge-grid">
+
+          {/* Left : intro + chips */}
+          <div className="concierge-intro">
+            <h2>Welcome to<br /><em>Come Alive Studio.</em></h2>
+            <p>
+              Beyond offering coaching in the areas of indie film production, mindset strategy
+              and relationships, we also support organising real film productions,
+              live streaming and corporate videos.
+            </p>
+            <p>
+              Contact us below for additional information and support, or use our
+              Concierge to get instant answers.
+            </p>
+
+            <div className="concierge-chips">
+              {CONCIERGE_CHIPS.map((chip) => (
+                <button
+                  key={chip}
+                  className="chip"
+                  onClick={() => sendChip(chip)}
+                >
+                  {chip}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Right : PaymeGPT widget */}
+          <div className="widget-frame-wrap">
+            <div className="section-label" style={{ marginBottom: '1rem' }}>
+              Come Alive Studio Concierge
+            </div>
+            <iframe
+              ref={iframeRef}
+              className="widget-frame"
+              src="https://paymegpt.com/widgets/85200112?c=GtzCCJWbJ"
+              title="Come Alive Studio Concierge"
+              allow="microphone"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
 function Library({ user, isPremium, setPage, progressMap, saveProgress }) {
   const [activeTab, setActiveTab] = useState("Filmmaking")
   const [activeVideo, setActiveVideo] = useState(null)
@@ -836,49 +1026,78 @@ function Booking({ isPremium }) {
 
 // ── CONTACT ───────────────────────────────────────────────────────────────────
 function Contact() {
-  const [submitted, setSubmitted] = useState(false)
-  const [sending, setSending]     = useState(false)
-  const [form, setForm] = useState({ name:'', email:'', subject:'Filmmaking question', message:'' })
-
-  const handleSubmit = async () => {
-    setSending(true)
-    try {
-      await fetch(FORMSPREE, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ ...form, _subject: 'Contact: ' + form.subject }) })
-      setSubmitted(true)
-    } catch(e) { setSending(false) }
-  }
-
   return (
     <div style={{background:'var(--ink)', paddingTop:'6rem', minHeight:'100vh'}}>
       <div className="max-w" style={{padding:'4rem 3rem'}}>
         <div className="section-label">Contact</div>
         <h2>Let's start a <em>conversation</em></h2>
         <div className="contact-grid">
+
+          {/* Left: contact details */}
           <div>
-            <p style={{color:'var(--mist)', fontSize:'0.92rem', marginBottom:'2rem'}}>Whether you have a question about the courses, want to collaborate on a film project, or just want to say hello, the door is open.</p>
-            {[{icon:'✉',label:'Email',value:'office@comealive.vision'},{icon:'🌐',label:'Website',value:'comealive.vision'},{icon:'📍',label:'Based in',value:'Vienna, Austria'},{icon:'📸',label:'Instagram',value:'@comealivestudio'}].map(d => (
+            <p style={{color:'var(--mist)', fontSize:'0.92rem', marginBottom:'2rem', lineHeight:'1.75'}}>
+              Whether you have a question about the courses, want to collaborate on a film project,
+              need a production team, or just want to say hello, the door is open.
+            </p>
+            {[
+              {icon:'✉', label:'Email',     value:'office@comealive.vision'},
+              {icon:'🌐', label:'Website',   value:'comealive.vision'},
+              {icon:'📍', label:'Based in',  value:'Vienna, Austria'},
+              {icon:'📸', label:'Instagram', value:'@comealivestudio'},
+            ].map(d => (
               <div className="contact-detail" key={d.label}>
                 <div className="contact-detail-icon">{d.icon}</div>
-                <div className="contact-detail-text"><strong>{d.label}</strong>{d.value}</div>
+                <div className="contact-detail-text">
+                  <strong>{d.label}</strong>{d.value}
+                </div>
               </div>
             ))}
-          </div>
-          <div>
-            {submitted ? (
-              <div className="success-msg">Message sent.<br /><span style={{fontSize:'1rem', color:'var(--mist)'}}>I'll reply within 48 hours.</span></div>
-            ) : (
-              <div style={{display:'flex', flexDirection:'column', gap:'1rem'}}>
-                <div className="form-group"><label className="form-label">Name</label><input className="form-input" value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="Your name" /></div>
-                <div className="form-group"><label className="form-label">Email</label><input className="form-input" type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} placeholder="your@email.com" /></div>
-                <div className="form-group"><label className="form-label">Subject</label>
-                  <select className="form-select" value={form.subject} onChange={e=>setForm({...form,subject:e.target.value})}>
-                    <option>Filmmaking question</option><option>Coaching enquiry</option><option>Collaboration proposal</option><option>Something else</option>
-                  </select>
-                </div>
-                <div className="form-group"><label className="form-label">Message</label><textarea className="form-textarea" value={form.message} onChange={e=>setForm({...form,message:e.target.value})} placeholder="What's on your mind?" /></div>
-                <button className="btn-primary" onClick={handleSubmit} disabled={sending}>{sending?'Sending…':'Send Message'}</button>
+
+            {/* Quick chips linking to concierge */}
+            <div style={{marginTop:'2rem'}}>
+              <div className="section-label" style={{marginBottom:'0.8rem'}}>Quick enquiry</div>
+              <div style={{display:'flex', flexWrap:'wrap', gap:'0.5rem'}}>
+                {[
+                  "Film production enquiry",
+                  "Live streaming support",
+                  "Corporate video",
+                  "Coaching session",
+                ].map(chip => (
+                  <span
+                    key={chip}
+                    style={{
+                      display:'inline-flex', alignItems:'center', gap:'0.4rem',
+                      padding:'0.45rem 0.9rem',
+                      border:'1px solid var(--border)',
+                      fontSize:'0.75rem', letterSpacing:'0.06em',
+                      color:'var(--mist)', cursor:'default',
+                    }}
+                  >
+                    → {chip}
+                  </span>
+                ))}
               </div>
-            )}
+            </div>
+          </div>
+
+          {/* Right: PaymeGPT contact form embed */}
+          <div>
+            <div className="section-label" style={{marginBottom:'1rem'}}>
+              Come Alive Studio Contact Form
+            </div>
+            <iframe
+              className="form-frame"
+              src="https://paymegpt.com/forms/fudm8x0e"
+              title="Come Alive Studio Contact Form"
+              allow="forms"
+              loading="lazy"
+              style={{
+                width: '100%',
+                height: '580px',
+                border: '1px solid var(--border)',
+                background: 'transparent',
+              }}
+            />
           </div>
         </div>
       </div>
@@ -1542,6 +1761,7 @@ useEffect(() => {
           <Hero setPage={setPage} />
           <Tiers setPage={setPage} />
           <About />
+          <ConciergeSection />
           <section style={{background:'var(--slate)', padding:'5rem 3rem', textAlign:'center'}}>
             <div className="section-label" style={{justifyContent:'center'}}>Podcast</div>
             <h2>Make It Happen<br /><em>premieres May 2026</em></h2>
