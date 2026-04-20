@@ -110,7 +110,7 @@ const css = `
   .video-thumb { aspect-ratio: 16/9; background: linear-gradient(135deg, #1a1713 0%, #2a2825 100%); display: flex; align-items: center; justify-content: center; position: relative; }
   .video-thumb-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(0,85,117,0.15); border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 1rem; }
   .video-lock { position: absolute; top: 0.8rem; right: 0.8rem; background: rgba(14,13,11,0.8); padding: 0.3rem 0.6rem; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mist); border: 1px solid var(--border); font-family: 'DM Mono', monospace; }
-  .video-free { background: rgba(184,149,90,0.15); color: var(--gold); border-color: var(--gold-dim); }
+  .video-free { background: rgba(0,85,117,0.15); color: var(--gold); border-color: var(--gold-dim); }
   .video-info { padding: 1.2rem; }
   .video-duration { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--mist); letter-spacing: 0.1em; margin-bottom: 0.4rem; }
   .video-title { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--parchment); line-height: 1.3; margin-bottom: 0.4rem; }
