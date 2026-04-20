@@ -31,9 +31,9 @@ const css = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Outfit:wght@300;400;500&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --ink: #0e0d0b; --parchment: #f5f0e8; --warm-white: #faf8f3;
-    --gold: #b8955a; --gold-light: #d4b07a; --gold-dim: #7a5f35;
-    --slate: #2a2825; --mist: #9e9890; --border: rgba(184,149,90,0.25);
+    --ink: #1d1d1b; --parchment: #e8eff2; --warm-white: #faf8f3;
+    --gold: #4f889f; --gold-light: #6fa0b2; --gold-dim: #005575;
+    --slate: #232625; --mist: #7fa5b5; --border: rgba(0, 85, 117, 0.35);
   }
   html { scroll-behavior: smooth; }
   body { font-family: 'Outfit', sans-serif; background: var(--ink); color: var(--parchment); font-weight: 300; line-height: 1.6; overflow-x: hidden; }
