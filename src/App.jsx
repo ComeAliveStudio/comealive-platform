@@ -118,7 +118,7 @@ const css = `
   .booking-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; max-width: 900px; margin: 2rem auto 0; }
   .session-type { border: 1px solid var(--border); padding: 1.5rem; cursor: pointer; transition: all 0.2s; background: var(--ink); margin-bottom: 1rem; }
   .session-type:hover, .session-type.active { border-color: var(--gold); }
-  .session-type.active { background: rgba(184,149,90,0.05); }
+  .session-type.active { background: rgba(0,85,117,0.06); }
   .session-name { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--parchment); margin-bottom: 0.3rem; }
   .session-meta { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--gold); letter-spacing: 0.1em; }
   .booking-form { display: flex; flex-direction: column; gap: 1rem; }
@@ -136,8 +136,8 @@ const css = `
   .dash-grid { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 5rem); }
   .dash-sidebar { background: var(--slate); border-right: 1px solid var(--border); padding: 2rem 0; }
   .dash-nav-item { display: flex; align-items: center; gap: 0.8rem; padding: 0.9rem 1.8rem; cursor: pointer; transition: all 0.15s; font-size: 0.8rem; letter-spacing: 0.08em; color: var(--mist); border-left: 2px solid transparent; }
-  .dash-nav-item:hover { color: var(--parchment); background: rgba(184,149,90,0.05); }
-  .dash-nav-item.active { color: var(--gold); border-left-color: var(--gold); background: rgba(184,149,90,0.05); }
+  .dash-nav-item:hover { color: var(--parchment); background: rgba(0,85,117,0.06); }
+  .dash-nav-item.active { color: var(--gold); border-left-color: var(--gold); background: rgba(0,85,117,0.06); }
   .dash-content { padding: 2.5rem 3rem; }
   .dash-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 3rem; }
   .dash-card { background: var(--slate); border: 1px solid var(--border); padding: 1.8rem; }
