@@ -45,7 +45,7 @@ const css = `
   .nav-cta { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.6rem 1.4rem; border: 1px solid var(--gold); background: transparent; color: var(--gold); cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif; }
   .nav-cta:hover { background: var(--gold); color: var(--ink); }
   .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 8rem 3rem 4rem; position: relative; overflow: hidden; }
-  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(184,149,90,0.06) 0%, transparent 70%), linear-gradient(160deg, #0e0d0b 0%, #1a1713 50%, #0e0d0b 100%); }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(0,85,117,0.06) 0%, transparent 70%), linear-gradient(160deg, #0e0d0b 0%, #1a1713 50%, #0e0d0b 100%); }
   .hero-grain { position: absolute; inset: 0; opacity: 0.035; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); }
   .hero-content { position: relative; z-index: 1; max-width: 760px; }
   .hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
@@ -93,7 +93,7 @@ const css = `
   .tier-price span { font-size: 1rem; color: var(--mist); }
   .tier-desc { font-size: 0.82rem; color: var(--mist); margin-bottom: 1.8rem; }
   .tier-features { list-style: none; margin-bottom: 2rem; }
-  .tier-features li { font-size: 0.83rem; color: var(--mist); padding: 0.5rem 0; border-bottom: 1px solid rgba(184,149,90,0.1); display: flex; align-items: center; gap: 0.6rem; }
+  .tier-features li { font-size: 0.83rem; color: var(--mist); padding: 0.5rem 0; border-bottom: 1px solid rgba(0,85,117,0.1); display: flex; align-items: center; gap: 0.6rem; }
   .tier-features li::before { content: '→'; color: var(--gold); font-size: 0.7rem; }
   .tier-btn { width: 100%; padding: 0.85rem; font-family: 'Outfit', sans-serif; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
   .tier-btn-outline { background: transparent; border: 1px solid var(--border); color: var(--mist); }
@@ -108,7 +108,7 @@ const css = `
   .video-card { background: var(--slate); border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: all 0.2s; }
   .video-card:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,85,117,0.18); }
   .video-thumb { aspect-ratio: 16/9; background: linear-gradient(135deg, #1a1713 0%, #2a2825 100%); display: flex; align-items: center; justify-content: center; position: relative; }
-  .video-thumb-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(184,149,90,0.15); border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 1rem; }
+  .video-thumb-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(0,85,117,0.15); border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 1rem; }
   .video-lock { position: absolute; top: 0.8rem; right: 0.8rem; background: rgba(14,13,11,0.8); padding: 0.3rem 0.6rem; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mist); border: 1px solid var(--border); font-family: 'DM Mono', monospace; }
   .video-free { background: rgba(184,149,90,0.15); color: var(--gold); border-color: var(--gold-dim); }
   .video-info { padding: 1.2rem; }
@@ -147,14 +147,14 @@ const css = `
   .progress-bar { height: 3px; background: var(--border); margin-top: 1rem; border-radius: 2px; }
   .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dim), var(--gold)); border-radius: 2px; transition: width 0.6s ease; box-shadow: 0 0 6px rgba(0,85,117,0.18); }
   .plan-badge { display:inline-flex; align-items:center; padding:0.3rem 0.8rem; border:1px solid var(--border); font-family:'DM Mono', monospace; font-size:0.62rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--mist); }
-  .plan-badge.active { border-color:var(--gold); color:var(--gold); background:rgba(184,149,90,0.06); }
+  .plan-badge.active { border-color:var(--gold); color:var(--gold); background:rgba(0,85,117,0.06); }
   footer { padding: 3rem; background: var(--slate); border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
   .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
   .footer-links { display: flex; gap: 2rem; }
   .footer-links a { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mist); text-decoration: none; transition: color 0.2s; cursor: pointer; }
   .footer-links a:hover { color: var(--gold); }
   .footer-copy { font-size: 0.7rem; color: var(--mist); }
-  .success-msg { background: rgba(184,149,90,0.1); border: 1px solid var(--gold); padding: 2rem; text-align: center; font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--gold); }
+  .success-msg { background: rgba(0,85,117,0.1); border: 1px solid var(--gold); padding: 2rem; text-align: center; font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--gold); }
   .modal-overlay { position: fixed; inset: 0; background: rgba(14,13,11,0.92); z-index: 200; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s ease; }
   .modal-box { background: var(--slate); border: 1px solid var(--gold); padding: 3rem; max-width: 420px; width: 90%; animation: slideUp 0.25s ease; }
   .max-w { max-width: 1100px; margin: 0 auto; }
