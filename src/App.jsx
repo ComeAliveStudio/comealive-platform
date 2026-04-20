@@ -106,7 +106,7 @@ const css = `
   .course-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
   .videos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
   .video-card { background: var(--slate); border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: all 0.2s; }
-  .video-card:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(184,149,90,0.12); }
+  .video-card:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,85,117,0.18); }
   .video-thumb { aspect-ratio: 16/9; background: linear-gradient(135deg, #1a1713 0%, #2a2825 100%); display: flex; align-items: center; justify-content: center; position: relative; }
   .video-thumb-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(184,149,90,0.15); border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 1rem; }
   .video-lock { position: absolute; top: 0.8rem; right: 0.8rem; background: rgba(14,13,11,0.8); padding: 0.3rem 0.6rem; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mist); border: 1px solid var(--border); font-family: 'DM Mono', monospace; }
@@ -145,7 +145,7 @@ const css = `
   .dash-card-value { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; color: var(--gold); font-weight: 300; line-height: 1; }
   .dash-card-sub { font-size: 0.75rem; color: var(--mist); margin-top: 0.4rem; }
   .progress-bar { height: 3px; background: var(--border); margin-top: 1rem; border-radius: 2px; }
-  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dim), var(--gold)); border-radius: 2px; transition: width 0.6s ease; box-shadow: 0 0 6px rgba(184,149,90,0.4); }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dim), var(--gold)); border-radius: 2px; transition: width 0.6s ease; box-shadow: 0 0 6px rgba(0,85,117,0.18); }
   .plan-badge { display:inline-flex; align-items:center; padding:0.3rem 0.8rem; border:1px solid var(--border); font-family:'DM Mono', monospace; font-size:0.62rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--mist); }
   .plan-badge.active { border-color:var(--gold); color:var(--gold); background:rgba(184,149,90,0.06); }
   footer { padding: 3rem; background: var(--slate); border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
