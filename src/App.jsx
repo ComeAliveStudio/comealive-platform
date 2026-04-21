@@ -677,24 +677,30 @@ function About() {
 
 // ── CONCIERGE SECTION ─────────────────────────────────────────────────────────
 const CONCIERGE_CHIPS = [
-  "What does Come Alive Studio do",
-  "What subscription options do I have",
-  "Tell me about your one-on-one program",
-  "I am looking for a film team / live streaming",
+  {
+    label: "What does Come Alive Studio do",
+    subject: "Come Alive Studio : General Enquiry",
+    body: "Hello,\n\nI would like to learn more about what Come Alive Studio offers.\n\nCould you give me an overview of your services, coaching programmes and courses?\n\nLooking forward to hearing from you.\n\nBest regards,",
+  },
+  {
+    label: "What subscription options do I have",
+    subject: "Come Alive Studio : Subscription Options",
+    body: "Hello,\n\nI would like to learn more about the membership and subscription options available at Come Alive Studio.\n\nCould you walk me through the plans, what each includes, and how to get started?\n\nLooking forward to hearing from you.\n\nBest regards,",
+  },
+  {
+    label: "Tell me about your one-on-one program",
+    subject: "Come Alive Studio : One-on-One Programme",
+    body: "Hello,\n\nI am interested in your one-on-one coaching or mentoring programme.\n\nMy area of interest (filmmaking / mindset / relationships / coaching):\n\nA brief note about where I am right now:\n\nBest availability for an introductory call:\n\nLooking forward to connecting.\n\nBest regards,",
+  },
+  {
+    label: "I am looking for a film team / live streaming",
+    subject: "Come Alive Studio : Film Team / Live Streaming",
+    body: "Hello,\n\nI am looking for support with the following:\n\nProject type (film production / live streaming / corporate video):\n\nBrief description:\n\nTimeline:\n\nBudget range:\n\nLooking forward to hearing from you.\n\nBest regards,",
+  },
 ]
 
 function ConciergeSection() {
   const iframeRef = React.useRef(null)
-
-  const sendChip = (text) => {
-    // Post the chip text into the PaymeGPT widget via postMessage
-    if (iframeRef.current) {
-      iframeRef.current.contentWindow?.postMessage(
-        { type: 'SET_INPUT', text },
-        'https://paymegpt.com'
-      )
-    }
-  }
 
   return (
     <section className="concierge-section" id="concierge">
@@ -702,7 +708,7 @@ function ConciergeSection() {
         <div className="section-label">Support</div>
         <div className="concierge-grid">
 
-          {/* Left : intro + chips */}
+          {/* Left : intro + mailto chips */}
           <div className="concierge-intro">
             <h2>Welcome to<br /><em>Come Alive Studio.</em></h2>
             <p>
@@ -715,15 +721,38 @@ function ConciergeSection() {
               Concierge to get instant answers.
             </p>
 
-            <div className="concierge-chips">
-              {CONCIERGE_CHIPS.map((chip) => (
-                <button
-                  key={chip}
-                  className="chip"
-                  onClick={() => sendChip(chip)}
+            {/* Quick enquiry chips — each opens a pre-filled email */}
+            <div style={{marginTop:'1.6rem', display:'flex', flexDirection:'column', gap:'0.55rem'}}>
+              {CONCIERGE_CHIPS.map(q => (
+                <a
+                  key={q.label}
+                  href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(q.subject)}&body=${encodeURIComponent(q.body)}`}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.6rem',
+                    padding: '0.65rem 1rem',
+                    border: '1px solid var(--border)',
+                    color: 'var(--mist)',
+                    fontSize: '0.8rem',
+                    letterSpacing: '0.06em',
+                    textDecoration: 'none',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.borderColor = 'var(--gold)'
+                    e.currentTarget.style.color = 'var(--gold)'
+                    e.currentTarget.style.background = 'rgba(0,85,117,0.06)'
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.borderColor = 'var(--border)'
+                    e.currentTarget.style.color = 'var(--mist)'
+                    e.currentTarget.style.background = 'transparent'
+                  }}
                 >
-                  {chip}
-                </button>
+                  <span style={{color:'var(--gold)', fontSize:'0.7rem'}}>→</span>
+                  {q.label}
+                </a>
               ))}
             </div>
           </div>
@@ -1085,7 +1114,7 @@ function Contact() {
         <h2>Let's start a <em>conversation</em></h2>
         <div className="contact-grid">
 
-          {/* Left: contact details + quick enquiry chips */}
+          {/* Left: contact details with live links */}
           <div>
             <p style={{color:'var(--mist)', fontSize:'0.92rem', marginBottom:'2rem', lineHeight:'1.75'}}>
               Whether you have a question about the courses, want to collaborate on a film project,
@@ -1093,58 +1122,49 @@ function Contact() {
             </p>
 
             {[
-              {icon:'✉', label:'Email',     value:'office@comealive.vision'},
-              {icon:'🌐', label:'Website',   value:'comealive.vision'},
-              {icon:'📍', label:'Based in',  value:'Vienna, Austria'},
-              {icon:'📸', label:'Instagram', value:'@comealivestudio'},
+              {
+                icon: '✉',
+                label: 'Email',
+                value: 'office@comealive.vision',
+                href: `mailto:office@comealive.vision?subject=${encodeURIComponent('Come Alive Studio : Enquiry')}&body=${encodeURIComponent('Hello,\n\nI would like to get in touch with Come Alive Studio.\n\nMy enquiry:\n\nLooking forward to hearing from you.\n\nBest regards,')}`,
+              },
+              {
+                icon: '🌐',
+                label: 'Website',
+                value: 'comealive.vision',
+                href: 'https://www.comealive.vision',
+              },
+              {
+                icon: '📍',
+                label: 'Based in',
+                value: 'Vienna, Austria',
+                href: 'https://maps.app.goo.gl/gfThM1QLkHRuq4qR9',
+              },
+              {
+                icon: '📸',
+                label: 'Instagram',
+                value: '@comealivestudio',
+                href: 'https://www.instagram.com/comealive.vision/',
+              },
             ].map(d => (
-              <div className="contact-detail" key={d.label}>
-                <div className="contact-detail-icon">{d.icon}</div>
-                <div className="contact-detail-text">
-                  <strong>{d.label}</strong>{d.value}
+              <a
+                key={d.label}
+                href={d.href}
+                target={d.href.startsWith('mailto') ? undefined : '_blank'}
+                rel="noreferrer"
+                style={{textDecoration:'none', display:'block'}}
+                onMouseEnter={e => e.currentTarget.querySelector('.contact-detail-text strong').style.color = 'var(--gold)'}
+                onMouseLeave={e => e.currentTarget.querySelector('.contact-detail-text strong').style.color = 'var(--parchment)'}
+              >
+                <div className="contact-detail">
+                  <div className="contact-detail-icon">{d.icon}</div>
+                  <div className="contact-detail-text">
+                    <strong style={{transition:'color 0.2s'}}>{d.label}</strong>
+                    {d.value}
+                  </div>
                 </div>
-              </div>
+              </a>
             ))}
-
-            {/* Quick enquiry chips — each opens a pre-filled email */}
-            <div style={{marginTop:'2.5rem'}}>
-              <div className="section-label" style={{marginBottom:'1rem'}}>
-                Quick Enquiries
-              </div>
-              <div style={{display:'flex', flexDirection:'column', gap:'0.55rem'}}>
-                {QUICK_ENQUIRIES.map(q => (
-                  <a
-                    key={q.label}
-                    href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(q.subject)}&body=${encodeURIComponent(q.body)}`}
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.6rem',
-                      padding: '0.65rem 1rem',
-                      border: '1px solid var(--border)',
-                      color: 'var(--mist)',
-                      fontSize: '0.8rem',
-                      letterSpacing: '0.06em',
-                      textDecoration: 'none',
-                      transition: 'all 0.2s',
-                    }}
-                    onMouseEnter={e => {
-                      e.currentTarget.style.borderColor = 'var(--gold)'
-                      e.currentTarget.style.color = 'var(--gold)'
-                      e.currentTarget.style.background = 'rgba(0,85,117,0.06)'
-                    }}
-                    onMouseLeave={e => {
-                      e.currentTarget.style.borderColor = 'var(--border)'
-                      e.currentTarget.style.color = 'var(--mist)'
-                      e.currentTarget.style.background = 'transparent'
-                    }}
-                  >
-                    <span style={{color:'var(--gold)', fontSize:'0.7rem'}}>→</span>
-                    {q.label}
-                  </a>
-                ))}
-              </div>
-            </div>
           </div>
 
           {/* Right: Formspree contact form */}
