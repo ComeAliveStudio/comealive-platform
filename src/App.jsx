@@ -37,7 +37,7 @@ const css = `
   }
   html { scroll-behavior: smooth; }
   body { font-family: 'Outfit', sans-serif; background: var(--ink); color: var(--parchment); font-weight: 300; line-height: 1.6; overflow-x: hidden; }
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 3rem; background: rgba(14,13,11,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 3rem; background: rgba(13,17,22,0.94); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
   .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 400; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; cursor: pointer; }
   .nav-links { display: flex; gap: 2.5rem; list-style: none; }
   .nav-links a { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mist); text-decoration: none; transition: color 0.2s; cursor: pointer; }
@@ -45,7 +45,7 @@ const css = `
   .nav-cta { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.6rem 1.4rem; border: 1px solid var(--gold); background: transparent; color: var(--gold); cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif; }
   .nav-cta:hover { background: var(--gold); color: var(--ink); }
   .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 8rem 3rem 4rem; position: relative; overflow: hidden; }
-  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(0,85,117,0.06) 0%, transparent 70%), linear-gradient(160deg, #0e0d0b 0%, #1a1713 50%, #0e0d0b 100%); }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(0,85,117,0.06) 0%, transparent 70%), linear-gradient(160deg, #0e1218 0%, #101c28 50%, #0e1218 100%); }
   .hero-grain { position: absolute; inset: 0; opacity: 0.035; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); }
   .hero-content { position: relative; z-index: 1; max-width: 760px; }
   .hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
@@ -76,7 +76,7 @@ const css = `
   .about { background: var(--slate); }
   .about-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 5rem; align-items: center; max-width: 1100px; margin: 0 auto; }
   .about-portrait { aspect-ratio: 3/4; background: var(--ink); border: 1px solid var(--border); position: relative; overflow: hidden; }
-  .about-portrait-inner { width: 100%; height: 100%; background: linear-gradient(160deg, #2a2825 0%, #1a1713 100%); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 4rem; color: var(--gold-dim); }
+  .about-portrait-inner { width: 100%; height: 100%; background: linear-gradient(160deg, #0d1e2a 0%, #06101a 100%); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 4rem; color: var(--gold-dim); }
   .about-portrait::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 40%; background: linear-gradient(transparent, var(--slate)); }
   .about-text p { color: var(--mist); margin-bottom: 1.2rem; font-size: 0.95rem; }
   .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2.5rem; }
@@ -86,7 +86,7 @@ const css = `
   .tiers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1000px; margin: 3rem auto 0; }
   .tier-card { border: 1px solid var(--border); padding: 2.5rem; position: relative; transition: border-color 0.2s; background: var(--slate); }
   .tier-card:hover { border-color: var(--gold); }
-  .tier-card.featured { border-color: var(--gold); background: #1e1c18; }
+  .tier-card.featured { border-color: var(--gold); background: #0a1824; }
   .tier-card.featured::before { content: 'Most Popular'; position: absolute; top: -1px; left: 50%; transform: translateX(-50%); background: linear-gradient(90deg, var(--gold-dim) 0%, var(--gold) 40%, var(--gold-light) 60%, var(--gold) 100%); background-size: 200% 100%; animation: badgeSheen 3s ease-in-out infinite; color: var(--ink); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.3rem 1rem; font-weight: 500; white-space: nowrap; }
   .tier-name { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--parchment); margin-bottom: 0.5rem; }
   .tier-price { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; color: var(--gold); font-weight: 300; line-height: 1; margin: 1rem 0 0.3rem; }
@@ -107,7 +107,7 @@ const css = `
   .videos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
   .video-card { background: var(--slate); border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: all 0.2s; }
   .video-card:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,85,117,0.18); }
-  .video-thumb { aspect-ratio: 16/9; background: linear-gradient(135deg, #1a1713 0%, #2a2825 100%); display: flex; align-items: center; justify-content: center; position: relative; }
+  .video-thumb { aspect-ratio: 16/9; background: linear-gradient(135deg, #0a1824 0%, #0d2030 100%); display: flex; align-items: center; justify-content: center; position: relative; }
   .video-thumb-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(0,85,117,0.15); border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 1rem; }
   .video-lock { position: absolute; top: 0.8rem; right: 0.8rem; background: rgba(14,13,11,0.8); padding: 0.3rem 0.6rem; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mist); border: 1px solid var(--border); font-family: 'DM Mono', monospace; }
   .video-free { background: rgba(0,85,117,0.15); color: var(--gold); border-color: var(--gold-dim); }
@@ -155,7 +155,7 @@ const css = `
   .footer-links a:hover { color: var(--gold); }
   .footer-copy { font-size: 0.7rem; color: var(--mist); }
   .success-msg { background: rgba(0,85,117,0.1); border: 1px solid var(--gold); padding: 2rem; text-align: center; font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--gold); }
-  .modal-overlay { position: fixed; inset: 0; background: rgba(14,13,11,0.92); z-index: 200; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s ease; }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(10,14,18,0.94); z-index: 200; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s ease; }
   .modal-box { background: var(--slate); border: 1px solid var(--gold); padding: 3rem; max-width: 420px; width: 90%; animation: slideUp 0.25s ease; }
   .max-w { max-width: 1100px; margin: 0 auto; }
   .text-center { text-align: center; }
@@ -164,7 +164,7 @@ const css = `
   .hero-video-wrap video { width: 100%; height: 100%; object-fit: cover; opacity: 0.55; }
   .hero-video-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(29,29,27,0.82) 0%, rgba(29,29,27,0.45) 55%, rgba(29,29,27,0.25) 100%), linear-gradient(to top, rgba(29,29,27,0.7) 0%, transparent 40%); }
   /* CSS-only animated scene for browsers where video is blocked */
-  .hero-scene { position: absolute; inset: 0; overflow: hidden; background: linear-gradient(180deg, #0a1a28 0%, #0e2530 35%, #1d2e20 65%, #0d1f18 100%); }
+  .hero-scene { position: absolute; inset: 0; overflow: hidden; background: linear-gradient(180deg, #06101a 0%, #0a1e2e 35%, #0d1e2a 65%, #081520 100%); }
   .hero-scene-sky { position: absolute; top: 0; left: 0; right: 0; height: 42%; background: linear-gradient(180deg, #050e18 0%, #0a2035 50%, #12304a 100%); }
   .hero-scene-ocean { position: absolute; bottom: 0; left: 0; right: 0; height: 28%; background: linear-gradient(180deg, #0d2a3e 0%, #06182a 100%); }
   .hero-scene-ocean::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(79,136,159,0.04) 3px, rgba(79,136,159,0.04) 4px); animation: oceanRipple 8s linear infinite; }
@@ -1025,7 +1025,59 @@ function Booking({ isPremium }) {
 }
 
 // ── CONTACT ───────────────────────────────────────────────────────────────────
+const CONTACT_EMAIL = "office@comealive.vision"
+
+const QUICK_ENQUIRIES = [
+  {
+    label: "Film production",
+    subject: "Film Production Enquiry",
+    body: "Hello,\n\nI would like to discuss a film production project with Come Alive Studio.\n\nBrief description of the project:\n\nTimeline:\n\nBudget range:\n\nLooking forward to hearing from you.\n\nBest regards,",
+  },
+  {
+    label: "Live streaming support",
+    subject: "Live Streaming Support Enquiry",
+    body: "Hello,\n\nI am interested in live streaming support from Come Alive Studio.\n\nEvent / project description:\n\nExpected date:\n\nExpected audience size:\n\nLooking forward to hearing from you.\n\nBest regards,",
+  },
+  {
+    label: "Corporate video",
+    subject: "Corporate Video Enquiry",
+    body: "Hello,\n\nI would like to enquire about corporate video production with Come Alive Studio.\n\nProject overview:\n\nDeliverable needed:\n\nTimeline:\n\nLooking forward to hearing from you.\n\nBest regards,",
+  },
+  {
+    label: "Introductory session",
+    subject: "Introductory Coaching Session",
+    body: "Hello,\n\nI would like to book a free introductory session with Come Alive Studio.\n\nArea of interest (filmmaking / mindset / relationships / coaching):\n\nA brief note about where I am right now:\n\nBest availability:\n\nLooking forward to connecting.\n\nBest regards,",
+  },
+]
+
 function Contact() {
+  const [submitted, setSubmitted] = useState(false)
+  const [sending, setSending]     = useState(false)
+  const [form, setForm] = useState({
+    name: '', email: '', subject: 'Filmmaking question', message: ''
+  })
+
+  const handleSubmit = async () => {
+    if (!form.name || !form.email) return
+    setSending(true)
+    try {
+      await fetch(FORMSPREE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          subject: form.subject,
+          message: form.message,
+          _subject: 'Contact: ' + form.subject,
+        }),
+      })
+      setSubmitted(true)
+    } catch (e) {
+      setSending(false)
+    }
+  }
+
   return (
     <div style={{background:'var(--ink)', paddingTop:'6rem', minHeight:'100vh'}}>
       <div className="max-w" style={{padding:'4rem 3rem'}}>
@@ -1033,12 +1085,13 @@ function Contact() {
         <h2>Let's start a <em>conversation</em></h2>
         <div className="contact-grid">
 
-          {/* Left: contact details */}
+          {/* Left: contact details + quick enquiry chips */}
           <div>
             <p style={{color:'var(--mist)', fontSize:'0.92rem', marginBottom:'2rem', lineHeight:'1.75'}}>
               Whether you have a question about the courses, want to collaborate on a film project,
               need a production team, or just want to say hello, the door is open.
             </p>
+
             {[
               {icon:'✉', label:'Email',     value:'office@comealive.vision'},
               {icon:'🌐', label:'Website',   value:'comealive.vision'},
@@ -1053,52 +1106,113 @@ function Contact() {
               </div>
             ))}
 
-            {/* Quick chips linking to concierge */}
-            <div style={{marginTop:'2rem'}}>
-              <div className="section-label" style={{marginBottom:'0.8rem'}}>Quick enquiry</div>
-              <div style={{display:'flex', flexWrap:'wrap', gap:'0.5rem'}}>
-                {[
-                  "Film production enquiry",
-                  "Live streaming support",
-                  "Corporate video",
-                  "Coaching session",
-                ].map(chip => (
-                  <span
-                    key={chip}
+            {/* Quick enquiry chips — each opens a pre-filled email */}
+            <div style={{marginTop:'2.5rem'}}>
+              <div className="section-label" style={{marginBottom:'1rem'}}>
+                Quick Enquiries
+              </div>
+              <div style={{display:'flex', flexDirection:'column', gap:'0.55rem'}}>
+                {QUICK_ENQUIRIES.map(q => (
+                  <a
+                    key={q.label}
+                    href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(q.subject)}&body=${encodeURIComponent(q.body)}`}
                     style={{
-                      display:'inline-flex', alignItems:'center', gap:'0.4rem',
-                      padding:'0.45rem 0.9rem',
-                      border:'1px solid var(--border)',
-                      fontSize:'0.75rem', letterSpacing:'0.06em',
-                      color:'var(--mist)', cursor:'default',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.6rem',
+                      padding: '0.65rem 1rem',
+                      border: '1px solid var(--border)',
+                      color: 'var(--mist)',
+                      fontSize: '0.8rem',
+                      letterSpacing: '0.06em',
+                      textDecoration: 'none',
+                      transition: 'all 0.2s',
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.borderColor = 'var(--gold)'
+                      e.currentTarget.style.color = 'var(--gold)'
+                      e.currentTarget.style.background = 'rgba(0,85,117,0.06)'
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.borderColor = 'var(--border)'
+                      e.currentTarget.style.color = 'var(--mist)'
+                      e.currentTarget.style.background = 'transparent'
                     }}
                   >
-                    → {chip}
-                  </span>
+                    <span style={{color:'var(--gold)', fontSize:'0.7rem'}}>→</span>
+                    {q.label}
+                  </a>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Right: PaymeGPT contact form embed */}
+          {/* Right: Formspree contact form */}
           <div>
-            <div className="section-label" style={{marginBottom:'1rem'}}>
-              Come Alive Studio Contact Form
-            </div>
-            <iframe
-              className="form-frame"
-              src="https://paymegpt.com/forms/fudm8x0e"
-              title="Come Alive Studio Contact Form"
-              allow="forms"
-              loading="lazy"
-              style={{
-                width: '100%',
-                height: '580px',
-                border: '1px solid var(--border)',
-                background: 'transparent',
-              }}
-            />
+            {submitted ? (
+              <div className="success-msg">
+                Message sent.<br />
+                <span style={{fontSize:'1rem', color:'var(--mist)'}}>
+                  I'll reply within 48 hours.
+                </span>
+              </div>
+            ) : (
+              <div style={{display:'flex', flexDirection:'column', gap:'1rem'}}>
+                <div className="form-group">
+                  <label className="form-label">Name</label>
+                  <input
+                    className="form-input"
+                    value={form.name}
+                    onChange={e => setForm({...form, name: e.target.value})}
+                    placeholder="Your name"
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Email</label>
+                  <input
+                    className="form-input"
+                    type="email"
+                    value={form.email}
+                    onChange={e => setForm({...form, email: e.target.value})}
+                    placeholder="your@email.com"
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Subject</label>
+                  <select
+                    className="form-select"
+                    value={form.subject}
+                    onChange={e => setForm({...form, subject: e.target.value})}
+                  >
+                    <option>Filmmaking question</option>
+                    <option>Coaching enquiry</option>
+                    <option>Film production</option>
+                    <option>Live streaming support</option>
+                    <option>Corporate video</option>
+                    <option>Collaboration proposal</option>
+                    <option>Something else</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Message</label>
+                  <textarea
+                    className="form-textarea"
+                    value={form.message}
+                    onChange={e => setForm({...form, message: e.target.value})}
+                    placeholder="What's on your mind?"
+                  />
+                </div>
+                <button
+                  className="btn-primary"
+                  onClick={handleSubmit}
+                  disabled={sending}
+                >
+                  {sending ? 'Sending…' : 'Send Message'}
+                </button>
+              </div>
+            )}
           </div>
+
         </div>
       </div>
     </div>
