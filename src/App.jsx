@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import * as React from "react";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import ComeAliveChat from "./components/ComeAliveChat";
 
 const SUPABASE_URL  = import.meta.env.VITE_SUPABASE_URL
 const SUPABASE_KEY  = import.meta.env.VITE_SUPABASE_ANON_KEY
