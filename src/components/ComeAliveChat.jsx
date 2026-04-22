@@ -225,36 +225,52 @@ export default function ComeAliveChat({ defaultOpen = false }) {
 
   // ── API call ────────────────────────────────────────────────────
   async function sendToApi(text, contextUrl = "") {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          sessionId,
-          message: text,
-          userUrl: contextUrl || userUrl,
-        }),
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
+  setLoading(true);
 
-      // Update detected language if returned by backend
-      if (data.lang) setLang(data.lang);
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sessionId,
+        message: text,
+        userUrl: contextUrl || userUrl,
+      }),
+    });
 
-      setMessages(prev => [...prev, { role: "assistant", content: data.reply }]);
-      if (data.cta) setCta(data.cta);
-    } catch {
-      setMessages(prev => [...prev, {
-        role: "assistant",
-        content: lang === "it"
-          ? "Qualcosa non ha funzionato. Riprova tra un momento."
-          : "Something went wrong. Please try again.",
-      }]);
-    } finally {
-      setLoading(false);
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data?.error || data?.reply || `HTTP ${res.status}`);
     }
+
+    if (data.lang) setLang(data.lang);
+
+    console.log("Provider used:", data.provider);
+
+    setMessages(prev => [
+      ...prev,
+      { role: "assistant", content: data.reply }
+    ]);
+
+    if (data.cta) setCta(data.cta);
+  } catch (err) {
+    console.error("ComeAliveChat frontend error:", err);
+
+    setMessages(prev => [
+      ...prev,
+      {
+        role: "assistant",
+        content:
+          lang === "it"
+            ? "Qualcosa non ha funzionato. Riprova tra un momento."
+            : "Something went wrong. Please try again."
+      }
+    ]);
+  } finally {
+    setLoading(false);
   }
+}
 
   // ── Onboarding complete ─────────────────────────────────────────
   function handleOnboardingSubmit(url) {
