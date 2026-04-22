@@ -1960,6 +1960,7 @@ useEffect(() => {
           </div>
         )
       )}
+      <ComeAliveChat />
     </>
   )
 }
