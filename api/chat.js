@@ -220,6 +220,7 @@ function loadSession(id) {
       handoff: false,
       lang: null,
       turns: 0,
+      userUrl: null,
     }
   );
 }
@@ -254,7 +255,7 @@ export default async function handler(req, res) {
   if (req.method !== "POST")
     return res.status(405).json({ error: "Method not allowed" });
 
-  const { sessionId, message } = req.body || {};
+  const { sessionId, message, userUrl } = req.body || {};
 
   if (!sessionId || !message || typeof message !== "string") {
     return res.status(400).json({ error: "sessionId and message are required" });
@@ -269,6 +270,7 @@ export default async function handler(req, res) {
     // ── 1. Load or create session ──────────────────────────────────
     state = loadSession(sessionId);
     if (!state.lang) state.lang = detectLanguage(message);
+    if (userUrl && !state.userUrl) state.userUrl = String(userUrl).slice(0, 300);
 
     state.messages.push({ role: "user", content: message });
     state.turns += 1;
@@ -311,7 +313,11 @@ export default async function handler(req, res) {
     }
 
     // ── 4. Agent A: Visible Host ────────────────────────────────────
+    // Build personalised system prompt
     let visibleSystem = PROMPT_VISIBLE;
+    if (state.userUrl) {
+      visibleSystem += `\n\n[USER CONTEXT — provided by the user before the conversation started]:\nThe user shared this URL about themselves: ${state.userUrl}\nIf this is a LinkedIn profile or personal website, use what you can infer from the URL (name, field, company) to make opening questions more specific and personalised. Do not fabricate details you cannot confirm from the URL alone.`;
+    }
 
     if (planner) {
       visibleSystem += `
