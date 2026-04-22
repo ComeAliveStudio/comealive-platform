@@ -356,7 +356,14 @@ export default function ComeAliveChat({ defaultOpen = false }) {
             {/* Reset button — goes back to onboarding */}
             {stage === "chat" && (
               <button
-                onClick={() => { setStage("onboarding"); setMessages([]); setCta(null); setUserUrl(""); }}
+                onClick={() => {
+                  setStage("onboarding");
+                  setMessages([]);
+                  setCta(null);
+                  setUserUrl("");
+                  setInput("");
+                  setSessionId(uid());
+                }}
                 title="Start over"
                 aria-label="Start over"
                 style={{
