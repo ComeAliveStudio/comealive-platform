@@ -20,7 +20,7 @@ const ADDONS = {
 }
 
 const PRICES = {
-  founding:     "price_REPLACE_FOUNDING_MONTHLY",    // €19/month — create in Stripe Dashboard
+  founding:     "price_REPLACE_FOUNDING_MONTHLY",    // €9/month — create in Stripe Dashboard
   master:       "price_REPLACE_MASTER_YEARLY",        // €97/year  — create in Stripe Dashboard
   discovery:    "price_1TGR3BE72B8UAf4GM1udhJHX",
   filmmaking:   "price_1TGMflE72B8UAf4GqOpfrAXO",
@@ -254,13 +254,13 @@ const COURSE_ADDONS = {
 // ── STRIPE PAYMENT LINKS ─────────────────────────────────────────────────────
 // HOW TO CREATE:
 //  1. dashboard.stripe.com → Payment Links → + New
-//  2. Founding Member: product "Founding Member", €19 recurring monthly
+//  2. Founding Member: product "Founding Member", €9 recurring monthly
 //  3. Master Planner:  product "Master Planner",  €97 recurring yearly
 //  4. In each link's Stripe settings → After payment → redirect to:
 //     https://app.comealive.vision/?payment=success
 // ─────────────────────────────────────────────────────────────────────────────
 const PAYMENT_LINKS = {
-  founding:     "https://buy.stripe.com/REPLACE_FOUNDING_MEMBER_LINK",  // €19/month
+  founding:     "https://buy.stripe.com/REPLACE_FOUNDING_MEMBER_LINK",  // €9/month
   master:       "https://buy.stripe.com/REPLACE_MASTER_PLANNER_LINK",   // €97/year
   filmmaking:   "https://buy.stripe.com/test_28E7sL9MHdED3ISfOagUM02",
   relationship: "https://buy.stripe.com/test_00w4gz0c77gfdjs6dAgUM03",
@@ -636,7 +636,7 @@ function Tiers({ setPage }) {
           {/* Founding Member – featured */}
           <div className="tier-card featured">
             <div className="tier-name">Founding Member</div>
-            <div className="tier-price">€19 <span>/ month</span></div>
+            <div className="tier-price">€9 <span>/ month</span></div>
             <div className="tier-desc">Support the work. Get the tools.</div>
             <ul className="tier-features">
               <li>Everything in Explorer</li>
@@ -1774,7 +1774,7 @@ function Dashboard({
                       onClick={() => goToStripe('founding')}
                       style={{width:'100%'}}
                     >
-                      Become a Founding Member — €19/mo
+                      Become a Founding Member — €9/mo
                     </button>
                   )}
 
