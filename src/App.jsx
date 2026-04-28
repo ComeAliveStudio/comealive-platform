@@ -20,8 +20,8 @@ const ADDONS = {
 }
 
 const PRICES = {
-  professional: "price_1TGMXNE72B8UAf4G0JSemNG5",
-  mastery:      "price_1TGMaOE72B8UAf4Gjks176aW",
+  founding:     "price_REPLACE_FOUNDING_MONTHLY",    // €19/month — create in Stripe Dashboard
+  master:       "price_REPLACE_MASTER_YEARLY",        // €97/year  — create in Stripe Dashboard
   discovery:    "price_1TGR3BE72B8UAf4GM1udhJHX",
   filmmaking:   "price_1TGMflE72B8UAf4GqOpfrAXO",
   relationship: "price_1TGMgME72B8UAf4GkqcoJwBQ",
@@ -88,7 +88,7 @@ const css = `
   .tier-card { border: 1px solid var(--border); padding: 2.5rem; position: relative; transition: border-color 0.2s; background: var(--slate); }
   .tier-card:hover { border-color: var(--gold); }
   .tier-card.featured { border-color: var(--gold); background: #0a1824; }
-  .tier-card.featured::before { content: 'Most Popular'; position: absolute; top: -1px; left: 50%; transform: translateX(-50%); background: linear-gradient(90deg, var(--gold-dim) 0%, var(--gold) 40%, var(--gold-light) 60%, var(--gold) 100%); background-size: 200% 100%; animation: badgeSheen 3s ease-in-out infinite; color: var(--ink); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.3rem 1rem; font-weight: 500; white-space: nowrap; }
+  .tier-card.featured::before { content: 'Early Access'; position: absolute; top: -1px; left: 50%; transform: translateX(-50%); background: linear-gradient(90deg, var(--gold-dim) 0%, var(--gold) 40%, var(--gold-light) 60%, var(--gold) 100%); background-size: 200% 100%; animation: badgeSheen 3s ease-in-out infinite; color: var(--ink); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.3rem 1rem; font-weight: 500; white-space: nowrap; }
   .tier-name { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--parchment); margin-bottom: 0.5rem; }
   .tier-price { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; color: var(--gold); font-weight: 300; line-height: 1; margin: 1rem 0 0.3rem; }
   .tier-price span { font-size: 1rem; color: var(--mist); }
@@ -251,9 +251,17 @@ const COURSE_ADDONS = {
 // ── STRIPE PAYMENT LINKS ─────────────────────────────────────────────────────
 // Replace these with your actual Stripe Payment Links
 // Stripe Dashboard → Products → [product] → "Create payment link"
+// ── STRIPE PAYMENT LINKS ─────────────────────────────────────────────────────
+// HOW TO CREATE:
+//  1. dashboard.stripe.com → Payment Links → + New
+//  2. Founding Member: product "Founding Member", €19 recurring monthly
+//  3. Master Planner:  product "Master Planner",  €97 recurring yearly
+//  4. In each link's Stripe settings → After payment → redirect to:
+//     https://app.comealive.vision/?payment=success
+// ─────────────────────────────────────────────────────────────────────────────
 const PAYMENT_LINKS = {
-  professional: "https://buy.stripe.com/test_dRmeVd8IDdED5R00TggUM00",
-  mastery:      "https://buy.stripe.com/test_6oUbJ15wr8kjenwgSegUM01",
+  founding:     "https://buy.stripe.com/REPLACE_FOUNDING_MEMBER_LINK",  // €19/month
+  master:       "https://buy.stripe.com/REPLACE_MASTER_PLANNER_LINK",   // €97/year
   filmmaking:   "https://buy.stripe.com/test_28E7sL9MHdED3ISfOagUM02",
   relationship: "https://buy.stripe.com/test_00w4gz0c77gfdjs6dAgUM03",
   mindset:      "https://buy.stripe.com/test_bJe3cv7Ez587djs0TggUM04",
@@ -338,7 +346,8 @@ function useAuth() {
   }, [fetchPlan])
 
   // isPremium: check plan field only — planStatus may be null if webhook is slow
-  const isPremium = plan === "professional" || plan === "mastery"
+  // isPremium: new plan names + old names kept for existing subscribers during migration
+  const isPremium = plan === "founding" || plan === "master" || plan === "professional" || plan === "mastery"
 
   return {
     user,
@@ -603,48 +612,72 @@ function Tiers({ setPage }) {
   return (
     <section style={{background:'var(--ink)'}}>
       <div className="max-w text-center">
-        <div className="section-label" style={{justifyContent:'center'}}>Membership</div>
-        <h2>Choose your <em>level of access</em></h2>
-        <p style={{color:'var(--mist)', maxWidth:480, margin:'0 auto', fontSize:'0.9rem'}}>Free content to start. Premium when you're ready to go deeper.</p>
+        <div className="section-label" style={{justifyContent:'center'}}>Early Access</div>
+        <h2>Choose your <em>path forward</em></h2>
+        <p style={{color:'var(--mist)', maxWidth:480, margin:'0 auto', fontSize:'0.9rem'}}>
+          Start free. Upgrade when it makes sense for you.<br />
+          Founding Members lock in this price for as long as they stay.
+        </p>
         <div className="tiers-grid">
+
+          {/* Explorer – free */}
           <div className="tier-card">
             <div className="tier-name">Explorer</div>
             <div className="tier-price">€0 <span>/ forever</span></div>
-            <div className="tier-desc">Access to all free episodes across every track.</div>
+            <div className="tier-desc">Full free content. No card required.</div>
             <ul className="tier-features">
               <li>Free episodes in all 4 tracks</li>
               <li>Podcast access on Spotify</li>
-              <li>Newsletter & updates</li>
+              <li>Newsletter &amp; updates</li>
             </ul>
             <button className="tier-btn tier-btn-outline" onClick={() => setPage('library')}>Start Free</button>
           </div>
+
+          {/* Founding Member – featured */}
           <div className="tier-card featured">
-            <div className="tier-name">Professional</div>
-            <div className="tier-price">€29 <span>/ month</span></div>
-            <div className="tier-desc">Full library access plus monthly live session.</div>
+            <div className="tier-name">Founding Member</div>
+            <div className="tier-price">€19 <span>/ month</span></div>
+            <div className="tier-desc">Support the work. Get the tools.</div>
             <ul className="tier-features">
-              <li>All free + premium episodes</li>
-              <li>Monthly group live Q&A</li>
-              <li>Downloadable frameworks & PDFs</li>
-              <li>Priority booking & 20% discount</li>
+              <li>Everything in Explorer</li>
+              <li>Download Workbooks &amp; Starter Kit</li>
+              <li>Monthly Group Live Q&amp;A</li>
               <li>Progress tracking dashboard</li>
             </ul>
-            <button className="tier-btn tier-btn-filled" onClick={() => handleJoin('professional')}>Join Professional</button>
+            <button className="tier-btn tier-btn-filled" onClick={() => handleJoin('founding')}>Become a Founding Member</button>
           </div>
+
+          {/* Master Planner */}
           <div className="tier-card">
-            <div className="tier-name">Mastery</div>
-            <div className="tier-price">€97 <span>/ month</span></div>
-            <div className="tier-desc">Full access plus 1-on-1 coaching session per month.</div>
+            <div className="tier-name">Master Planner</div>
+            <div className="tier-price">€97 <span>/ year</span></div>
+            <div className="tier-desc">One session. One year of momentum.</div>
             <ul className="tier-features">
-              <li>Everything in Professional</li>
-              <li>1× private coaching session/month</li>
+              <li>Everything in Founding Member</li>
+              <li>1× private coaching session</li>
               <li>Direct messaging access</li>
               <li>Custom growth roadmap</li>
-              <li>Early access to new courses</li>
+              <li>Privileged access to new courses</li>
             </ul>
-            <button className="tier-btn tier-btn-outline" onClick={() => handleJoin('mastery')}>Join Mastery</button>
+            <button className="tier-btn tier-btn-outline" onClick={() => handleJoin('master')}>Get the Master Plan</button>
           </div>
+
         </div>
+
+        {/* Founding note */}
+        <p style={{
+          color:'var(--mist)',
+          fontSize:'0.78rem',
+          maxWidth:520,
+          margin:'2rem auto 0',
+          lineHeight:1.7,
+          fontStyle:'italic',
+        }}>
+          Founding Members help make independent content creation possible.
+          You're not just buying access — you're part of building this from the ground up.
+          Cancel anytime. No hidden fees.
+        </p>
+
       </div>
     </section>
   )
@@ -927,7 +960,7 @@ function Library({ user, isPremium, setPage, progressMap, saveProgress }) {
               Ready to go deeper?
             </div>
             <p style={{ color:'var(--mist)', fontSize:'0.88rem', marginBottom:'1.5rem' }}>
-              Join Professional to unlock all premium episodes across every track.
+              Become a Founding Member to unlock all premium episodes across every track.
             </p>
             <button className="btn-primary" onClick={() => setPage('home')}>
               View Membership Plans
@@ -1266,8 +1299,13 @@ function DownloadsSection({ plan }) {
 
   const canAccess = (requiredPlan) => {
     if (requiredPlan === 'explorer') return true
-    if (requiredPlan === 'professional') return plan === 'professional' || plan === 'mastery'
-    if (requiredPlan === 'mastery') return plan === 'mastery'
+    // support both old names (professional/mastery) and new names (founding/master)
+    if (requiredPlan === 'professional' || requiredPlan === 'founding') {
+      return plan === 'founding' || plan === 'master' || plan === 'professional' || plan === 'mastery'
+    }
+    if (requiredPlan === 'mastery' || requiredPlan === 'master') {
+      return plan === 'master' || plan === 'mastery'
+    }
     return false
   }
 
@@ -1733,20 +1771,20 @@ function Dashboard({
                   {plan === 'explorer' && (
                     <button
                       className="btn-primary"
-                      onClick={() => goToStripe('professional')}
+                      onClick={() => goToStripe('founding')}
                       style={{width:'100%'}}
                     >
-                      Upgrade to Professional
+                      Become a Founding Member — €19/mo
                     </button>
                   )}
 
-                  {plan !== 'mastery' && (
+                  {plan !== 'master' && plan !== 'mastery' && (
                     <button
                       className="btn-ghost"
-                      onClick={() => goToStripe('mastery')}
+                      onClick={() => goToStripe('master')}
                       style={{width:'100%'}}
                     >
-                      Upgrade to Mastery
+                      Upgrade to Master Planner — €97/yr
                     </button>
                   )}
 
