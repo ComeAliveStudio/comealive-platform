@@ -260,8 +260,8 @@ const COURSE_ADDONS = {
 //     https://app.comealive.vision/?payment=success
 // ─────────────────────────────────────────────────────────────────────────────
 const PAYMENT_LINKS = {
-  founding:     "https://buy.stripe.com/REPLACE_FOUNDING_MEMBER_LINK",  // €9/month
-  master:       "https://buy.stripe.com/REPLACE_MASTER_PLANNER_LINK",   // €97/year
+  founding:     "https://buy.stripe.com/test_8x26oHgb50RRbbkfOagUM05",  // €9/month
+  master:       "https://buy.stripe.com/test_14A4gzaQLgQPa7g8lIgUM06",   // €97/year
   filmmaking:   "https://buy.stripe.com/test_28E7sL9MHdED3ISfOagUM02",
   relationship: "https://buy.stripe.com/test_00w4gz0c77gfdjs6dAgUM03",
   mindset:      "https://buy.stripe.com/test_bJe3cv7Ez587djs0TggUM04",
