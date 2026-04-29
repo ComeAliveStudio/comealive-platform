@@ -691,7 +691,7 @@ function About() {
         <div>
         <div className="about-portrait">
           <img
-            src="/images/angelo.jpg"
+            src="/images/Angelo.jpg"
              alt="Angelo D’Agostino"
             style={{
             width: "100%",
