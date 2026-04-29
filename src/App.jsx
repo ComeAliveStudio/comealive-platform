@@ -674,7 +674,7 @@ function Tiers({ setPage }) {
           fontStyle:'italic',
         }}>
           Founding Members help make independent content creation possible.
-          You're not just buying access, you're part of building this from the ground up.
+          You are not just buying access, you are part of building this from the ground up.
           Cancel anytime. No hidden fees.
         </p>
 
