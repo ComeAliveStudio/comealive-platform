@@ -689,7 +689,17 @@ function About() {
     <section className="about">
       <div className="about-grid max-w">
         <div>
-          <div className="about-portrait"><div className="about-portrait-inner">A.D.</div></div>
+        <div className="about-portrait">
+          <img
+            src="/images/angelo.jpg"
+             alt="Angelo D’Agostino"
+            style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover"
+            }}
+            />
+          </div>
         </div>
         <div className="about-text">
           <div className="section-label">About</div>
