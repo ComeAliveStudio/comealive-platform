@@ -32,168 +32,171 @@ const css = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Outfit:wght@300;400;500&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --ink: #1d1d1b; --parchment: #e8eff2; --warm-white: #faf8f3;
-    --gold: #4f889f; --gold-light: #6fa0b2; --gold-dim: #005575;
-    --slate: #232625; --mist: #7fa5b5; --border: rgba(0, 85, 117, 0.35);
+    --ink: #4f889f; --parchment: #f6f3f0; --warm-white: #faf8f3;
+    --gold: #005575; --gold-light: #4f889f; --gold-dim: #005575;
+    --slate: #dbe8eb; --mist: #4f889f; --border: rgba(215,229,232,0.85);
+    --card-text: #1d1d1b; --accent: #005575;
   }
   html { scroll-behavior: smooth; }
   body { font-family: 'Outfit', sans-serif; background: var(--ink); color: var(--parchment); font-weight: 300; line-height: 1.6; overflow-x: hidden; }
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 3rem; background: rgba(13,17,22,0.94); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
-  .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 400; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; cursor: pointer; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 3rem; background: rgba(0,63,90,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(215,229,232,0.25); }
+  .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 400; letter-spacing: 0.15em; color: var(--parchment); text-transform: uppercase; cursor: pointer; }
   .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-  .nav-links a { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mist); text-decoration: none; transition: color 0.2s; cursor: pointer; }
-  .nav-links a:hover { color: var(--gold); }
-  .nav-cta { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.6rem 1.4rem; border: 1px solid var(--gold); background: transparent; color: var(--gold); cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif; }
-  .nav-cta:hover { background: var(--gold); color: var(--ink); }
+  .nav-links a { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(246,243,240,0.7); text-decoration: none; transition: color 0.2s; cursor: pointer; }
+  .nav-links a:hover { color: var(--parchment); }
+  .nav-cta { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.6rem 1.4rem; border: 1px solid var(--parchment); background: transparent; color: var(--parchment); cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif; }
+  .nav-cta:hover { background: var(--parchment); color: var(--gold); }
   .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 8rem 3rem 4rem; position: relative; overflow: hidden; }
-  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(0,85,117,0.06) 0%, transparent 70%), linear-gradient(160deg, #0e1218 0%, #101c28 50%, #0e1218 100%); }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(0,63,90,0.18) 0%, transparent 70%), linear-gradient(160deg, #3a7490 0%, #4f889f 50%, #3a7490 100%); }
   .hero-grain { position: absolute; inset: 0; opacity: 0.035; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); }
   .hero-content { position: relative; z-index: 1; max-width: 760px; }
-  .hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
-  .hero-eyebrow::after { content: ''; display: block; width: 40px; height: 1px; background: var(--gold); }
+  .hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(246,243,240,0.75); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
+  .hero-eyebrow::after { content: ''; display: block; width: 40px; height: 1px; background: rgba(246,243,240,0.5); }
   .hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(3.2rem, 7vw, 6rem); font-weight: 300; line-height: 1.05; color: var(--parchment); margin-bottom: 1rem; }
-  .hero h1 em { font-style: italic; color: var(--gold); }
-  .hero-sub { font-size: 1rem; color: var(--mist); max-width: 480px; margin-bottom: 2.5rem; font-weight: 300; line-height: 1.7; }
+  .hero h1 em { font-style: italic; color: var(--parchment); opacity: 0.85; }
+  .hero-sub { font-size: 1rem; color: rgba(246,243,240,0.78); max-width: 480px; margin-bottom: 2.5rem; font-weight: 300; line-height: 1.7; }
   .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
-  .btn-primary { padding: 0.9rem 2.2rem; background: var(--gold); color: var(--ink); border: none; cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; transition: all 0.2s; }
-  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
-  .btn-ghost { padding: 0.9rem 2.2rem; background: transparent; color: var(--parchment); border: 1px solid rgba(245,240,232,0.3); cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 300; transition: all 0.2s; }
-  .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
-  .hero-scroll { position: absolute; bottom: 2.5rem; left: 3rem; font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--mist); text-transform: uppercase; display: flex; align-items: center; gap: 0.8rem; }
-  .hero-scroll::before { content: ''; display: block; width: 1px; height: 40px; background: var(--mist); animation: scrollPulse 2s ease-in-out infinite; }
+  .btn-primary { padding: 0.9rem 2.2rem; background: var(--gold); color: var(--parchment); border: none; cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; transition: all 0.2s; }
+  .btn-primary:hover { background: #004460; transform: translateY(-1px); }
+  .btn-ghost { padding: 0.9rem 2.2rem; background: transparent; color: var(--parchment); border: 1px solid rgba(246,243,240,0.5); cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 300; transition: all 0.2s; }
+  .btn-ghost:hover { border-color: var(--parchment); background: rgba(246,243,240,0.12); }
+  .hero-scroll { position: absolute; bottom: 2.5rem; left: 3rem; font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; color: rgba(246,243,240,0.6); text-transform: uppercase; display: flex; align-items: center; gap: 0.8rem; }
+  .hero-scroll::before { content: ''; display: block; width: 1px; height: 40px; background: rgba(246,243,240,0.4); animation: scrollPulse 2s ease-in-out infinite; }
   @keyframes scrollPulse { 0%,100%{opacity:0.3}50%{opacity:1} }
   @keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
   @keyframes slideUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
   @keyframes shimmerPulse { 0%,100%{opacity:0.3;transform:scaleX(0.92)} 50%{opacity:1;transform:scaleX(1)} }
   @keyframes badgeSheen { 0%{background-position:100% 0} 50%{background-position:0% 0} 100%{background-position:100% 0} }
   .loading-screen { min-height:100vh; background:var(--ink); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.6rem; }
-  .loading-wordmark { font-family:'Cormorant Garamond', serif; font-size:1.2rem; letter-spacing:0.28em; color:var(--gold-dim); text-transform:uppercase; }
-  .loading-bar { width:120px; height:1px; background:var(--gold); animation:shimmerPulse 1.8s ease-in-out infinite; transform-origin:center; }
+  .loading-wordmark { font-family:'Cormorant Garamond', serif; font-size:1.2rem; letter-spacing:0.28em; color:rgba(246,243,240,0.7); text-transform:uppercase; }
+  .loading-bar { width:120px; height:1px; background:var(--parchment); animation:shimmerPulse 1.8s ease-in-out infinite; transform-origin:center; }
   section { padding: 6rem 3rem; }
   .section-label { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 3rem; display: flex; align-items: center; gap: 1rem; }
   .section-label::after { content: ''; flex: 1; max-width: 60px; height: 1px; background: var(--border); }
   h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 300; color: var(--parchment); line-height: 1.15; margin-bottom: 1.2rem; }
-  h2 em { font-style: italic; color: var(--gold); }
-  .about { background: var(--slate); }
+  h2 em { font-style: italic; color: rgba(246,243,240,0.75); }
+  .about { background: #3d7890; }
   .about-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 5rem; align-items: center; max-width: 1100px; margin: 0 auto; }
-  .about-portrait { aspect-ratio: 3/4; background: var(--ink); border: 1px solid var(--border); position: relative; overflow: hidden; }
-  .about-portrait-inner { width: 100%; height: 100%; background: linear-gradient(160deg, #0d1e2a 0%, #06101a 100%); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 4rem; color: var(--gold-dim); }
-  .about-portrait::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 40%; background: linear-gradient(transparent, var(--slate)); }
-  .about-text p { color: var(--mist); margin-bottom: 1.2rem; font-size: 0.95rem; }
+  .about-portrait { aspect-ratio: 3/4; background: rgba(0,63,90,0.3); border: 1px solid rgba(215,229,232,0.35); position: relative; overflow: hidden; }
+  .about-portrait-inner { width: 100%; height: 100%; background: linear-gradient(160deg, #3a7490 0%, #2d6078 100%); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 4rem; color: rgba(246,243,240,0.4); }
+  .about-portrait::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 40%; background: linear-gradient(transparent, #3d7890); }
+  .about-text p { color: rgba(246,243,240,0.8); margin-bottom: 1.2rem; font-size: 0.95rem; }
   .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2.5rem; }
-  .stat { border-left: 1px solid var(--border); padding-left: 1.2rem; }
-  .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; color: var(--gold); font-weight: 300; line-height: 1; }
-  .stat-label { font-size: 0.72rem; color: var(--mist); letter-spacing: 0.08em; margin-top: 0.3rem; }
+  .stat { border-left: 1px solid rgba(215,229,232,0.4); padding-left: 1.2rem; }
+  .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; color: var(--parchment); font-weight: 300; line-height: 1; }
+  .stat-label { font-size: 0.72rem; color: rgba(246,243,240,0.65); letter-spacing: 0.08em; margin-top: 0.3rem; }
   .tiers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1000px; margin: 3rem auto 0; }
-  .tier-card { border: 1px solid var(--border); padding: 2.5rem; position: relative; transition: border-color 0.2s; background: var(--slate); }
+  .tier-card { border: 1px solid var(--border); padding: 2.5rem; position: relative; transition: border-color 0.2s; background: #dbe8eb; color: var(--card-text); }
   .tier-card:hover { border-color: var(--gold); }
-  .tier-card.featured { border-color: var(--gold); background: #0a1824; }
-  .tier-card.featured::before { content: 'Early Access'; position: absolute; top: -1px; left: 50%; transform: translateX(-50%); background: linear-gradient(90deg, var(--gold-dim) 0%, var(--gold) 40%, var(--gold-light) 60%, var(--gold) 100%); background-size: 200% 100%; animation: badgeSheen 3s ease-in-out infinite; color: var(--ink); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.3rem 1rem; font-weight: 500; white-space: nowrap; }
-  .tier-name { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--parchment); margin-bottom: 0.5rem; }
+  .tier-card.featured { border-color: var(--gold); background: #c8dce3; }
+  .tier-card.featured::before { content: 'Early Access'; position: absolute; top: -1px; left: 50%; transform: translateX(-50%); background: linear-gradient(90deg, var(--gold-dim) 0%, var(--gold) 40%, var(--gold-light) 60%, var(--gold) 100%); background-size: 200% 100%; animation: badgeSheen 3s ease-in-out infinite; color: var(--parchment); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.3rem 1rem; font-weight: 500; white-space: nowrap; }
+  .tier-name { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--gold); margin-bottom: 0.5rem; }
   .tier-price { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; color: var(--gold); font-weight: 300; line-height: 1; margin: 1rem 0 0.3rem; }
-  .tier-price span { font-size: 1rem; color: var(--mist); }
-  .tier-desc { font-size: 0.82rem; color: var(--mist); margin-bottom: 1.8rem; }
+  .tier-price span { font-size: 1rem; color: #4f889f; }
+  .tier-desc { font-size: 0.82rem; color: #4f889f; margin-bottom: 1.8rem; }
   .tier-features { list-style: none; margin-bottom: 2rem; }
-  .tier-features li { font-size: 0.83rem; color: var(--mist); padding: 0.5rem 0; border-bottom: 1px solid rgba(0,85,117,0.1); display: flex; align-items: center; gap: 0.6rem; }
+  .tier-features li { font-size: 0.83rem; color: var(--card-text); padding: 0.5rem 0; border-bottom: 1px solid rgba(0,85,117,0.12); display: flex; align-items: center; gap: 0.6rem; }
   .tier-features li::before { content: '→'; color: var(--gold); font-size: 0.7rem; }
   .tier-btn { width: 100%; padding: 0.85rem; font-family: 'Outfit', sans-serif; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
-  .tier-btn-outline { background: transparent; border: 1px solid var(--border); color: var(--mist); }
-  .tier-btn-outline:hover { border-color: var(--gold); color: var(--gold); }
-  .tier-btn-filled { background: var(--gold); border: 1px solid var(--gold); color: var(--ink); font-weight: 500; }
-  .tier-btn-filled:hover { background: var(--gold-light); }
+  .tier-btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
+  .tier-btn-outline:hover { background: var(--gold); color: var(--parchment); }
+  .tier-btn-filled { background: var(--gold); border: 1px solid var(--gold); color: var(--parchment); font-weight: 500; }
+  .tier-btn-filled:hover { background: #004460; }
   .library { background: var(--ink); }
-  .course-tabs { display: flex; gap: 0; margin-bottom: 3rem; border-bottom: 1px solid var(--border); }
-  .course-tab { padding: 0.8rem 1.8rem; background: none; border: none; font-family: 'Outfit', sans-serif; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; color: var(--mist); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s; }
-  .course-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .course-tabs { display: flex; gap: 0; margin-bottom: 3rem; border-bottom: 1px solid rgba(215,229,232,0.35); }
+  .course-tab { padding: 0.8rem 1.8rem; background: none; border: none; font-family: 'Outfit', sans-serif; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; color: rgba(246,243,240,0.6); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s; }
+  .course-tab.active { color: var(--parchment); border-bottom-color: var(--parchment); }
   .videos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
-  .video-card { background: var(--slate); border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: all 0.2s; }
-  .video-card:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,85,117,0.18); }
-  .video-thumb { aspect-ratio: 16/9; background: linear-gradient(135deg, #0a1824 0%, #0d2030 100%); display: flex; align-items: center; justify-content: center; position: relative; }
-  .video-thumb-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(0,85,117,0.15); border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 1rem; }
-  .video-lock { position: absolute; top: 0.8rem; right: 0.8rem; background: rgba(14,13,11,0.8); padding: 0.3rem 0.6rem; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mist); border: 1px solid var(--border); font-family: 'DM Mono', monospace; }
-  .video-free { background: rgba(0,85,117,0.15); color: var(--gold); border-color: var(--gold-dim); }
+  .video-card { background: #dbe8eb; border: 1px solid rgba(215,229,232,0.6); overflow: hidden; cursor: pointer; transition: all 0.2s; }
+  .video-card:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,63,90,0.22); }
+  .video-thumb { aspect-ratio: 16/9; background: linear-gradient(135deg, #3a7490 0%, #2d6078 100%); display: flex; align-items: center; justify-content: center; position: relative; }
+  .video-thumb-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.15); border: 1px solid var(--parchment); display: flex; align-items: center; justify-content: center; color: var(--parchment); font-size: 1rem; }
+  .video-lock { position: absolute; top: 0.8rem; right: 0.8rem; background: rgba(0,63,90,0.75); padding: 0.3rem 0.6rem; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(246,243,240,0.8); border: 1px solid rgba(215,229,232,0.3); font-family: 'DM Mono', monospace; }
+  .video-free { background: rgba(0,85,117,0.2); color: var(--parchment); border-color: rgba(0,85,117,0.5); }
   .video-info { padding: 1.2rem; }
-  .video-duration { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--mist); letter-spacing: 0.1em; margin-bottom: 0.4rem; }
-  .video-title { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--parchment); line-height: 1.3; margin-bottom: 0.4rem; }
-  .video-desc { font-size: 0.78rem; color: var(--mist); }
+  .video-duration { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: #4f889f; letter-spacing: 0.1em; margin-bottom: 0.4rem; }
+  .video-title { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--gold); line-height: 1.3; margin-bottom: 0.4rem; }
+  .video-desc { font-size: 0.78rem; color: var(--card-text); }
   .booking-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; max-width: 900px; margin: 2rem auto 0; }
-  .session-type { border: 1px solid var(--border); padding: 1.5rem; cursor: pointer; transition: all 0.2s; background: var(--ink); margin-bottom: 1rem; }
+  .session-type { border: 1px solid var(--border); padding: 1.5rem; cursor: pointer; transition: all 0.2s; background: #dbe8eb; margin-bottom: 1rem; }
   .session-type:hover, .session-type.active { border-color: var(--gold); }
-  .session-type.active { background: rgba(0,85,117,0.06); }
-  .session-name { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--parchment); margin-bottom: 0.3rem; }
-  .session-meta { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--gold); letter-spacing: 0.1em; }
+  .session-type.active { background: rgba(0,85,117,0.08); }
+  .session-name { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--gold); margin-bottom: 0.3rem; }
+  .session-meta { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: #4f889f; letter-spacing: 0.1em; }
   .booking-form { display: flex; flex-direction: column; gap: 1rem; }
   .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
-  .form-label { font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mist); font-family: 'DM Mono', monospace; }
-  .form-input, .form-select, .form-textarea { background: var(--ink); border: 1px solid var(--border); color: var(--parchment); padding: 0.75rem 1rem; font-family: 'Outfit', sans-serif; font-size: 0.88rem; font-weight: 300; transition: border-color 0.2s; width: 100%; }
-  .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--gold); }
+  .form-label { font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(246,243,240,0.7); font-family: 'DM Mono', monospace; }
+  .form-input, .form-select, .form-textarea { background: rgba(255,255,255,0.12); border: 1px solid rgba(215,229,232,0.4); color: var(--parchment); padding: 0.75rem 1rem; font-family: 'Outfit', sans-serif; font-size: 0.88rem; font-weight: 300; transition: border-color 0.2s; width: 100%; }
+  .form-input::placeholder, .form-textarea::placeholder { color: rgba(246,243,240,0.4); }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--parchment); }
+  .form-select option { background: #3a7490; color: var(--parchment); }
   .form-textarea { resize: vertical; min-height: 100px; }
   .contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 5rem; max-width: 950px; margin: 2rem auto 0; align-items: start; }
   .contact-detail { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
-  .contact-detail-icon { width: 36px; height: 36px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 0.9rem; flex-shrink: 0; }
-  .contact-detail-text { font-size: 0.85rem; color: var(--mist); }
+  .contact-detail-icon { width: 36px; height: 36px; border: 1px solid rgba(215,229,232,0.4); display: flex; align-items: center; justify-content: center; color: var(--parchment); font-size: 0.9rem; flex-shrink: 0; }
+  .contact-detail-text { font-size: 0.85rem; color: rgba(246,243,240,0.7); }
   .contact-detail-text strong { color: var(--parchment); display: block; font-weight: 400; }
   .dashboard { min-height: 100vh; background: var(--ink); padding-top: 5rem; }
   .dash-grid { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 5rem); }
-  .dash-sidebar { background: var(--slate); border-right: 1px solid var(--border); padding: 2rem 0; }
-  .dash-nav-item { display: flex; align-items: center; gap: 0.8rem; padding: 0.9rem 1.8rem; cursor: pointer; transition: all 0.15s; font-size: 0.8rem; letter-spacing: 0.08em; color: var(--mist); border-left: 2px solid transparent; }
-  .dash-nav-item:hover { color: var(--parchment); background: rgba(0,85,117,0.06); }
-  .dash-nav-item.active { color: var(--gold); border-left-color: var(--gold); background: rgba(0,85,117,0.06); }
+  .dash-sidebar { background: #3a7490; border-right: 1px solid rgba(215,229,232,0.25); padding: 2rem 0; }
+  .dash-nav-item { display: flex; align-items: center; gap: 0.8rem; padding: 0.9rem 1.8rem; cursor: pointer; transition: all 0.15s; font-size: 0.8rem; letter-spacing: 0.08em; color: rgba(246,243,240,0.65); border-left: 2px solid transparent; }
+  .dash-nav-item:hover { color: var(--parchment); background: rgba(255,255,255,0.08); }
+  .dash-nav-item.active { color: var(--parchment); border-left-color: var(--parchment); background: rgba(255,255,255,0.1); }
   .dash-content { padding: 2.5rem 3rem; }
   .dash-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 3rem; }
-  .dash-card { background: var(--slate); border: 1px solid var(--border); padding: 1.8rem; }
-  .dash-card-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mist); margin-bottom: 0.8rem; }
+  .dash-card { background: #dbe8eb; border: 1px solid rgba(215,229,232,0.6); padding: 1.8rem; }
+  .dash-card-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: #4f889f; margin-bottom: 0.8rem; }
   .dash-card-value { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; color: var(--gold); font-weight: 300; line-height: 1; }
-  .dash-card-sub { font-size: 0.75rem; color: var(--mist); margin-top: 0.4rem; }
-  .progress-bar { height: 3px; background: var(--border); margin-top: 1rem; border-radius: 2px; }
-  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dim), var(--gold)); border-radius: 2px; transition: width 0.6s ease; box-shadow: 0 0 6px rgba(0,85,117,0.18); }
-  .plan-badge { display:inline-flex; align-items:center; padding:0.3rem 0.8rem; border:1px solid var(--border); font-family:'DM Mono', monospace; font-size:0.62rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--mist); }
-  .plan-badge.active { border-color:var(--gold); color:var(--gold); background:rgba(0,85,117,0.06); }
-  footer { padding: 3rem; background: var(--slate); border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
-  .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
+  .dash-card-sub { font-size: 0.75rem; color: #4f889f; margin-top: 0.4rem; }
+  .progress-bar { height: 3px; background: rgba(0,85,117,0.18); margin-top: 1rem; border-radius: 2px; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dim), var(--gold)); border-radius: 2px; transition: width 0.6s ease; box-shadow: 0 0 6px rgba(0,85,117,0.25); }
+  .plan-badge { display:inline-flex; align-items:center; padding:0.3rem 0.8rem; border:1px solid rgba(215,229,232,0.4); font-family:'DM Mono', monospace; font-size:0.62rem; letter-spacing:0.12em; text-transform:uppercase; color:rgba(246,243,240,0.6); }
+  .plan-badge.active { border-color:var(--parchment); color:var(--parchment); background:rgba(255,255,255,0.1); }
+  footer { padding: 3rem; background: #3a7490; border-top: 1px solid rgba(215,229,232,0.25); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--parchment); }
   .footer-links { display: flex; gap: 2rem; }
-  .footer-links a { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mist); text-decoration: none; transition: color 0.2s; cursor: pointer; }
-  .footer-links a:hover { color: var(--gold); }
-  .footer-copy { font-size: 0.7rem; color: var(--mist); }
-  .success-msg { background: rgba(0,85,117,0.1); border: 1px solid var(--gold); padding: 2rem; text-align: center; font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--gold); }
-  .modal-overlay { position: fixed; inset: 0; background: rgba(10,14,18,0.94); z-index: 200; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s ease; }
-  .modal-box { background: var(--slate); border: 1px solid var(--gold); padding: 3rem; max-width: 420px; width: 90%; animation: slideUp 0.25s ease; }
+  .footer-links a { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(246,243,240,0.6); text-decoration: none; transition: color 0.2s; cursor: pointer; }
+  .footer-links a:hover { color: var(--parchment); }
+  .footer-copy { font-size: 0.7rem; color: rgba(246,243,240,0.5); }
+  .success-msg { background: rgba(219,232,235,0.2); border: 1px solid var(--parchment); padding: 2rem; text-align: center; font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--parchment); }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,63,90,0.85); z-index: 200; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s ease; }
+  .modal-box { background: #dbe8eb; border: 1px solid var(--gold); padding: 3rem; max-width: 420px; width: 90%; animation: slideUp 0.25s ease; }
   .max-w { max-width: 1100px; margin: 0 auto; }
   .text-center { text-align: center; }
   /* ── VIDEO HERO ── */
   .hero-video-wrap { position: absolute; inset: 0; overflow: hidden; z-index: 0; }
   .hero-video-wrap video { width: 100%; height: 100%; object-fit: cover; opacity: 0.55; }
-  .hero-video-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(29,29,27,0.82) 0%, rgba(29,29,27,0.45) 55%, rgba(29,29,27,0.25) 100%), linear-gradient(to top, rgba(29,29,27,0.7) 0%, transparent 40%); }
+  .hero-video-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(30,77,99,0.78) 0%, rgba(30,77,99,0.42) 55%, rgba(30,77,99,0.22) 100%), linear-gradient(to top, rgba(30,77,99,0.7) 0%, transparent 40%); }
   /* CSS-only animated scene for browsers where video is blocked */
-  .hero-scene { position: absolute; inset: 0; overflow: hidden; background: linear-gradient(180deg, #06101a 0%, #0a1e2e 35%, #0d1e2a 65%, #081520 100%); }
-  .hero-scene-sky { position: absolute; top: 0; left: 0; right: 0; height: 42%; background: linear-gradient(180deg, #050e18 0%, #0a2035 50%, #12304a 100%); }
-  .hero-scene-ocean { position: absolute; bottom: 0; left: 0; right: 0; height: 28%; background: linear-gradient(180deg, #0d2a3e 0%, #06182a 100%); }
-  .hero-scene-ocean::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(79,136,159,0.04) 3px, rgba(79,136,159,0.04) 4px); animation: oceanRipple 8s linear infinite; }
-  .hero-scene-road { position: absolute; bottom: 26%; left: 50%; transform: translateX(-50%); width: 0; border-left: 1px solid rgba(79,136,159,0.15); height: 50%; background: linear-gradient(to top, rgba(30,45,35,0.6), transparent); }
+  .hero-scene { position: absolute; inset: 0; overflow: hidden; background: linear-gradient(180deg, #2d6078 0%, #3a7490 35%, #4f889f 65%, #3a7490 100%); }
+  .hero-scene-sky { position: absolute; top: 0; left: 0; right: 0; height: 42%; background: linear-gradient(180deg, #1e4d63 0%, #2d6078 50%, #3a7490 100%); }
+  .hero-scene-ocean { position: absolute; bottom: 0; left: 0; right: 0; height: 28%; background: linear-gradient(180deg, #2d6078 0%, #1e4d63 100%); }
+  .hero-scene-ocean::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(219,232,235,0.06) 3px, rgba(219,232,235,0.06) 4px); animation: oceanRipple 8s linear infinite; }
+  .hero-scene-road { position: absolute; bottom: 26%; left: 50%; transform: translateX(-50%); width: 0; border-left: 1px solid rgba(219,232,235,0.15); height: 50%; background: linear-gradient(to top, rgba(30,77,99,0.6), transparent); }
   /* Buildings */
   .hero-scene-city { position: absolute; bottom: 26%; left: 0; right: 0; display: flex; align-items: flex-end; justify-content: center; gap: 2px; padding: 0 8%; animation: cityPan 18s linear infinite; }
-  .bld { background: rgba(10,20,30,0.9); border-top: 1px solid rgba(0,85,117,0.2); flex-shrink: 0; }
-  .bld::before { content: ''; display: block; width: 100%; height: 100%; background: repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(79,136,159,0.04) 8px, rgba(79,136,159,0.04) 9px), repeating-linear-gradient(90deg, transparent, transparent 12px, rgba(79,136,159,0.03) 12px, rgba(79,136,159,0.03) 13px); }
+  .bld { background: rgba(20,55,75,0.9); border-top: 1px solid rgba(219,232,235,0.2); flex-shrink: 0; }
+  .bld::before { content: ''; display: block; width: 100%; height: 100%; background: repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(219,232,235,0.05) 8px, rgba(219,232,235,0.05) 9px), repeating-linear-gradient(90deg, transparent, transparent 12px, rgba(219,232,235,0.04) 12px, rgba(219,232,235,0.04) 13px); }
   /* Stars */
   .hero-scene-stars { position: absolute; top: 0; left: 0; right: 0; height: 45%; overflow: hidden; }
-  .star { position: absolute; width: 1px; height: 1px; background: rgba(232,239,242,0.7); border-radius: 50%; animation: starTwinkle 3s ease-in-out infinite; }
+  .star { position: absolute; width: 1px; height: 1px; background: rgba(246,243,240,0.7); border-radius: 50%; animation: starTwinkle 3s ease-in-out infinite; }
   /* Horizon glow */
-  .hero-scene-horizon { position: absolute; bottom: 26%; left: 0; right: 0; height: 3px; background: linear-gradient(to right, transparent, rgba(0,85,117,0.4) 20%, rgba(79,136,159,0.6) 50%, rgba(0,85,117,0.4) 80%, transparent); filter: blur(1px); }
+  .hero-scene-horizon { position: absolute; bottom: 26%; left: 0; right: 0; height: 3px; background: linear-gradient(to right, transparent, rgba(219,232,235,0.4) 20%, rgba(246,243,240,0.6) 50%, rgba(219,232,235,0.4) 80%, transparent); filter: blur(1px); }
   @keyframes cityPan { 0%{transform:translateX(8%)} 100%{transform:translateX(-8%)} }
   @keyframes oceanRipple { 0%{background-position:0 0} 100%{background-position:0 20px} }
   @keyframes starTwinkle { 0%,100%{opacity:0.3} 50%{opacity:1} }
 
   /* ── CONCIERGE SECTION ── */
-  .concierge-section { background: var(--slate); padding: 5rem 3rem; }
+  .concierge-section { background: #3a7490; padding: 5rem 3rem; }
   .concierge-inner { max-width: 900px; margin: 0 auto; }
   .concierge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
-  .concierge-intro p { color: var(--mist); font-size: 0.95rem; line-height: 1.75; margin-bottom: 1.2rem; }
+  .concierge-intro p { color: rgba(246,243,240,0.8); font-size: 0.95rem; line-height: 1.75; margin-bottom: 1.2rem; }
   .concierge-chips { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.8rem; }
-  .chip { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.55rem 1rem; border: 1px solid var(--border); background: transparent; color: var(--mist); font-family: 'Barlow Condensed', sans-serif; font-size: 0.78rem; letter-spacing: 0.08em; cursor: pointer; transition: all 0.22s; text-align: left; }
-  .chip::before { content: '→'; color: var(--gold-light); font-size: 0.7rem; flex-shrink: 0; }
-  .chip:hover { border-color: var(--gold-light); color: var(--gold-light); background: rgba(0,85,117,0.06); }
+  .chip { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.55rem 1rem; border: 1px solid rgba(215,229,232,0.4); background: transparent; color: rgba(246,243,240,0.75); font-family: 'Barlow Condensed', sans-serif; font-size: 0.78rem; letter-spacing: 0.08em; cursor: pointer; transition: all 0.22s; text-align: left; }
+  .chip::before { content: '→'; color: rgba(246,243,240,0.6); font-size: 0.7rem; flex-shrink: 0; }
+  .chip:hover { border-color: var(--parchment); color: var(--parchment); background: rgba(255,255,255,0.1); }
   .widget-frame-wrap { width: 100%; }
-  .widget-frame { width: 100%; height: 520px; border: 1px solid var(--border); background: var(--ink); }
+  .widget-frame { width: 100%; height: 520px; border: 1px solid rgba(215,229,232,0.3); background: rgba(255,255,255,0.08); }
   .form-frame { width: 100%; height: 560px; border: none; background: transparent; }
 
   @media (max-width: 768px) {
@@ -456,14 +459,14 @@ function AuthModal({ onClose, defaultMode = "signin" }) {
         {sent ? (
           <div style={{textAlign:'center'}}>
             <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.8rem', color:'var(--gold)', marginBottom:'1rem'}}>Check your email.</div>
-            <p style={{color:'var(--mist)', fontSize:'0.88rem'}}>We sent a magic link to <strong style={{color:'var(--parchment)'}}>{email}</strong>. Click it to sign in — no password needed.</p>
+            <p style={{color:'rgba(246,243,240,0.7)', fontSize:'0.88rem'}}>We sent a magic link to <strong style={{color:'var(--parchment)'}}>{email}</strong>. Click it to sign in — no password needed.</p>
           </div>
         ) : (
           <>
             <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.6rem', color:'var(--parchment)', marginBottom:'0.4rem'}}>
               {mode === "signin" ? "Sign in" : "Create account"}
             </div>
-            <p style={{color:'var(--mist)', fontSize:'0.82rem', marginBottom:'1.5rem'}}>We'll send a magic link to your email — no password needed.</p>
+            <p style={{color:'rgba(246,243,240,0.7)', fontSize:'0.82rem', marginBottom:'1.5rem'}}>We'll send a magic link to your email — no password needed.</p>
             {err && <p style={{color:'#e24b4a', fontSize:'0.82rem', marginBottom:'1rem'}}>{err}</p>}
             <div className="form-group" style={{marginBottom:'1rem'}}>
               <label className="form-label">Email</label>
@@ -472,7 +475,7 @@ function AuthModal({ onClose, defaultMode = "signin" }) {
             <button className="btn-primary" style={{width:'100%'}} onClick={handle}>
               {mode === "signin" ? "Send magic link" : "Create account"}
             </button>
-            <button onClick={onClose} style={{width:'100%', marginTop:'0.8rem', background:'none', border:'none', color:'var(--mist)', cursor:'pointer', fontSize:'0.78rem'}}>Cancel</button>
+            <button onClick={onClose} style={{width:'100%', marginTop:'0.8rem', background:'none', border:'none', color:'rgba(246,243,240,0.7)', cursor:'pointer', fontSize:'0.78rem'}}>Cancel</button>
           </>
         )}
       </div>
@@ -575,7 +578,7 @@ function HeroScene() {
       {/* Vignette overlay so text stays legible */}
       <div style={{
         position: 'absolute', inset: 0,
-        background: 'linear-gradient(to right, rgba(29,29,27,0.78) 0%, rgba(29,29,27,0.38) 55%, rgba(29,29,27,0.18) 100%), linear-gradient(to top, rgba(29,29,27,0.65) 0%, transparent 35%)',
+        background: 'linear-gradient(to right, rgba(30,77,99,0.72) 0%, rgba(30,77,99,0.32) 55%, rgba(30,77,99,0.12) 100%), linear-gradient(to top, rgba(30,77,99,0.65) 0%, transparent 35%)',
       }} />
     </div>
   )
@@ -610,11 +613,11 @@ function Hero({ setPage }) {
 function Tiers({ setPage }) {
   const handleJoin = (planKey) => goToStripe(planKey)
   return (
-    <section style={{background:'var(--ink)'}}>
+    <section style={{background:'#4f889f'}}>
       <div className="max-w text-center">
         <div className="section-label" style={{justifyContent:'center'}}>Early Access</div>
         <h2>Choose your <em>path forward</em></h2>
-        <p style={{color:'var(--mist)', maxWidth:480, margin:'0 auto', fontSize:'0.9rem'}}>
+        <p style={{color:'rgba(246,243,240,0.75)', maxWidth:480, margin:'0 auto', fontSize:'0.9rem'}}>
           Start free. Upgrade when it makes sense for you.<br />
           Founding Members lock in this price for as long as they stay.
         </p>
@@ -666,7 +669,7 @@ function Tiers({ setPage }) {
 
         {/* Founding note */}
         <p style={{
-          color:'var(--mist)',
+          color:'rgba(246,243,240,0.65)',
           fontSize:'0.78rem',
           maxWidth:520,
           margin:'2rem auto 0',
@@ -784,13 +787,13 @@ function ConciergeSection() {
                     transition: 'all 0.2s',
                   }}
                   onMouseEnter={e => {
-                    e.currentTarget.style.borderColor = 'var(--gold)'
-                    e.currentTarget.style.color = 'var(--gold)'
-                    e.currentTarget.style.background = 'rgba(0,85,117,0.06)'
+                    e.currentTarget.style.borderColor = 'var(--parchment)'
+                    e.currentTarget.style.color = 'var(--parchment)'
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.1)'
                   }}
                   onMouseLeave={e => {
                     e.currentTarget.style.borderColor = 'var(--border)'
-                    e.currentTarget.style.color = 'var(--mist)'
+                    e.currentTarget.style.color = 'rgba(246,243,240,0.75)'
                     e.currentTarget.style.background = 'transparent'
                   }}
                 >
@@ -829,7 +832,7 @@ function Library({ user, isPremium, setPage, progressMap, saveProgress }) {
       <div className="max-w" style={{ padding:'0 3rem' }}>
         <div className="section-label">Course Library</div>
         <h2>Everything in one place.<br /><em>Organised by track.</em></h2>
-        <p style={{ color:'var(--mist)', marginBottom:'2.5rem', fontSize:'0.9rem', maxWidth:520 }}>
+        <p style={{ color:'rgba(246,243,240,0.75)', marginBottom:'2.5rem', fontSize:'0.9rem', maxWidth:520 }}>
           Free episodes available to all. <br />
           Premium content unlocks with Professional membership.
         </p>
@@ -919,8 +922,8 @@ function Library({ user, isPremium, setPage, progressMap, saveProgress }) {
                       style={{
                         marginTop:'0.8rem',
                         background:'none',
-                        border:'1px solid var(--border)',
-                        color:'var(--mist)',
+                        border:'1px solid rgba(215,229,232,0.4)',
+                        color:'rgba(246,243,240,0.7)',
                         padding:'0.45rem 0.75rem',
                         cursor:'pointer',
                         fontSize:'0.7rem',
@@ -957,19 +960,19 @@ function Library({ user, isPremium, setPage, progressMap, saveProgress }) {
           <div style={{
             marginTop:'3rem',
             padding:'2rem',
-            border:'1px solid var(--border)',
+            border:'1px solid rgba(215,229,232,0.4)',
             textAlign:'center',
-            background:'var(--slate)'
+            background:'#dbe8eb'
           }}>
             <div style={{
               fontFamily:'Cormorant Garamond',
               fontSize:'1.4rem',
-              color:'var(--parchment)',
+              color:'var(--gold)',
               marginBottom:'0.8rem'
             }}>
               Ready to go deeper?
             </div>
-            <p style={{ color:'var(--mist)', fontSize:'0.88rem', marginBottom:'1.5rem' }}>
+            <p style={{ color:'var(--card-text)', fontSize:'0.88rem', marginBottom:'1.5rem' }}>
               Become a Founding Member to unlock all premium episodes across every track.
             </p>
             <button className="btn-primary" onClick={() => setPage('home')}>
@@ -1053,13 +1056,13 @@ function Booking({ isPremium }) {
   }
 
   return (
-    <div style={{background:'var(--slate)', paddingTop:'6rem', minHeight:'100vh'}}>
+    <div style={{background:'#4f889f', paddingTop:'6rem', minHeight:'100vh'}}>
       <div className="max-w" style={{padding:'4rem 3rem'}}>
         <div className="section-label">Book a Session</div>
         <h2>Work directly <em>with Angelo</em></h2>
         <div className="booking-grid">
           <div>
-            <p style={{color:'var(--mist)', fontSize:'0.88rem', marginBottom:'1.5rem'}}>The Discovery call is always free. Contact me first and we can discuss the best option for you during the introductory sesssion. Paid sessions open Stripe checkout directly. </p>
+            <p style={{color:'rgba(246,243,240,0.75)', fontSize:'0.88rem', marginBottom:'1.5rem'}}>The Discovery call is always free. Contact me first and we can discuss the best option for you during the introductory sesssion. Paid sessions open Stripe checkout directly. </p>
             <div>
               {sessions.map((s,i) => {
                 const locked = s.planKey && !isPremium
@@ -1070,7 +1073,7 @@ function Booking({ isPremium }) {
                     style={{opacity: locked ? 0.4 : 1, cursor: locked ? 'default' : 'pointer'}}>
                     <div className="session-name">{s.name}</div>
                     <div className="session-meta">{s.meta}</div>
-                    {locked && <div style={{fontSize:'0.7rem', color:'var(--gold)', fontFamily:'DM Mono', marginTop:'0.4rem'}}>→ Register to unlock</div>}
+                    {locked && <div style={{fontSize:'0.7rem', color:'rgba(246,243,240,0.75)', fontFamily:'DM Mono', marginTop:'0.4rem'}}>→ Register to unlock</div>}
                   </div>
                 )
               })}
@@ -1078,7 +1081,7 @@ function Booking({ isPremium }) {
           </div>
           <div>
             {submitted ? (
-              <div className="success-msg">Request received.<br /><span style={{fontSize:'1rem', color:'var(--mist)'}}>Angelo will be in touch within 24 hours.</span></div>
+              <div className="success-msg">Request received.<br /><span style={{fontSize:'1rem', color:'rgba(246,243,240,0.7)'}}>Angelo will be in touch within 24 hours.</span></div>
             ) : (
               <div className="booking-form">
                 <div className="form-group"><label className="form-label">Your Name</label><input className="form-input" value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="Full name" /></div>
@@ -1152,7 +1155,7 @@ function Contact() {
   }
 
   return (
-    <div style={{background:'var(--ink)', paddingTop:'6rem', minHeight:'100vh'}}>
+    <div style={{background:'#4f889f', paddingTop:'6rem', minHeight:'100vh'}}>
       <div className="max-w" style={{padding:'4rem 3rem'}}>
         <div className="section-label">Contact</div>
         <h2>Let's start a <em>conversation</em></h2>
@@ -1160,7 +1163,7 @@ function Contact() {
 
           {/* Left: contact details with live links */}
           <div>
-            <p style={{color:'var(--mist)', fontSize:'0.92rem', marginBottom:'2rem', lineHeight:'1.75'}}>
+            <p style={{color:'rgba(246,243,240,0.78)', fontSize:'0.92rem', marginBottom:'2rem', lineHeight:'1.75'}}>
               Whether you have a question about the courses, want to collaborate on a film project,
               need a production team, or just want to say hello, the door is open.
             </p>
@@ -1216,7 +1219,7 @@ function Contact() {
             {submitted ? (
               <div className="success-msg">
                 Message sent.<br />
-                <span style={{fontSize:'1rem', color:'var(--mist)'}}>
+                <span style={{fontSize:'1rem', color:'rgba(246,243,240,0.7)'}}>
                   I'll reply within 48 hours.
                 </span>
               </div>
@@ -1321,7 +1324,7 @@ function DownloadsSection({ plan }) {
 
   if (loadingAssets) {
     return (
-      <div style={{padding:'2rem', border:'1px solid var(--border)', color:'var(--mist)'}}>
+      <div style={{padding:'2rem', border:'1px solid rgba(215,229,232,0.4)', color:'rgba(246,243,240,0.7)'}}>
         Loading downloads...
       </div>
     )
@@ -1332,7 +1335,7 @@ function DownloadsSection({ plan }) {
       <div className="section-label">Downloads</div>
 
       {assets.length === 0 ? (
-        <div style={{padding:'2rem', border:'1px solid var(--border)', color:'var(--mist)'}}>
+        <div style={{padding:'2rem', border:'1px solid rgba(215,229,232,0.4)', color:'rgba(246,243,240,0.7)'}}>
           No files available yet.
         </div>
       ) : (
@@ -1344,8 +1347,8 @@ function DownloadsSection({ plan }) {
               <div
                 key={asset.id}
                 style={{
-                  border:'1px solid var(--border)',
-                  background:'var(--slate)',
+                  border:'1px solid rgba(215,229,232,0.5)',
+                  background:'#dbe8eb',
                   padding:'1.4rem'
                 }}
               >
@@ -1359,14 +1362,14 @@ function DownloadsSection({ plan }) {
                     <div style={{
                       fontFamily:'Cormorant Garamond',
                       fontSize:'1.4rem',
-                      color:'var(--parchment)',
+                      color:'var(--gold)',
                       marginBottom:'0.35rem'
                     }}>
                       {asset.title}
                     </div>
 
                     {asset.description && (
-                      <div style={{color:'var(--mist)', fontSize:'0.88rem'}}>
+                      <div style={{color:'var(--card-text)', fontSize:'0.88rem'}}>
                         {asset.description}
                       </div>
                     )}
@@ -1527,8 +1530,8 @@ function Dashboard({
     <div className="dashboard">
       <div style={{
         padding:'2rem 3rem',
-        borderBottom:'1px solid var(--border)',
-        background:'var(--slate)',
+        borderBottom:'1px solid rgba(215,229,232,0.25)',
+        background:'#3a7490',
         display:'flex',
         justifyContent:'space-between',
         alignItems:'center'
@@ -1587,7 +1590,7 @@ function Dashboard({
                 <div key={track} style={{marginBottom:'1.5rem'}}>
                   <div style={{display:'flex', justifyContent:'space-between', marginBottom:'0.5rem'}}>
                     <span style={{fontSize:'0.85rem', color:'var(--parchment)'}}>{track}</span>
-                    <span style={{fontFamily:'DM Mono', fontSize:'0.65rem', color:'var(--gold)'}}>{pct}%</span>
+                    <span style={{fontFamily:'DM Mono', fontSize:'0.65rem', color:'rgba(246,243,240,0.7)'}}>{pct}%</span>
                   </div>
                   <div className="progress-bar" style={{height:'4px'}}>
                     <div className="progress-fill" style={{width:`${pct}%`}} />
@@ -1602,11 +1605,11 @@ function Dashboard({
               <div className="section-label">Continue Watching</div>
 
               {continueWatching.length === 0 ? (
-                <div style={{padding:'3rem', border:'1px solid var(--border)', textAlign:'center'}}>
-                  <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.4rem', color:'var(--mist)', marginBottom:'0.8rem'}}>
+                <div style={{padding:'3rem', border:'1px solid rgba(215,229,232,0.35)', textAlign:'center'}}>
+                  <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.4rem', color:'rgba(246,243,240,0.65)', marginBottom:'0.8rem'}}>
                     No progress yet
                   </div>
-                  <p style={{fontSize:'0.82rem', color:'var(--mist)'}}>
+                  <p style={{fontSize:'0.82rem', color:'rgba(246,243,240,0.6)'}}>
                     Start a course in the Library and your progress will appear here.
                   </p>
                 </div>
@@ -1656,8 +1659,8 @@ function Dashboard({
                               style={{
                                 marginTop:'0.8rem',
                                 background:'none',
-                                border:'1px solid var(--border)',
-                                color:'var(--mist)',
+                                border:'1px solid rgba(215,229,232,0.4)',
+                                color:'rgba(246,243,240,0.7)',
                                 padding:'0.45rem 0.75rem',
                                 cursor:'pointer',
                                 fontSize:'0.7rem',
@@ -1699,15 +1702,15 @@ function Dashboard({
               <div className="section-label">Billing</div>
 
               <div style={{
-                border:'1px solid var(--border)',
-                background:'var(--slate)',
+                border:'1px solid rgba(215,229,232,0.5)',
+                background:'#dbe8eb',
                 padding:'2rem',
                 maxWidth:'720px'
               }}>
                 <div style={{
                   fontFamily:'Cormorant Garamond',
                   fontSize:'1.8rem',
-                  color:'var(--parchment)',
+                  color:'var(--gold)',
                   marginBottom:'1.2rem'
                 }}>
                   Your subscription
@@ -1716,21 +1719,21 @@ function Dashboard({
                 <div style={{display:'grid', gap:'1rem'}}>
                   <div>
                     <div className="form-label">Plan</div>
-                    <div style={{color:'var(--parchment)', textTransform:'capitalize'}}>
+                    <div style={{color:'var(--card-text)', textTransform:'capitalize'}}>
                       {plan}
                     </div>
                   </div>
 
                   <div>
                     <div className="form-label">Status</div>
-                    <div style={{color:'var(--parchment)', textTransform:'capitalize'}}>
+                    <div style={{color:'var(--card-text)', textTransform:'capitalize'}}>
                       {planStatus || 'free'}
                     </div>
                   </div>
 
                   <div>
                     <div className="form-label">Renews / Expires</div>
-                    <div style={{color:'var(--parchment)'}}>
+                    <div style={{color:'var(--card-text)'}}>
                       {formatDate(planExpiresAt)}
                     </div>
                   </div>
@@ -1738,7 +1741,7 @@ function Dashboard({
                   {trialEndsAt && (
                     <div>
                       <div className="form-label">Trial ends</div>
-                      <div style={{color:'var(--parchment)'}}>
+                      <div style={{color:'var(--card-text)'}}>
                         {formatDate(trialEndsAt)}
                       </div>
                     </div>
@@ -1746,7 +1749,7 @@ function Dashboard({
 
                   <div>
                     <div className="form-label">Cancel at period end</div>
-                    <div style={{color:'var(--parchment)'}}>
+                    <div style={{color:'var(--card-text)'}}>
                       {cancelAtPeriodEnd ? 'Yes' : 'No'}
                     </div>
                   </div>
@@ -1755,8 +1758,8 @@ function Dashboard({
                 <div style={{
                   marginTop:'1.5rem',
                   padding:'1rem 1.2rem',
-                  border:'1px solid var(--border)',
-                  background:'var(--ink)'
+                  border:'1px solid rgba(0,85,117,0.2)',
+                  background:'rgba(0,85,117,0.06)'
                 }}>
                   <div style={{
                     fontFamily:'DM Mono',
@@ -1767,7 +1770,7 @@ function Dashboard({
                   }}>
                     Subscription message
                   </div>
-                  <div style={{color:'var(--mist)', fontSize:'0.9rem'}}>
+                  <div style={{color:'var(--card-text)', fontSize:'0.9rem'}}>
                     {billingMessage()}
                   </div>
                 </div>
@@ -1812,8 +1815,8 @@ function Dashboard({
                   {!stripeCustomerId && (
                     <div style={{
                       padding:'0.9rem 1rem',
-                      border:'1px solid var(--border)',
-                      color:'var(--mist)',
+                      border:'1px solid rgba(215,229,232,0.4)',
+                      color:'rgba(246,243,240,0.6)',
                       fontSize:'0.82rem'
                     }}>
                       No billing account connected yet.
@@ -1825,11 +1828,11 @@ function Dashboard({
           )}
 
           {activeSection==='sessions' && (
-            <div style={{padding:'3rem', border:'1px solid var(--border)', textAlign:'center'}}>
-              <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.4rem', color:'var(--mist)', marginBottom:'0.8rem'}}>
+            <div style={{padding:'3rem', border:'1px solid rgba(215,229,232,0.35)', textAlign:'center'}}>
+              <div style={{fontFamily:'Cormorant Garamond', fontSize:'1.4rem', color:'rgba(246,243,240,0.65)', marginBottom:'0.8rem'}}>
                 No sessions booked yet
               </div>
-              <p style={{fontSize:'0.82rem', color:'var(--mist)'}}>
+              <p style={{fontSize:'0.82rem', color:'rgba(246,243,240,0.6)'}}>
                 Head to the Booking page to schedule your first session.
               </p>
             </div>
@@ -1945,10 +1948,10 @@ useEffect(() => {
           <Tiers setPage={setPage} />
           <About />
           <ConciergeSection />
-          <section style={{background:'var(--slate)', padding:'5rem 3rem', textAlign:'center'}}>
+          <section style={{background:'#3a7490', padding:'5rem 3rem', textAlign:'center'}}>
             <div className="section-label" style={{justifyContent:'center'}}>Podcast</div>
             <h2>Make It Happen<br /><em>premieres May 2026</em></h2>
-            <p style={{color:'var(--mist)', maxWidth:460, margin:'0 auto 2rem', fontSize:'0.9rem'}}>
+            <p style={{color:'rgba(246,243,240,0.75)', maxWidth:460, margin:'0 auto 2rem', fontSize:'0.9rem'}}>
               The independent filmmaker's survival guide.<br />
               New episodes every week on Spotify.
             </p>
@@ -2003,7 +2006,7 @@ useEffect(() => {
             isPremium={isPremium}
           />
         ) : (
-          <div style={{paddingTop:'8rem', textAlign:'center', color:'var(--mist)'}}>
+          <div style={{paddingTop:'8rem', textAlign:'center', color:'rgba(246,243,240,0.7)'}}>
             Please sign in to access your dashboard.
           </div>
         )
