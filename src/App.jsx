@@ -165,26 +165,36 @@ const css = `
   .text-center { text-align: center; }
   /* ── VIDEO HERO ── */
   .hero-video-wrap { position: absolute; inset: 0; overflow: hidden; z-index: 0; }
-  .hero-video-wrap video { width: 100%; height: 100%; object-fit: cover; opacity: 0.55; }
-  .hero-video-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(30,77,99,0.78) 0%, rgba(30,77,99,0.42) 55%, rgba(30,77,99,0.22) 100%), linear-gradient(to top, rgba(30,77,99,0.7) 0%, transparent 40%); }
-  /* CSS-only animated scene for browsers where video is blocked */
-  .hero-scene { position: absolute; inset: 0; overflow: hidden; background: linear-gradient(180deg, #2d6078 0%, #3a7490 35%, #4f889f 65%, #3a7490 100%); }
-  .hero-scene-sky { position: absolute; top: 0; left: 0; right: 0; height: 42%; background: linear-gradient(180deg, #1e4d63 0%, #2d6078 50%, #3a7490 100%); }
-  .hero-scene-ocean { position: absolute; bottom: 0; left: 0; right: 0; height: 28%; background: linear-gradient(180deg, #2d6078 0%, #1e4d63 100%); }
-  .hero-scene-ocean::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(219,232,235,0.06) 3px, rgba(219,232,235,0.06) 4px); animation: oceanRipple 8s linear infinite; }
-  .hero-scene-road { position: absolute; bottom: 26%; left: 50%; transform: translateX(-50%); width: 0; border-left: 1px solid rgba(219,232,235,0.15); height: 50%; background: linear-gradient(to top, rgba(30,77,99,0.6), transparent); }
-  /* Buildings */
-  .hero-scene-city { position: absolute; bottom: 26%; left: 0; right: 0; display: flex; align-items: flex-end; justify-content: center; gap: 2px; padding: 0 8%; animation: cityPan 18s linear infinite; }
-  .bld { background: rgba(20,55,75,0.9); border-top: 1px solid rgba(219,232,235,0.2); flex-shrink: 0; }
-  .bld::before { content: ''; display: block; width: 100%; height: 100%; background: repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(219,232,235,0.05) 8px, rgba(219,232,235,0.05) 9px), repeating-linear-gradient(90deg, transparent, transparent 12px, rgba(219,232,235,0.04) 12px, rgba(219,232,235,0.04) 13px); }
-  /* Stars */
-  .hero-scene-stars { position: absolute; top: 0; left: 0; right: 0; height: 45%; overflow: hidden; }
-  .star { position: absolute; width: 1px; height: 1px; background: rgba(246,243,240,0.7); border-radius: 50%; animation: starTwinkle 3s ease-in-out infinite; }
-  /* Horizon glow */
-  .hero-scene-horizon { position: absolute; bottom: 26%; left: 0; right: 0; height: 3px; background: linear-gradient(to right, transparent, rgba(219,232,235,0.4) 20%, rgba(246,243,240,0.6) 50%, rgba(219,232,235,0.4) 80%, transparent); filter: blur(1px); }
-  @keyframes cityPan { 0%{transform:translateX(8%)} 100%{transform:translateX(-8%)} }
-  @keyframes oceanRipple { 0%{background-position:0 0} 100%{background-position:0 20px} }
-  @keyframes starTwinkle { 0%,100%{opacity:0.3} 50%{opacity:1} }
+  .hero-video-wrap video {
+    width: 100%; height: 100%; object-fit: cover;
+    opacity: 0; transition: opacity 1.2s ease;
+  }
+  .hero-video-wrap video.loaded { opacity: 0.52; }
+  .hero-video-overlay {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(to right,  rgba(30,77,99,0.82) 0%, rgba(30,77,99,0.45) 55%, rgba(30,77,99,0.25) 100%),
+      linear-gradient(to top,    rgba(30,77,99,0.75) 0%, transparent 42%);
+  }
+  /* CSS fallback — shown while video loads or on mobile */
+  .hero-scene {
+    position: absolute; inset: 0; overflow: hidden;
+    background: linear-gradient(160deg, #2d6078 0%, #3a7490 50%, #2d6078 100%);
+  }
+  .hero-scene-overlay {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 60% 50%, rgba(0,63,90,0.18) 0%, transparent 70%);
+  }
+  /* film-frame grid lines (same as landing page) */
+  .hero-scene::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(to right,  rgba(219,232,235,0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(219,232,235,0.06) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 65% 50%, black 20%, transparent 75%);
+  }
 
   /* ── CONCIERGE SECTION ── */
   .concierge-section { background: #3a7490; padding: 5rem 3rem; }
@@ -510,84 +520,53 @@ function NavBar({ setPage, user, onSignIn, onSignOut }) {
 }
 
 // ── HERO ──────────────────────────────────────────────────────────────────────
-// Animated city-to-ocean scene
-// When you have the final video from HeyGen or a stock source, replace the
-// <HeroScene /> with:
-//   <div className="hero-video-wrap">
-//     <video autoPlay muted loop playsInline src="YOUR_VIDEO_URL.mp4" />
-//     <div className="hero-video-overlay" />
-//   </div>
+// VIDEO SOURCE — set VITE_HERO_VIDEO_URL in your .env (Supabase Storage public URL)
+// e.g. VITE_HERO_VIDEO_URL=https://<project>.supabase.co/storage/v1/object/public/assets/hero-loop.mp4
+// Falls back to a clean teal gradient while the video loads or on mobile.
 
-function HeroScene() {
-  // Generate deterministic stars
-  const stars = Array.from({ length: 55 }, (_, i) => ({
-    left: ((i * 137.508) % 100).toFixed(2),
-    top:  ((i * 79.37)  % 100).toFixed(2),
-    delay: ((i * 0.41)  % 3).toFixed(2),
-    size: i % 7 === 0 ? 2 : 1,
-  }))
+const HERO_VIDEO_URL = import.meta.env.VITE_HERO_VIDEO_URL || null
 
-  // Buildings: [width, height] in px  — vary to create a realistic SF skyline silhouette
-  const buildings = [
-    [28,90],[18,60],[36,130],[24,80],[44,160],[20,55],[32,110],
-    [26,85],[50,180],[22,70],[38,140],[16,50],[42,155],[28,95],
-    [34,120],[20,65],[46,170],[24,75],[30,100],[18,58],[40,145],
-    [26,88],[36,125],[22,68],[48,165],[20,60],[32,105],[28,92],
-    [44,150],[18,52],[38,135],[24,78],[30,98],[46,158],[22,72],
-  ]
+function HeroBackground() {
+  const videoRef = useRef(null)
+
+  useEffect(() => {
+    const v = videoRef.current
+    if (!v) return
+    const onLoaded = () => v.classList.add('loaded')
+    v.addEventListener('canplaythrough', onLoaded)
+    return () => v.removeEventListener('canplaythrough', onLoaded)
+  }, [])
 
   return (
-    <div className="hero-scene" aria-hidden="true">
-      {/* Sky gradient */}
-      <div className="hero-scene-sky" />
-
-      {/* Stars */}
-      <div className="hero-scene-stars">
-        {stars.map((s, i) => (
-          <div
-            key={i}
-            className="star"
-            style={{
-              left: `${s.left}%`,
-              top: `${s.top}%`,
-              width: `${s.size}px`,
-              height: `${s.size}px`,
-              animationDelay: `${s.delay}s`,
-            }}
-          />
-        ))}
+    <>
+      {/* Always render the CSS fallback — it shows instantly behind the video */}
+      <div className="hero-scene" aria-hidden="true">
+        <div className="hero-scene-overlay" />
       </div>
 
-      {/* Slow-panning city silhouette */}
-      <div className="hero-scene-city">
-        {buildings.map(([w, h], i) => (
-          <div
-            key={i}
-            className="bld"
-            style={{ width: `${w}px`, height: `${h}px` }}
+      {/* Video layer — fades in once buffered */}
+      {HERO_VIDEO_URL && (
+        <div className="hero-video-wrap" aria-hidden="true">
+          <video
+            ref={videoRef}
+            src={HERO_VIDEO_URL}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
           />
-        ))}
-      </div>
-
-      {/* Horizon teal glow */}
-      <div className="hero-scene-horizon" />
-
-      {/* Ocean */}
-      <div className="hero-scene-ocean" />
-
-      {/* Vignette overlay so text stays legible */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        background: 'linear-gradient(to right, rgba(30,77,99,0.72) 0%, rgba(30,77,99,0.32) 55%, rgba(30,77,99,0.12) 100%), linear-gradient(to top, rgba(30,77,99,0.65) 0%, transparent 35%)',
-      }} />
-    </div>
+          <div className="hero-video-overlay" />
+        </div>
+      )}
+    </>
   )
 }
 
 function Hero({ setPage }) {
   return (
     <section className="hero" style={{ minHeight: '100vh', padding: '8rem 3rem 4rem' }}>
-      <HeroScene />
+      <HeroBackground />
       <div className="hero-grain" />
 
       <div className="hero-content">
