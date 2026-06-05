@@ -56,6 +56,8 @@
       overflow:hidden;
       background:rgba(0,63,90,0.55);
       transition:border-color 0.2s;
+      display:flex;
+      flex-direction:column;
     }
     .phase-card.answered-yes { border-color:#2e7458; }
     .phase-card.answered-no  { border-color:#b84a36; }
@@ -80,14 +82,24 @@
     .phase-title { font-size:15px; font-weight:500; color:var(--parchment); margin:0; }
     .phase-focus { font-size:12px; color:rgba(219,232,235,0.55); margin:2px 0 0; }
 
-    .phase-body { padding:0 18px 16px; }
+    .phase-body { padding:0 18px 16px; display:flex; flex-direction:column; flex:1; }
     .phase-divider { height:0.5px; background:var(--border); margin:0 0 14px; }
 
     /* DO / DON'T */
     .do-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; }
     .do-box { padding:10px 12px; border-radius:8px; }
-    .do-yes { background:rgba(46,116,88,0.15);  border:0.5px solid rgba(46,116,88,0.4); }
-    .do-no  { background:rgba(184,74,54,0.15);  border:0.5px solid rgba(184,74,54,0.4); }
+    .do-yes     { background:rgba(46,116,88,0.15);   border:0.5px solid rgba(46,116,88,0.4); }
+    .do-no      { background:rgba(184,74,54,0.15);  border:0.5px solid rgba(184,74,54,0.4); }
+    .do-obs     { background:rgba(79,136,159,0.15); border:0.5px solid rgba(79,136,159,0.4); }
+    .do-only    { background:rgba(176,120,40,0.15); border:0.5px solid rgba(176,120,40,0.4); }
+    .do-healthy { background:rgba(83,74,183,0.15);  border:0.5px solid rgba(175,169,236,0.4); }
+    .do-empty   { background:rgba(219,232,235,0.05); border:0.5px solid rgba(219,232,235,0.1); }
+    .do-obs .do-label     { color:#85B7EB; }
+    .do-only .do-label    { color:#f0ca80; }
+    .do-healthy .do-label { color:#AFA9EC; }
+    .do-obs .do-list li::before     { content:'·'; color:#85B7EB; flex-shrink:0; }
+    .do-only .do-list li::before    { content:'·'; color:#f0ca80; flex-shrink:0; }
+    .do-healthy .do-list li::before { content:'·'; color:#AFA9EC; flex-shrink:0; }
     .do-label { font-size:10px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; }
     .do-yes .do-label { color:#80c8a4; }
     .do-no  .do-label { color:#f0a898; }
@@ -104,7 +116,7 @@
     .only-pill { font-size:11px; padding:3px 11px; border-radius:20px; background:rgba(176,120,40,0.15); border:0.5px solid rgba(176,120,40,0.4); color:#f0ca80; }
 
     /* QUESTION BOX */
-    .question-box { border-radius:8px; padding:12px 14px; cursor:pointer; transition:all 0.15s; }
+    .question-box { border-radius:8px; padding:12px 14px; cursor:pointer; transition:all 0.15s; margin-top:auto; }
     .qb-1 { background:rgba(29,158,117,0.12); border:0.5px solid rgba(93,202,165,0.4); }
     .qb-2 { background:rgba(55,138,221,0.12); border:0.5px solid rgba(133,183,235,0.4); }
     .qb-3 { background:rgba(186,117,23,0.12); border:0.5px solid rgba(250,199,117,0.4); }
@@ -156,7 +168,8 @@
       background:rgba(0,63,90,0.4);
       border-radius:0 10px 10px 0;
     }
-    .gr-label { font-size:10px; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:rgba(219,232,235,0.5); margin-bottom:12px; }
+    .gr-label { font-size:10px; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:rgba(219,232,235,0.5); margin-bottom:8px; }
+    .gr-intro { font-size:13px; color:rgba(219,232,235,0.7); font-style:italic; margin-bottom:12px; }
     .gr-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
     .gr-col-label { font-size:11px; font-weight:500; margin-bottom:6px; }
     .gr-no-label  { color:#f0a898; }
@@ -294,13 +307,21 @@
       </div>
       <div class="phase-body">
         <div class="phase-divider"></div>
-        <div class="observe-block">
-          <div class="block-label">Observe</div>
-          <div class="pill-wrap">
-            <span class="obs-pill">Follow-through</span>
-            <span class="obs-pill">Communication style</span>
-            <span class="obs-pill">Respect for boundaries</span>
-            <span class="obs-pill">Reliability</span>
+        <div class="do-grid">
+          <div class="do-box do-obs">
+            <div class="do-label">Observe</div>
+            <ul class="do-list">
+              <li>Follow-through</li>
+              <li>Communication style</li>
+              <li>Respect for boundaries</li>
+              <li>Reliability</li>
+            </ul>
+          </div>
+          <div class="do-box do-empty">
+            <div class="do-label">&nbsp;</div>
+            <ul class="do-list">
+              <li style="opacity:0">·</li>
+            </ul>
           </div>
         </div>
         <div class="question-box qb-2" onclick="openQ(2)">
@@ -327,21 +348,23 @@
       </div>
       <div class="phase-body">
         <div class="phase-divider"></div>
-        <div class="observe-block">
-          <div class="block-label">Gradually allow</div>
-          <div class="pill-wrap">
-            <span class="obs-pill">Vulnerability</span>
-            <span class="obs-pill">Emotional depth</span>
-            <span class="obs-pill">Personal history</span>
-            <span class="obs-pill">Future discussions</span>
+        <div class="do-grid">
+          <div class="do-box do-obs">
+            <div class="do-label">Gradually allow</div>
+            <ul class="do-list">
+              <li>Vulnerability</li>
+              <li>Emotional depth</li>
+              <li>Personal history</li>
+              <li>Future discussions</li>
+            </ul>
           </div>
-        </div>
-        <div class="observe-block">
-          <div class="block-label">Only when</div>
-          <div class="pill-wrap">
-            <span class="only-pill">Consistency is established</span>
-            <span class="only-pill">Accountability is present</span>
-            <span class="only-pill">Emotional safety exists</span>
+          <div class="do-box do-only">
+            <div class="do-label">Only when</div>
+            <ul class="do-list">
+              <li>Consistency established</li>
+              <li>Accountability present</li>
+              <li>Emotional safety exists</li>
+            </ul>
           </div>
         </div>
         <div class="question-box qb-3" onclick="openQ(3)">
@@ -368,13 +391,21 @@
       </div>
       <div class="phase-body">
         <div class="phase-divider"></div>
-        <div class="observe-block">
-          <div class="block-label">Healthy signs</div>
-          <div class="pill-wrap">
-            <span class="obs-pill">Reciprocal effort</span>
-            <span class="obs-pill">Clear communication</span>
-            <span class="obs-pill">Conflict can be repaired</span>
-            <span class="obs-pill">Both invest willingly</span>
+        <div class="do-grid">
+          <div class="do-box do-healthy">
+            <div class="do-label">Healthy signs</div>
+            <ul class="do-list">
+              <li>Reciprocal effort</li>
+              <li>Clear communication</li>
+              <li>Conflict can be repaired</li>
+              <li>Both invest willingly</li>
+            </ul>
+          </div>
+          <div class="do-box do-empty">
+            <div class="do-label">&nbsp;</div>
+            <ul class="do-list">
+              <li style="opacity:0">·</li>
+            </ul>
           </div>
         </div>
         <div class="question-box qb-4" onclick="openQ(4)">
@@ -409,9 +440,9 @@
   <!-- GOLDEN RULE -->
   <div class="golden-rule">
     <div class="gr-label">The golden rule</div>
+    <p class="gr-intro">Your relationship should be based not on</p>
     <div class="gr-grid">
       <div>
-        <div class="gr-col-label gr-no-label">Do not trust:</div>
         <ul class="gr-list gr-no">
           <li>Chemistry</li>
           <li>Attraction</li>
@@ -420,7 +451,7 @@
         </ul>
       </div>
       <div>
-        <div class="gr-col-label gr-yes-label">But look for:</div>
+        <div class="gr-col-label gr-yes-label">But rather be based on</div>
         <ul class="gr-list gr-yes">
           <li>Consistency</li>
           <li>Accountability</li>
