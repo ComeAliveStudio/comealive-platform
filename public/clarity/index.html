@@ -1,1 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relationship Clarity Tool — Your Master Relationship Manual</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink:        #4f889f;
+      --gold:       #005575;
+      --slate:      #dbe8eb;
+      --mist:       #4f889f;
+      --border:     rgba(215,229,232,0.85);
+      --card-text:  #1d1d1b;
+      --accent:     #005575;
+      --nav-bg:     rgba(0,63,90,0.96);
+      --alt-bg:     #3a7490;
+      --alt-bg2:    #3d7890;
+      --parchment:  #f0ece4;
+      --deep-teal:  #003f5a;
+      --mid-teal:   #005575;
+      --light-teal: #dbe8eb;
+      --danger:     #b84a36;
+      --danger-pale:#faeae6;
+      --amber:      #b07828;
+      --amber-pale: #faf3e2;
+      --safe:       #2e7458;
+      --safe-pale:  #e2f0ea;
+    }
 
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--deep-teal);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--card-text);
+      min-height: 100vh;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--nav-bg);
+      padding: 52px 24px 44px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(215,229,232,0.2);
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: -80px; left: -80px;
+      width: 260px; height: 260px;
+      border-radius: 50%;
+      background: rgba(79,136,159,0.12);
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: -50px; right: -50px;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: rgba(0,85,117,0.15);
+    }
+    .header-tag {
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--mist); margin-bottom: 14px;
+    }
+    header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px,6vw,50px);
+      font-weight: 300; line-height: 1.2;
+      color: var(--parchment);
+      margin-bottom: 10px;
+    }
+    header h1 em { font-style: italic; color: var(--slate); }
+    .header-book {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px; font-style: italic;
+      color: rgba(240,236,228,0.7);
+      margin-top: 6px;
+    }
+    .header-author {
+      margin-top: 18px; font-size: 10px;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: rgba(240,236,228,0.38);
+    }
+
+    /* ── MAIN WRAPPER ── */
+    main {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    .intro { text-align: center; margin-bottom: 36px; }
+    .intro p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px; font-weight: 300;
+      font-style: italic;
+      color: var(--slate);
+      line-height: 1.75;
+    }
+
+    /* ── TABS ── */
+    .tabs {
+      display: flex;
+      margin-bottom: 24px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .tab {
+      flex: 1; padding: 13px 8px;
+      border: none; border-right: 1px solid var(--border);
+      background: rgba(0,63,90,0.55);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px; font-weight: 500;
+      color: var(--slate);
+      letter-spacing: 0.04em;
+      transition: all 0.2s;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 4px;
+    }
+    .tab:last-child { border-right: none; }
+    .tab .tab-icon { font-size: 15px; }
+    .tab.active-red    { background: var(--danger);  color: #fff; border-color: var(--danger); }
+    .tab.active-amber  { background: var(--amber);   color: #fff; border-color: var(--amber); }
+    .tab.active-green  { background: var(--safe);    color: #fff; border-color: var(--safe); }
+    .tab:hover:not(.active-red):not(.active-amber):not(.active-green) {
+      background: rgba(79,136,159,0.2);
+    }
+
+    /* ── CHECKLIST SECTION ── */
+    .section { display: none; }
+    .section.visible { display: block; }
+    .section-label {
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--mist); margin-bottom: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    @media(max-width:480px){ .grid { grid-template-columns: 1fr; } }
+
+    .item {
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(219,232,235,0.08);
+      cursor: pointer;
+      display: flex; align-items: flex-start; gap: 10px;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .item:hover { background: rgba(219,232,235,0.15); border-color: var(--mist); }
+    .item.checked-red   { background: rgba(184,74,54,0.15);  border-color: var(--danger); }
+    .item.checked-amber { background: rgba(176,120,40,0.15); border-color: var(--amber); }
+    .item.checked-green { background: rgba(46,116,88,0.15);  border-color: var(--safe); }
+
+    .chk {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(219,232,235,0.4);
+      flex-shrink: 0; margin-top: 1px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: transparent;
+      transition: all 0.15s;
+    }
+    .item.checked-red   .chk { background: var(--danger); border-color: var(--danger); color: #fff; }
+    .item.checked-amber .chk { background: var(--amber);  border-color: var(--amber);  color: #fff; }
+    .item.checked-green .chk { background: var(--safe);   border-color: var(--safe);   color: #fff; }
+    .item-label { font-size: 13px; line-height: 1.5; color: var(--slate); }
+
+    /* ── SUMMARY ── */
+    .summary {
+      margin-top: 24px;
+      padding: 20px;
+      background: rgba(0,63,90,0.55);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    .summary-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14px; font-style: italic;
+      color: var(--slate); margin-bottom: 14px;
+    }
+    .pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .pill { font-size: 12px; font-weight: 500; padding: 5px 14px; border-radius: 20px; }
+    .pill-red   { background: rgba(184,74,54,0.2);  color: #f0a898; border: 1px solid rgba(184,74,54,0.4); }
+    .pill-amber { background: rgba(176,120,40,0.2); color: #f0ca80; border: 1px solid rgba(176,120,40,0.4); }
+    .pill-green { background: rgba(46,116,88,0.2);  color: #80c8a4; border: 1px solid rgba(46,116,88,0.4); }
+
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .reset-btn {
+      font-size: 11px; color: var(--slate);
+      background: none; border: 1px solid var(--border);
+      padding: 6px 14px; border-radius: 20px;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      transition: background 0.15s;
+    }
+    .reset-btn:hover { background: rgba(219,232,235,0.1); }
+    .results-btn {
+      font-size: 12px; font-weight: 500;
+      color: #fff; background: var(--accent);
+      border: none; padding: 8px 22px;
+      border-radius: 20px; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: background 0.15s;
+    }
+    .results-btn:hover { background: var(--mist); }
+    .results-btn:disabled { background: rgba(219,232,235,0.2); color: rgba(219,232,235,0.4); cursor: default; }
+
+    /* ── FINAL RULE ── */
+    .final-rule {
+      margin-top: 24px; padding: 22px 26px;
+      border-left: 3px solid var(--mist);
+      background: rgba(0,63,90,0.4);
+      border-radius: 0 10px 10px 0;
+    }
+    .final-rule p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px; font-style: italic;
+      color: var(--slate); margin-bottom: 10px;
+    }
+    .final-rule ul { list-style: none; padding: 0; }
+    .final-rule li {
+      font-size: 13px; color: rgba(219,232,235,0.8);
+      padding: 3px 0; display: flex; align-items: center; gap: 8px;
+    }
+    .final-rule li::before { content: '—'; color: var(--mist); }
+
+    /* ── EMAIL CAPTURE ── */
+    .capture {
+      margin-top: 28px; padding: 28px 24px;
+      background: rgba(0,63,90,0.7);
+      border: 1px solid var(--border);
+      border-radius: 14px; text-align: center;
+    }
+    .capture h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px; font-weight: 300;
+      color: var(--parchment); margin-bottom: 6px;
+    }
+    .capture p { font-size: 13px; color: rgba(219,232,235,0.6); margin-bottom: 20px; line-height: 1.65; }
+    .capture-form { display: flex; gap: 8px; max-width: 380px; margin: 0 auto; }
+    @media(max-width:480px){ .capture-form { flex-direction: column; } }
+    .capture input {
+      flex: 1; padding: 11px 16px; border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.08);
+      color: var(--parchment); font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none;
+    }
+    .capture input::placeholder { color: rgba(240,236,228,0.3); }
+    .capture input:focus { border-color: var(--mist); }
+    .capture button {
+      padding: 11px 20px; border-radius: 8px; border: none;
+      background: var(--accent); color: #fff;
+      font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+      cursor: pointer; white-space: nowrap; transition: background 0.15s;
+    }
+    .capture button:hover { background: var(--mist); }
+    .capture-success { display: none; font-size: 14px; color: #80c8a4; padding: 10px 0; }
+
+    footer {
+      text-align: center; padding: 24px;
+      font-size: 11px; color: rgba(219,232,235,0.45);
+      border-top: 1px solid rgba(215,229,232,0.15);
+    }
+    footer a { color: var(--mist); text-decoration: none; }
+
+    /* ══════════════════════════════════════
+       RESULTS SCREEN
+    ══════════════════════════════════════ */
+    #results-screen { animation: fadeUp 0.4s ease; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+
+    .results-back {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--slate);
+      cursor: pointer; margin-bottom: 28px;
+      background: none; border: none;
+      font-family: 'DM Sans', sans-serif; padding: 0;
+      transition: color 0.15s;
+    }
+    .results-back:hover { color: var(--parchment); }
+
+    .results-header { text-align: center; margin-bottom: 32px; }
+    .results-header .tier-label {
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .results-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(24px,5vw,40px);
+      font-weight: 300; line-height: 1.25;
+      color: var(--parchment); margin-bottom: 10px;
+    }
+    .results-header .tier-sub {
+      font-size: 13px; color: var(--slate);
+      font-style: italic;
+    }
+
+    /* Score bar */
+    .score-bar-wrap { margin-bottom: 28px; }
+    .score-bar-labels {
+      display: flex; justify-content: space-between;
+      font-size: 10px; color: rgba(219,232,235,0.5);
+      letter-spacing: 0.06em; margin-bottom: 8px;
+    }
+    .score-bar-track {
+      height: 7px; border-radius: 20px;
+      background: rgba(219,232,235,0.12); overflow: hidden;
+    }
+    .score-bar-fill { height: 100%; border-radius: 20px; transition: width 0.7s ease; }
+
+    .score-pills { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
+
+    /* Result card */
+    .result-card {
+      border-radius: 12px; overflow: hidden;
+      border: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+    .result-card-header {
+      padding: 22px 26px 18px;
+      background: var(--slate);
+      border-bottom: 1px solid var(--border);
+    }
+    .result-card-header .rc-tag {
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 6px;
+    }
+    .result-card-header h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px; font-weight: 400;
+      color: var(--gold); line-height: 1.3;
+    }
+    .result-card-body {
+      padding: 22px 26px;
+      background: #fff;
+    }
+    .result-card-body p {
+      font-size: 14px; line-height: 1.85;
+      color: var(--card-text); margin-bottom: 14px;
+    }
+    .result-card-body p:last-child { margin-bottom: 0; }
+    .result-card-body strong { color: var(--accent); font-weight: 500; }
+    .result-card-body em { font-style: italic; color: #555; }
+    .result-card-body .closer {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px; font-style: italic;
+      color: var(--gold);
+      border-top: 1px solid var(--border);
+      padding-top: 16px; margin-top: 16px;
+    }
+
+    /* Results CTA */
+    .results-action {
+      margin-top: 28px; padding: 28px 24px;
+      background: rgba(0,63,90,0.7);
+      border: 1px solid var(--border);
+      border-radius: 14px; text-align: center;
+    }
+    .results-action h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px; font-weight: 300;
+      color: var(--parchment); margin-bottom: 8px;
+    }
+    .results-action p {
+      font-size: 13px; color: rgba(219,232,235,0.6);
+      line-height: 1.7; margin-bottom: 20px;
+    }
+    .results-action .cta-btn {
+      display: inline-block; padding: 12px 28px;
+      border-radius: 8px; background: var(--accent);
+      color: #fff; font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 500;
+      text-decoration: none;
+      transition: background 0.15s; cursor: pointer; border: none;
+    }
+    .results-action .cta-btn:hover { background: var(--mist); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-tag">Interactive Companion Tool</div>
+  <h1>Relationship <em>Clarity</em> Checklist</h1>
+  <div class="header-book">Your Master Relationship Manual</div>
+  <div class="header-author">Angelo D'Agostino</div>
+</header>
+
+<!-- ═══════════ CHECKLIST SCREEN ═══════════ -->
+<div id="checklist-screen" class="screen active">
+<main>
+  <div class="intro">
+    <p>Check what you observe. Check what you feel.<br>Let the numbers tell you what your heart already knows.</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active-red" onclick="show('red',this)">
+      <span class="tab-icon">⚠</span><span>Caution Signals</span>
+    </button>
+    <button class="tab" onclick="show('amber',this)">
+      <span class="tab-icon">⊘</span><span>Internal Warnings</span>
+    </button>
+    <button class="tab" onclick="show('green',this)">
+      <span class="tab-icon">✓</span><span>Green Flags</span>
+    </button>
+  </div>
+
+  <div id="sec-red" class="section visible">
+    <div class="section-label">What you observe in this person</div>
+    <div class="grid" id="grid-red"></div>
+  </div>
+  <div id="sec-amber" class="section">
+    <div class="section-label">What you feel inside yourself</div>
+    <div class="grid" id="grid-amber"></div>
+  </div>
+  <div id="sec-green" class="section">
+    <div class="section-label">What is genuinely present</div>
+    <div class="grid" id="grid-green"></div>
+  </div>
+
+  <div class="summary">
+    <div class="summary-title">Your current picture</div>
+    <div class="pills">
+      <span class="pill pill-red"   id="count-red">0 caution signals</span>
+      <span class="pill pill-amber" id="count-amber">0 internal warnings</span>
+      <span class="pill pill-green" id="count-green">0 green flags</span>
+    </div>
+    <div class="btn-row">
+      <button class="reset-btn" onclick="resetAll()">Reset all</button>
+      <button class="results-btn" id="results-btn" onclick="goToResults()" disabled>See my results →</button>
+    </div>
+  </div>
+
+  <div class="final-rule">
+    <p>Judge by stability — not by intensity</p>
+    <ul>
+      <li>Consistency</li><li>Clarity</li><li>Accountability</li>
+      <li>Emotional safety</li><li>Stability over time</li>
+    </ul>
+  </div>
+
+  <div class="capture">
+    <h3>Save your results</h3>
+    <p>Get the full reflection guide sent to your inbox — free from Angelo D'Agostino.</p>
+    <div class="capture-form">
+      <input type="email" id="email-input" placeholder="your@email.com">
+      <button onclick="submitEmail()">Send it to me</button>
+    </div>
+    <div class="capture-success" id="capture-success">✓ You're in. Check your inbox.</div>
+  </div>
+</main>
+<footer>From <em>Your Master Relationship Manual</em> by <a href="https://app.comealive.vision">Angelo D'Agostino</a></footer>
+</div>
+
+<!-- ═══════════ RESULTS SCREEN ═══════════ -->
+<div id="results-screen" class="screen">
+<main>
+  <button class="results-back" onclick="goBack()">← Back to checklist</button>
+
+  <div class="results-header">
+    <div class="tier-label" id="res-tier-label"></div>
+    <h2 id="res-title"></h2>
+    <div class="tier-sub" id="res-sub"></div>
+  </div>
+
+  <div class="score-bar-wrap">
+    <div class="score-bar-labels">
+      <span>ALL GREEN</span><span>MIXED</span><span>HIGH ALERT</span>
+    </div>
+    <div class="score-bar-track">
+      <div class="score-bar-fill" id="score-bar-fill"></div>
+    </div>
+  </div>
+
+  <div class="score-pills" id="res-pills"></div>
+  <div id="res-card"></div>
+
+  <div class="results-action">
+    <h3>This is your starting point — not your ending point.</h3>
+    <p>The patterns you've identified today are the ones that have been running the show quietly. Awareness is step one. What you do with it is entirely up to you.</p>
+    <a href="https://app.comealive.vision" class="cta-btn">Explore coaching with Angelo →</a>
+  </div>
+</main>
+<footer>From <em>Your Master Relationship Manual</em> by <a href="https://app.comealive.vision">Angelo D'Agostino</a></footer>
+</div>
+
+<script>
+const DATA = {
+  red:   ["Hot–cold behaviour","Inconsistent communication","Disappearances without explanation","Mixed signals","Future promises, no present action","Emotional unavailability","Lack of accountability","Blame-shifting","Gaslighting","Triangulation with ex-partners","Chronic ambiguity","Repeated boundary testing","Attention only after distance","Intensity replacing stability","Sexual closeness replacing emotional safety"],
+  amber: ["Anxiety increasing over time","Obsessive thinking","Fear of losing the connection","Constant need for reassurance","Hyper-analysis of messages","Feeling emotionally destabilised","Ignoring obvious inconsistencies","Rationalising disrespect","Feeling relief instead of peace","Losing focus on work or purpose"],
+  green: ["Calm consistency","Predictable behaviour","Emotional accountability","Clear communication","Respect for boundaries","Stable effort over time","Repair after conflict","Emotional safety","Mutual investment","Peacefulness without confusion"]
+};
+
+const counts = { red:0, amber:0, green:0 };
+
+const TIERS = [
+  {
+    id:1, barColor:"linear-gradient(90deg,#2e7458,#4a9e78)",
+    labelColor:"#80c8a4",
+    label:"Tier 1 — Clear Horizon",
+    title:"This looks like the real thing.",
+    sub:"The green flags dominate. Trust what you see.",
+    heading:"You Are in Safe Territory",
+    body:`<p>Let's be honest — this doesn't happen all the time. What you're describing here is a connection where the basics are actually in place. <strong>Consistency. Clarity. Emotional safety.</strong> These aren't small things. These are the whole thing.</p>
+<p>In <em>Your Master Relationship Manual</em>, we talk a lot about how we've been conditioned to mistake intensity for love. The dramatic highs. The anxious lows. The "I can't stop thinking about them" that we romanticise as passion. But what you're experiencing right now — the calm, the predictability, the sense of being met — that is what real love actually feels like.</p>
+<p>It feels quieter than the movies. And that's not a problem. That's the point.</p>
+<p>The work here is not to fix anything. The work is to <strong>stop waiting for it to fall apart.</strong> If you're here checking this list, part of you may still be scanning for danger out of old habit. Notice that. Then put the list down and enjoy what you have.</p>
+<div class="closer">Stability isn't boring. It's the foundation everything else is built on.</div>`
+  },
+  {
+    id:2, barColor:"linear-gradient(90deg,#2e7458,#8cb840)",
+    labelColor:"#a8cc60",
+    label:"Tier 2 — Mostly Healthy",
+    title:"Good foundations. A few things worth noticing.",
+    sub:"Mostly green, with some early signals to stay aware of.",
+    heading:"Stay Present — and Stay Honest",
+    body:`<p>What you have here is largely solid. The green flags are doing their job — you feel safe more often than not, there's genuine investment on both sides, and the relationship has a quality of <em>ease</em> that isn't easy to find.</p>
+<p>And yet — a few things have shown up on the radar. Not enough to panic. But enough to pay attention to.</p>
+<p>Here's what I've seen in my work: <strong>the small inconsistencies we ignore in year one become the arguments we can't resolve in year three.</strong> Not because they were unsolvable — but because we talked ourselves out of naming them early. We gave the benefit of the doubt one too many times. We didn't want to rock a boat that felt, mostly, stable.</p>
+<p>You don't need to start a difficult conversation tonight. But you do need to <strong>stay honest with yourself.</strong> What are you rationalising? What have you noticed but decided not to mention? That's the question worth sitting with.</p>
+<div class="closer">A good relationship can hold an honest conversation. If it can't — that's useful information too.</div>`
+  },
+  {
+    id:3, barColor:"linear-gradient(90deg,#8cb840,#c4892a)",
+    labelColor:"#f0ca80",
+    label:"Tier 3 — Mixed Signals",
+    title:"Something good is here. So is something that worries you.",
+    sub:"A genuine mix — and that mix is exactly what makes it hard.",
+    heading:"The Confusion Is the Pattern",
+    body:`<p>This is the zone most people spend the most time in. And it's the hardest place to be — not because everything is bad, but because <strong>enough is good to keep you hoping.</strong></p>
+<p>You're not imagining the connection. It's real. The warmth is real. The moments of closeness are real. But the inconsistency is also real. The anxiety you feel between those moments is real. The conversations you replay in your head at 2am — also real.</p>
+<p>In <em>Your Master Relationship Manual</em>, I call this the <em>push-pull trap.</em> It's the relationship that never quite stabilises, never quite ends. Where you feel just good enough to stay and just uncertain enough to never fully relax. Your nervous system is working overtime — and it's telling you something.</p>
+<p><strong>Mixed signals are not a phase.</strong> They are information. The question is not "does this person have good qualities?" — of course they do. The question is: <em>is this pattern consistent enough to build a life on?</em></p>
+<p>You deserve to be someone's clear choice. Not their "sometimes." Not their "let me see how this goes."</p>
+<div class="closer">Confusion is not chemistry. It's a signal asking to be read.</div>`
+  },
+  {
+    id:4, barColor:"linear-gradient(90deg,#c4892a,#b84a36)",
+    labelColor:"#f0a898",
+    label:"Tier 4 — Serious Concern",
+    title:"The red flags are speaking. Are you listening?",
+    sub:"Multiple warning signs — inside and out. This needs honest attention.",
+    heading:"Your Gut Already Knows",
+    body:`<p>Let me ask you something. Before you filled in this checklist — before you counted anything — how did you feel when you woke up this morning and thought about this relationship? Calm? Or already bracing?</p>
+<p>The signals here are significant. Not one or two edge cases — but a pattern. <strong>What you're experiencing internally matches what you're observing externally.</strong> The anxiety, the obsessive thinking, the need for reassurance — these are not character flaws. They are intelligent responses to an environment that doesn't feel safe.</p>
+<p>In <em>Your Master Relationship Manual</em>, I write about this directly: <em>when you find yourself analysing every message, rehearsing every conversation, and feeling relief instead of peace — you are not in love. You are in survival mode.</em></p>
+<p>This doesn't necessarily mean the relationship is over. But it means something has to change — and that conversation has to happen. Not tomorrow. Not "when the time is right." The time is right when you can no longer pretend the signals aren't there.</p>
+<p><strong>You are allowed to ask for clarity.</strong> You are allowed to say "this isn't working for me." A partner worth keeping will hear that. A partner who can't — is also giving you information.</p>
+<div class="closer">Peace is not the absence of conflict. It's the presence of honesty.</div>`
+  },
+  {
+    id:5, barColor:"linear-gradient(90deg,#b84a36,#8b2a1a)",
+    labelColor:"#f08878",
+    label:"Tier 5 — High Alert",
+    title:"This is not a grey area anymore.",
+    sub:"The pattern is clear. What happens next is your decision.",
+    heading:"You Already Know What This Is",
+    body:`<p>I'm not going to soften this. You didn't come here looking for reassurance — you came here looking for clarity. And the numbers have given it to you.</p>
+<p>What you're describing is a relationship where the warning signs are not occasional — they are the structure. The hot and cold. The disappearances. The gaslighting. The way you feel like you're always one wrong move from losing something that never quite felt secure to begin with. <strong>That is not love. That is a cycle.</strong></p>
+<p>And cycles — I have to tell you this plainly — <em>do not break themselves.</em></p>
+<p>In <em>Your Master Relationship Manual</em>, I talk about the moment of recognition. It's rarely dramatic. It's usually quiet. A morning where you look at yourself in the mirror and think: <em>I have been explaining this person's behaviour to everyone around me, including myself, for a very long time.</em> That moment is not defeat. That moment is the beginning.</p>
+<p>You do not need to make every decision today. But you do need to <strong>stop pretending this is a phase.</strong> It isn't. It's a pattern. And patterns only change when someone decides — firmly, with love for themselves — that they are no longer available for it.</p>
+<p>That someone can be you. Starting now.</p>
+<div class="closer">The most important relationship you will ever have is the one you have with your own clarity. Protect it.</div>`
+  }
+];
+
+function getTier(r, a, g) {
+  const maxR = DATA.red.length, maxA = DATA.amber.length, maxG = DATA.green.length;
+  if (r + a + g === 0) return null;
+  const danger = Math.max(0, Math.min(1, (r*2 + a*1.2) / (maxR*2 + maxA*1.2) - (g*0.8)/(maxG*2)));
+  if (danger < 0.12) return TIERS[0];
+  if (danger < 0.28) return TIERS[1];
+  if (danger < 0.50) return TIERS[2];
+  if (danger < 0.72) return TIERS[3];
+  return TIERS[4];
+}
+
+function build() {
+  ['red','amber','green'].forEach(type => {
+    const grid = document.getElementById('grid-' + type);
+    DATA[type].forEach((label, i) => {
+      const el = document.createElement('div');
+      el.className = 'item';
+      el.id = type + '-' + i;
+      el.innerHTML = `<div class="chk">✓</div><span class="item-label">${label}</span>`;
+      el.onclick = () => toggle(type, i, el);
+      grid.appendChild(el);
+    });
+  });
+}
+
+function toggle(type, i, el) {
+  const cls = 'checked-' + type;
+  if (el.classList.contains(cls)) { el.classList.remove(cls); counts[type]--; }
+  else { el.classList.add(cls); counts[type]++; }
+  updateCounts();
+}
+
+function updateCounts() {
+  document.getElementById('count-red').textContent   = counts.red   + (counts.red===1   ? ' caution signal'   : ' caution signals');
+  document.getElementById('count-amber').textContent = counts.amber + (counts.amber===1 ? ' internal warning' : ' internal warnings');
+  document.getElementById('count-green').textContent = counts.green + (counts.green===1 ? ' green flag'        : ' green flags');
+  document.getElementById('results-btn').disabled = (counts.red + counts.amber + counts.green) === 0;
+}
+
+function show(type, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('visible'));
+  document.getElementById('sec-' + type).classList.add('visible');
+  document.querySelectorAll('.tab').forEach(t => { t.className = 'tab'; });
+  btn.classList.add('active-' + type);
+}
+
+function resetAll() {
+  document.querySelectorAll('.item').forEach(el => { el.className = 'item'; });
+  counts.red = 0; counts.amber = 0; counts.green = 0;
+  updateCounts();
+}
+
+function goToResults() {
+  const tier = getTier(counts.red, counts.amber, counts.green);
+  if (!tier) return;
+
+  document.getElementById('res-tier-label').textContent = tier.label;
+  document.getElementById('res-tier-label').style.color = tier.labelColor;
+  document.getElementById('res-title').textContent = tier.title;
+  document.getElementById('res-sub').textContent   = tier.sub;
+
+  const maxR = DATA.red.length, maxA = DATA.amber.length;
+  const pct  = Math.min(100, Math.round(((counts.red*2 + counts.amber) / (maxR*2 + maxA)) * 100));
+  const fill = document.getElementById('score-bar-fill');
+  fill.style.width      = pct + '%';
+  fill.style.background = tier.barColor;
+
+  document.getElementById('res-pills').innerHTML =
+    `<span class="pill pill-red">${counts.red} caution signals</span>
+     <span class="pill pill-amber">${counts.amber} internal warnings</span>
+     <span class="pill pill-green">${counts.green} green flags</span>`;
+
+  document.getElementById('res-card').innerHTML = `
+    <div class="result-card">
+      <div class="result-card-header">
+        <div class="rc-tag">Your Reading</div>
+        <h3>${tier.heading}</h3>
+      </div>
+      <div class="result-card-body">${tier.body}</div>
+    </div>`;
+
+  document.getElementById('checklist-screen').classList.remove('active');
+  document.getElementById('results-screen').classList.add('active');
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function goBack() {
+  document.getElementById('results-screen').classList.remove('active');
+  document.getElementById('checklist-screen').classList.add('active');
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+async function submitEmail() {
+  const emailInput = document.getElementById('email-input');
+  const val = emailInput.value.trim();
+  if (!val || !val.includes('@')) {
+    emailInput.style.borderColor = '#b84a36';
+    return;
+  }
+
+  const btn = document.querySelector('.capture button');
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+
+  // Get current tier based on checked items
+  const tier = getTier(counts.red, counts.amber, counts.green);
+  const tierNum = tier ? tier.id : 0;
+
+  try {
+    const res = await fetch(
+      'https://mraoyfuixnjrtdkldyxg.supabase.co/functions/v1/submit-lead',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: val,
+          tier: tierNum,
+          red:   counts.red,
+          amber: counts.amber,
+          green: counts.green,
+        }),
+      }
+    );
+
+    if (res.ok) {
+      document.querySelector('.capture-form').style.display = 'none';
+      document.getElementById('capture-success').style.display = 'block';
+    } else {
+      throw new Error('Server error');
+    }
+  } catch (err) {
+    btn.textContent = 'Try again';
+    btn.disabled = false;
+    btn.style.background = '#b84a36';
+  }
+}
+
+build();
+</script>
+</body>
+</html>
