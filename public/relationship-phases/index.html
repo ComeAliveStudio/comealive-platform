@@ -1,1 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relationship Phases Tool · Your Master Relationship Manual</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink:        #4f889f;
+      --gold:       #005575;
+      --slate:      #dbe8eb;
+      --mist:       #4f889f;
+      --border:     rgba(215,229,232,0.85);
+      --card-text:  #1d1d1b;
+      --accent:     #005575;
+      --nav-bg:     rgba(0,63,90,0.96);
+      --alt-bg:     #3a7490;
+      --parchment:  #f0ece4;
+      --deep-teal:  #003f5a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--deep-teal); font-family: 'DM Sans', sans-serif; color: var(--card-text); min-height: 100vh; }
 
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* HEADER */
+    header {
+      background: var(--nav-bg);
+      padding: 52px 24px 44px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(215,229,232,0.2);
+    }
+    header::before { content:''; position:absolute; top:-80px; left:-80px; width:260px; height:260px; border-radius:50%; background:rgba(79,136,159,0.12); }
+    header::after  { content:''; position:absolute; bottom:-50px; right:-50px; width:200px; height:200px; border-radius:50%; background:rgba(0,85,117,0.15); }
+    .header-tag { font-size:10px; font-weight:500; letter-spacing:0.2em; text-transform:uppercase; color:var(--mist); margin-bottom:14px; }
+    header h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(26px,5vw,46px); font-weight:300; line-height:1.2; color:var(--parchment); margin-bottom:10px; }
+    header h1 em { font-style:italic; color:var(--slate); }
+    .header-book { font-family:'Cormorant Garamond',serif; font-size:15px; font-style:italic; color:rgba(240,236,228,0.65); margin-top:6px; }
+    .header-author { margin-top:18px; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:rgba(240,236,228,0.35); }
+
+    main { max-width:720px; margin:0 auto; padding:40px 20px 80px; }
+
+    .intro { text-align:center; margin-bottom:32px; }
+    .intro p { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:300; font-style:italic; color:var(--slate); line-height:1.75; }
+
+    /* PHASE CARDS */
+    .phases { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:12px; margin-bottom:16px; }
+
+    .phase-card {
+      border:1px solid var(--border);
+      border-radius:12px;
+      overflow:hidden;
+      background:rgba(0,63,90,0.55);
+      transition:border-color 0.2s;
+    }
+    .phase-card.answered-yes { border-color:#2e7458; }
+    .phase-card.answered-no  { border-color:#b84a36; }
+
+    .phase-header { padding:16px 18px 14px; display:flex; align-items:flex-start; gap:12px; }
+    .phase-num {
+      width:34px; height:34px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:13px; font-weight:500; flex-shrink:0;
+    }
+    .pn-1 { background:rgba(29,158,117,0.2); color:#5DCAA5; }
+    .pn-2 { background:rgba(55,138,221,0.2); color:#85B7EB; }
+    .pn-3 { background:rgba(186,117,23,0.2); color:#FAC775; }
+    .pn-4 { background:rgba(83,74,183,0.2);  color:#AFA9EC; }
+
+    .phase-title-wrap { flex:1; }
+    .phase-label { font-size:10px; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; margin-bottom:3px; }
+    .pl-1 { color:#1D9E75; }
+    .pl-2 { color:#378ADD; }
+    .pl-3 { color:#BA7517; }
+    .pl-4 { color:#7F77DD; }
+    .phase-title { font-size:15px; font-weight:500; color:var(--parchment); margin:0; }
+    .phase-focus { font-size:12px; color:rgba(219,232,235,0.55); margin:2px 0 0; }
+
+    .phase-body { padding:0 18px 16px; }
+    .phase-divider { height:0.5px; background:var(--border); margin:0 0 14px; }
+
+    /* DO / DON'T */
+    .do-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; }
+    .do-box { padding:10px 12px; border-radius:8px; }
+    .do-yes { background:rgba(46,116,88,0.15);  border:0.5px solid rgba(46,116,88,0.4); }
+    .do-no  { background:rgba(184,74,54,0.15);  border:0.5px solid rgba(184,74,54,0.4); }
+    .do-label { font-size:10px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; }
+    .do-yes .do-label { color:#80c8a4; }
+    .do-no  .do-label { color:#f0a898; }
+    .do-list { list-style:none; padding:0; margin:0; }
+    .do-list li { font-size:12px; color:var(--slate); padding:2px 0; display:flex; align-items:baseline; gap:5px; line-height:1.45; }
+    .do-yes .do-list li::before { content:'·'; color:#80c8a4; flex-shrink:0; }
+    .do-no  .do-list li::before { content:'·'; color:#f0a898; flex-shrink:0; }
+
+    /* OBSERVE / ONLY WHEN */
+    .observe-block { margin-bottom:12px; }
+    .block-label { font-size:10px; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:rgba(219,232,235,0.55); margin-bottom:7px; }
+    .pill-wrap { display:flex; flex-wrap:wrap; gap:5px; }
+    .obs-pill  { font-size:11px; padding:3px 11px; border-radius:20px; background:rgba(219,232,235,0.1); border:0.5px solid var(--border); color:var(--slate); }
+    .only-pill { font-size:11px; padding:3px 11px; border-radius:20px; background:rgba(176,120,40,0.15); border:0.5px solid rgba(176,120,40,0.4); color:#f0ca80; }
+
+    /* QUESTION BOX */
+    .question-box { border-radius:8px; padding:12px 14px; cursor:pointer; transition:all 0.15s; }
+    .qb-1 { background:rgba(29,158,117,0.12); border:0.5px solid rgba(93,202,165,0.4); }
+    .qb-2 { background:rgba(55,138,221,0.12); border:0.5px solid rgba(133,183,235,0.4); }
+    .qb-3 { background:rgba(186,117,23,0.12); border:0.5px solid rgba(250,199,117,0.4); }
+    .qb-4 { background:rgba(83,74,183,0.12);  border:0.5px solid rgba(175,169,236,0.4); }
+    .q-label { font-size:10px; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:5px; }
+    .qb-1 .q-label { color:#5DCAA5; }
+    .qb-2 .q-label { color:#85B7EB; }
+    .qb-3 .q-label { color:#FAC775; }
+    .qb-4 .q-label { color:#AFA9EC; }
+    .q-text { font-size:13px; font-style:italic; color:var(--parchment); margin:0 0 10px; line-height:1.55; }
+    .q-hint { font-size:11px; color:rgba(219,232,235,0.45); margin-bottom:10px; }
+    .q-answers { display:none; gap:7px; }
+    .q-answers.open { display:flex; }
+    .q-btn {
+      flex:1; padding:8px 6px; border-radius:8px;
+      border:0.5px solid var(--border);
+      background:rgba(219,232,235,0.08);
+      font-size:12px; cursor:pointer;
+      font-family:'DM Sans',sans-serif;
+      color:var(--slate); transition:all 0.15s;
+    }
+    .q-btn:hover { background:rgba(219,232,235,0.15); }
+    .q-btn.sel-yes { background:rgba(46,116,88,0.25);  border-color:rgba(46,116,88,0.6);  color:#80c8a4; }
+    .q-btn.sel-no  { background:rgba(184,74,54,0.25);  border-color:rgba(184,74,54,0.6);  color:#f0a898; }
+
+    /* SUMMARY */
+    .summary {
+      margin-top:8px; padding:18px 20px;
+      background:rgba(0,63,90,0.55);
+      border-radius:12px; border:1px solid var(--border);
+    }
+    .summary-inner { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+    .s-pills { display:flex; gap:8px; flex-wrap:wrap; }
+    .s-pill { font-size:12px; font-weight:500; padding:5px 14px; border-radius:20px; }
+    .sp-yes     { background:rgba(46,116,88,0.2);  color:#80c8a4; border:0.5px solid rgba(46,116,88,0.4); }
+    .sp-no      { background:rgba(184,74,54,0.2);  color:#f0a898; border:0.5px solid rgba(184,74,54,0.4); }
+    .sp-pending { background:rgba(219,232,235,0.1); color:rgba(219,232,235,0.55); border:0.5px solid var(--border); }
+    .s-btns { display:flex; gap:8px; }
+    .reset-btn { font-size:11px; color:var(--slate); background:none; border:0.5px solid var(--border); padding:6px 14px; border-radius:20px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+    .reset-btn:hover { background:rgba(219,232,235,0.1); }
+    .results-btn { font-size:12px; font-weight:500; color:#fff; background:var(--accent); border:none; padding:8px 22px; border-radius:20px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:background 0.15s; }
+    .results-btn:hover { background:var(--mist); }
+    .results-btn:disabled { background:rgba(219,232,235,0.15); color:rgba(219,232,235,0.35); cursor:default; }
+
+    /* GOLDEN RULE */
+    .golden-rule {
+      margin-top:14px; padding:18px 20px;
+      border-left:3px solid var(--mist);
+      background:rgba(0,63,90,0.4);
+      border-radius:0 10px 10px 0;
+    }
+    .gr-label { font-size:10px; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:rgba(219,232,235,0.5); margin-bottom:12px; }
+    .gr-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .gr-col-label { font-size:11px; font-weight:500; margin-bottom:6px; }
+    .gr-no-label  { color:#f0a898; }
+    .gr-yes-label { color:#80c8a4; }
+    .gr-list { list-style:none; padding:0; margin:0; }
+    .gr-list li { font-size:12px; color:rgba(219,232,235,0.8); padding:3px 0; display:flex; gap:6px; align-items:baseline; }
+    .gr-no  li::before { content:'·'; color:#f0a898; }
+    .gr-yes li::before { content:'·'; color:#80c8a4; }
+
+    /* EMAIL CAPTURE */
+    .capture { margin-top:14px; padding:26px 24px; background:rgba(0,63,90,0.7); border:1px solid var(--border); border-radius:14px; text-align:center; }
+    .capture h3 { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:300; color:var(--parchment); margin-bottom:6px; }
+    .capture p { font-size:13px; color:rgba(219,232,235,0.55); margin-bottom:18px; line-height:1.65; }
+    .capture-form { display:flex; gap:8px; max-width:380px; margin:0 auto; }
+    @media(max-width:480px){ .capture-form { flex-direction:column; } }
+    .capture input { flex:1; padding:11px 16px; border-radius:8px; border:1px solid var(--border); background:rgba(255,255,255,0.08); color:var(--parchment); font-family:'DM Sans',sans-serif; font-size:13px; outline:none; }
+    .capture input::placeholder { color:rgba(240,236,228,0.3); }
+    .capture input:focus { border-color:var(--mist); }
+    .capture button { padding:11px 20px; border-radius:8px; border:none; background:var(--accent); color:#fff; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; white-space:nowrap; transition:background 0.15s; }
+    .capture button:hover { background:var(--mist); }
+    .capture-success { display:none; font-size:14px; color:#80c8a4; padding:10px 0; }
+
+    footer { text-align:center; padding:24px; font-size:11px; color:rgba(219,232,235,0.4); border-top:1px solid rgba(215,229,232,0.15); }
+    footer a { color:var(--mist); text-decoration:none; }
+
+    /* RESULTS SCREEN */
+    #results-screen { animation:fadeUp 0.4s ease; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:translateY(0);} }
+
+    .results-back { display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--slate); cursor:pointer; margin-bottom:28px; background:none; border:none; font-family:'DM Sans',sans-serif; padding:0; transition:color 0.15s; }
+    .results-back:hover { color:var(--parchment); }
+
+    .results-header { text-align:center; margin-bottom:32px; }
+    .results-header .tier-label { font-size:10px; font-weight:500; letter-spacing:0.18em; text-transform:uppercase; margin-bottom:10px; }
+    .results-header h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(22px,5vw,38px); font-weight:300; line-height:1.25; color:var(--parchment); margin-bottom:10px; }
+    .results-header .tier-sub { font-size:13px; color:var(--slate); font-style:italic; }
+
+    .phase-track { display:flex; gap:6px; justify-content:center; margin-bottom:28px; flex-wrap:wrap; }
+    .track-dot { display:flex; flex-direction:column; align-items:center; gap:5px; }
+    .track-circle { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:500; border:1.5px solid; }
+    .tc-yes { background:rgba(46,116,88,0.2);  border-color:#2e7458; color:#80c8a4; }
+    .tc-no  { background:rgba(184,74,54,0.2);  border-color:#b84a36; color:#f0a898; }
+    .track-label { font-size:10px; color:rgba(219,232,235,0.5); letter-spacing:0.06em; }
+
+    .result-card { border-radius:12px; overflow:hidden; border:1px solid var(--border); margin-bottom:16px; }
+    .result-card-header { padding:20px 24px 16px; background:var(--slate); border-bottom:1px solid var(--border); }
+    .result-card-header .rc-tag { font-size:10px; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent); margin-bottom:6px; }
+    .result-card-header h3 { font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:400; color:var(--gold); line-height:1.3; }
+    .result-card-body { padding:22px 26px; background:#fff; }
+    .result-card-body p { font-size:14px; line-height:1.85; color:var(--card-text); margin-bottom:14px; }
+    .result-card-body p:last-child { margin-bottom:0; }
+    .result-card-body strong { color:var(--accent); font-weight:500; }
+    .result-card-body em { font-style:italic; color:#555; }
+    .result-card-body .closer { font-family:'Cormorant Garamond',serif; font-size:18px; font-style:italic; color:var(--gold); border-top:1px solid var(--border); padding-top:16px; margin-top:16px; }
+
+    .results-action { margin-top:28px; padding:28px 24px; background:rgba(0,63,90,0.7); border:1px solid var(--border); border-radius:14px; text-align:center; }
+    .results-action h3 { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:300; color:var(--parchment); margin-bottom:8px; }
+    .results-action p { font-size:13px; color:rgba(219,232,235,0.6); line-height:1.7; margin-bottom:20px; }
+    .results-action .cta-btn { display:inline-block; padding:12px 28px; border-radius:8px; background:var(--accent); color:#fff; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; text-decoration:none; transition:background 0.15s; cursor:pointer; border:none; }
+    .results-action .cta-btn:hover { background:var(--mist); }
+
+    .score-pills { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:28px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-tag">Interactive Companion Tool</div>
+  <h1>The Relationship <em>Phases</em> Framework</h1>
+  <div class="header-book">Your Master Relationship Manual</div>
+  <div class="header-author">Angelo D'Agostino</div>
+</header>
+
+<!-- ═══ CHECKLIST SCREEN ═══ -->
+<div id="checklist-screen" class="screen active">
+<main>
+  <div class="intro">
+    <p>The goal is not to slow down connection.<br>It is to allow reality to emerge before attachment takes over.</p>
+  </div>
+
+  <div class="phases">
+
+    <!-- PHASE 1 -->
+    <div class="phase-card" id="card-1">
+      <div class="phase-header">
+        <div class="phase-num pn-1">1</div>
+        <div class="phase-title-wrap">
+          <div class="phase-label pl-1">Phase 1</div>
+          <div class="phase-title">Initial Interest</div>
+          <div class="phase-focus">Focus · observation</div>
+        </div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-divider"></div>
+        <div class="do-grid">
+          <div class="do-box do-yes">
+            <div class="do-label">Do</div>
+            <ul class="do-list">
+              <li>Meet &amp; talk</li>
+              <li>Enjoy the interaction</li>
+              <li>Stay present</li>
+            </ul>
+          </div>
+          <div class="do-box do-no">
+            <div class="do-label">Don't</div>
+            <ul class="do-list">
+              <li>Future plan</li>
+              <li>Seek reassurance</li>
+              <li>Overshare</li>
+              <li>Force exclusivity</li>
+            </ul>
+          </div>
+        </div>
+        <div class="question-box qb-1" onclick="openQ(1)">
+          <div class="q-label">Key question</div>
+          <div class="q-text">Do I enjoy this person, or am I reacting to chemistry?</div>
+          <div class="q-hint">Tap to answer</div>
+          <div class="q-answers" id="qa-1">
+            <button class="q-btn" onclick="answer(event,1,'yes')">I genuinely enjoy them</button>
+            <button class="q-btn" onclick="answer(event,1,'no')">Mostly chemistry · unsure</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 2 -->
+    <div class="phase-card" id="card-2">
+      <div class="phase-header">
+        <div class="phase-num pn-2">2</div>
+        <div class="phase-title-wrap">
+          <div class="phase-label pl-2">Phase 2</div>
+          <div class="phase-title">Early Consistency</div>
+          <div class="phase-focus">Focus · patterns</div>
+        </div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-divider"></div>
+        <div class="observe-block">
+          <div class="block-label">Observe</div>
+          <div class="pill-wrap">
+            <span class="obs-pill">Follow-through</span>
+            <span class="obs-pill">Communication style</span>
+            <span class="obs-pill">Respect for boundaries</span>
+            <span class="obs-pill">Reliability</span>
+          </div>
+        </div>
+        <div class="question-box qb-2" onclick="openQ(2)">
+          <div class="q-label">Key question</div>
+          <div class="q-text">Do words and actions align consistently?</div>
+          <div class="q-hint">Tap to answer</div>
+          <div class="q-answers" id="qa-2">
+            <button class="q-btn" onclick="answer(event,2,'yes')">Yes · consistently</button>
+            <button class="q-btn" onclick="answer(event,2,'no')">Inconsistent · mixed</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 3 -->
+    <div class="phase-card" id="card-3">
+      <div class="phase-header">
+        <div class="phase-num pn-3">3</div>
+        <div class="phase-title-wrap">
+          <div class="phase-label pl-3">Phase 3</div>
+          <div class="phase-title">Emotional Access</div>
+          <div class="phase-focus">Focus · trust</div>
+        </div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-divider"></div>
+        <div class="observe-block">
+          <div class="block-label">Gradually allow</div>
+          <div class="pill-wrap">
+            <span class="obs-pill">Vulnerability</span>
+            <span class="obs-pill">Emotional depth</span>
+            <span class="obs-pill">Personal history</span>
+            <span class="obs-pill">Future discussions</span>
+          </div>
+        </div>
+        <div class="observe-block">
+          <div class="block-label">Only when</div>
+          <div class="pill-wrap">
+            <span class="only-pill">Consistency is established</span>
+            <span class="only-pill">Accountability is present</span>
+            <span class="only-pill">Emotional safety exists</span>
+          </div>
+        </div>
+        <div class="question-box qb-3" onclick="openQ(3)">
+          <div class="q-label">Key question</div>
+          <div class="q-text">Has trust been earned?</div>
+          <div class="q-hint">Tap to answer</div>
+          <div class="q-answers" id="qa-3">
+            <button class="q-btn" onclick="answer(event,3,'yes')">Yes · trust is present</button>
+            <button class="q-btn" onclick="answer(event,3,'no')">Not yet · not sure</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 4 -->
+    <div class="phase-card" id="card-4">
+      <div class="phase-header">
+        <div class="phase-num pn-4">4</div>
+        <div class="phase-title-wrap">
+          <div class="phase-label pl-4">Phase 4</div>
+          <div class="phase-title">Intimacy &amp; Commitment</div>
+          <div class="phase-focus">Focus · mutual investment</div>
+        </div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-divider"></div>
+        <div class="observe-block">
+          <div class="block-label">Healthy signs</div>
+          <div class="pill-wrap">
+            <span class="obs-pill">Reciprocal effort</span>
+            <span class="obs-pill">Clear communication</span>
+            <span class="obs-pill">Conflict can be repaired</span>
+            <span class="obs-pill">Both invest willingly</span>
+          </div>
+        </div>
+        <div class="question-box qb-4" onclick="openQ(4)">
+          <div class="q-label">Key question</div>
+          <div class="q-text">Are we building something together?</div>
+          <div class="q-hint">Tap to answer</div>
+          <div class="q-answers" id="qa-4">
+            <button class="q-btn" onclick="answer(event,4,'yes')">Yes · mutually</button>
+            <button class="q-btn" onclick="answer(event,4,'no')">One-sided · unclear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="summary">
+    <div class="summary-inner">
+      <div class="s-pills">
+        <span class="s-pill sp-yes"     id="count-yes">0 yes</span>
+        <span class="s-pill sp-no"      id="count-no">0 no</span>
+        <span class="s-pill sp-pending" id="count-pending">4 unanswered</span>
+      </div>
+      <div class="s-btns">
+        <button class="reset-btn" onclick="resetAll()">Reset</button>
+        <button class="results-btn" id="results-btn" onclick="goToResults()" disabled>See my reading →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GOLDEN RULE -->
+  <div class="golden-rule">
+    <div class="gr-label">The golden rule</div>
+    <div class="gr-grid">
+      <div>
+        <div class="gr-col-label gr-no-label">Not based on</div>
+        <ul class="gr-list gr-no">
+          <li>Chemistry</li>
+          <li>Attraction</li>
+          <li>Intensity</li>
+          <li>Potential</li>
+        </ul>
+      </div>
+      <div>
+        <div class="gr-col-label gr-yes-label">Based on</div>
+        <ul class="gr-list gr-yes">
+          <li>Consistency</li>
+          <li>Accountability</li>
+          <li>Emotional safety</li>
+          <li>Mutual investment</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMAIL CAPTURE -->
+  <div class="capture">
+    <h3>Save your reading</h3>
+    <p>Get your phase results sent to your inbox · free from Angelo D'Agostino.</p>
+    <div class="capture-form">
+      <input type="email" id="email-input" placeholder="your@email.com">
+      <button onclick="submitEmail()">Send it to me</button>
+    </div>
+    <div class="capture-success" id="capture-success">· You're in. Check your inbox.</div>
+  </div>
+
+</main>
+<footer>From <em>Your Master Relationship Manual</em> by <a href="https://app.comealive.vision">Angelo D'Agostino</a></footer>
+</div>
+
+<!-- ═══ RESULTS SCREEN ═══ -->
+<div id="results-screen" class="screen">
+<main>
+  <button class="results-back" onclick="goBack()">← Back to phases</button>
+
+  <div class="results-header">
+    <div class="tier-label" id="res-label"></div>
+    <h2 id="res-title"></h2>
+    <div class="tier-sub" id="res-sub"></div>
+  </div>
+
+  <div class="phase-track" id="phase-track"></div>
+  <div class="score-pills" id="res-pills"></div>
+  <div id="res-card"></div>
+
+  <div class="results-action">
+    <h3>Awareness is step one.</h3>
+    <p>The phases don't judge you · they orient you. Now you know where you are. What you do next is your decision.</p>
+    <a href="https://app.comealive.vision" class="cta-btn">Explore coaching with Angelo →</a>
+  </div>
+
+</main>
+<footer>From <em>Your Master Relationship Manual</em> by <a href="https://app.comealive.vision">Angelo D'Agostino</a></footer>
+</div>
+
+<script>
+const answers = {1:null,2:null,3:null,4:null};
+const PHASE_LABELS = {1:'Initial Interest',2:'Early Consistency',3:'Emotional Access',4:'Intimacy · Commitment'};
+
+const RESULTS = {
+  '4-0':{
+    labelColor:'#80c8a4',
+    label:'All four phases · all clear',
+    title:'You are building on solid ground.',
+    sub:'Four phases. Four honest answers. All pointing the same way.',
+    heading:'You Have Earned This',
+    body:`<p>This is rare · not because good relationships are rare, but because most people don't pause long enough to check. You did. And what you found is that this connection has moved through each phase in the right order, earning access rather than demanding it.</p>
+<p>The enjoyment was real. The consistency followed. Trust was built. Investment became mutual. <strong>That is the sequence. That is how it is supposed to work.</strong></p>
+<p>The task now is not to test it further · it is to show up for it. Fully. Without one foot out the door. The checking is done. What comes next is presence.</p>
+<div class="closer">You didn't settle. You chose clearly. That's worth something.</div>`
+  },
+  '3-1':{
+    labelColor:'#a8cc60',
+    label:'Three phases clear · one to revisit',
+    title:'Mostly solid · with one phase to revisit.',
+    sub:'The foundation is real. One area still needs honest attention.',
+    heading:'Stay Present · and Stay Honest',
+    body:`<p>Three clear yeses and one honest no. That is not a failing grade · that is a useful map.</p>
+<p>The foundation is real. This connection has earned most of what it has been given. But somewhere in one of the four phases, something has not fully landed yet · and you know which one it is.</p>
+<p><strong>The question is not whether to walk away. The question is whether you have named what is missing.</strong> Not to your partner necessarily · to yourself first. What would a yes in that phase actually look like? Is it possible? Is it being worked toward?</p>
+<p>Awareness without action is just anxiety with better vocabulary. You have the awareness. Now decide what to do with it.</p>
+<div class="closer">One unresolved phase doesn't ruin a relationship. Ignoring it does.</div>`
+  },
+  '2-2':{
+    labelColor:'#f0ca80',
+    label:'Two phases clear · two to revisit',
+    title:'You are halfway between hope and reality.',
+    sub:'Two yeses, two nos. And you already felt this before you answered.',
+    heading:'The Connection Is Real · But Incomplete',
+    body:`<p>Two yeses and two nos. And if you are honest · you already felt this before you answered.</p>
+<p>This is the zone where most people stay the longest, because two yeses is enough to keep hoping and two nos is not enough to feel justified in leaving. The connection is real. But it is <strong>incomplete</strong>. And incomplete connections have a way of staying incomplete.</p>
+<p>The pattern I have seen most often: people grant access from phase four while still waiting for phases two and three to catch up. It does not work that way. Emotional access and commitment are not tools to <em>create</em> consistency and trust. They are rewards for it.</p>
+<p>You have not lost anything yet. But you are at a decision point. <strong>Hold the phase you are actually in.</strong> Do not skip ahead hoping it will resolve itself on arrival.</p>
+<div class="closer">Two nos is not failure. It's honesty. And honesty is the only thing that can actually move this forward.</div>`
+  },
+  '1-3':{
+    labelColor:'#f0a898',
+    label:'One phase clear · three to revisit',
+    title:'The attachment is ahead of the evidence.',
+    sub:'One yes, three nos. And yet the investment is already there.',
+    heading:'Slow Down · Not Away',
+    body:`<p>One yes. Three nos · or not yets. And yet here you are, probably more invested than the numbers suggest you should be.</p>
+<p>That is not weakness. That is human. We attach to potential. We attach to who someone could be, to the feeling of early connection, to the story we have started writing in our heads. But the story is not the relationship. <strong>The relationship is what actually happens · consistently, over time, under ordinary conditions.</strong></p>
+<p>The work right now is not to try harder. It is to slow down. Stop granting access that has not been earned. Stop performing investment hoping it will be matched. Go back to phase one · not as a punishment, but as a recalibration.</p>
+<p>Can you enjoy this person without needing them to be more than they currently are? If yes · stay curious. If no · that answer is also information.</p>
+<div class="closer">Potential is not a promise. Presence is.</div>`
+  },
+  '0-4':{
+    labelColor:'#f08878',
+    label:'No phases cleared · reality check needed',
+    title:'You already know what this is telling you.',
+    sub:'Four nos. You filled in every one. Part of you needed to see it written down.',
+    heading:'You Already Know What This Is',
+    body:`<p>Four nos. And you filled in every single one of them, which means part of you needed to see it written down.</p>
+<p>What you are describing is a connection that has not moved through the phases · it has jumped to an outcome without doing the work. The enjoyment may be real, the chemistry certainly is. But <strong>chemistry without consistency is not a relationship. It is an experience.</strong></p>
+<p>Experiences are valuable. They teach us things. But they are not foundations, and you cannot build a life on something that has not shown up reliably in the ordinary moments.</p>
+<p>The most important thing you can do right now is resist the urge to explain this away. Four phases. Zero of them cleared. That is not a technicality. <strong>That is the whole picture.</strong></p>
+<p>You deserve someone who earns it. Not someone you have to convince yourself to forgive for not earning it.</p>
+<div class="closer">This is not the end of the story. It's clarity about which story you're actually in.</div>`
+  }
+};
+
+function openQ(n) {
+  const qa = document.getElementById('qa-'+n);
+  const hint = qa.previousElementSibling;
+  qa.classList.toggle('open');
+  if (hint && hint.classList.contains('q-hint')) hint.style.display = qa.classList.contains('open') ? 'none' : '';
+}
+
+function answer(e, n, val) {
+  e.stopPropagation();
+  answers[n] = val;
+  document.getElementById('qa-'+n).classList.add('open');
+  document.querySelectorAll('#qa-'+n+' .q-btn').forEach(b => b.classList.remove('sel-yes','sel-no'));
+  e.target.classList.add(val==='yes'?'sel-yes':'sel-no');
+  const card = document.getElementById('card-'+n);
+  card.classList.remove('answered-yes','answered-no');
+  card.classList.add(val==='yes'?'answered-yes':'answered-no');
+  updateCounts();
+  document.getElementById('results-screen').classList.remove('active');
+}
+
+function updateCounts() {
+  const vals = Object.values(answers);
+  const yes = vals.filter(v=>v==='yes').length;
+  const no  = vals.filter(v=>v==='no').length;
+  const pen = vals.filter(v=>v===null).length;
+  document.getElementById('count-yes').textContent     = yes + (yes===1?' yes':' yes');
+  document.getElementById('count-no').textContent      = no  + (no===1?' no':' no');
+  document.getElementById('count-pending').textContent = pen + (pen===1?' unanswered':' unanswered');
+  document.getElementById('results-btn').disabled = pen > 0;
+}
+
+function goToResults() {
+  const yes = Object.values(answers).filter(v=>v==='yes').length;
+  const no  = Object.values(answers).filter(v=>v==='no').length;
+  const key = yes+'-'+no;
+  const data = RESULTS[key] || RESULTS['2-2'];
+
+  document.getElementById('res-label').textContent = data.label;
+  document.getElementById('res-label').style.color = data.labelColor;
+  document.getElementById('res-title').textContent = data.title;
+  document.getElementById('res-sub').textContent   = data.sub;
+
+  // Phase tracker
+  const track = document.getElementById('phase-track');
+  track.innerHTML = [1,2,3,4].map(n => {
+    const v = answers[n];
+    const cls = v==='yes'?'tc-yes':'tc-no';
+    const icon = v==='yes'?'✓':'✕';
+    return `<div class="track-dot">
+      <div class="track-circle ${cls}">${icon}</div>
+      <div class="track-label">P${n}</div>
+    </div>`;
+  }).join('');
+
+  // Pills
+  document.getElementById('res-pills').innerHTML =
+    `<span class="s-pill sp-yes">${yes} yes</span>
+     <span class="s-pill sp-no">${no} no</span>`;
+
+  // Card
+  document.getElementById('res-card').innerHTML = `
+    <div class="result-card">
+      <div class="result-card-header">
+        <div class="rc-tag">Your Reading</div>
+        <h3>${data.heading}</h3>
+      </div>
+      <div class="result-card-body">${data.body}</div>
+    </div>`;
+
+  document.getElementById('checklist-screen').classList.remove('active');
+  document.getElementById('results-screen').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function goBack() {
+  document.getElementById('results-screen').classList.remove('active');
+  document.getElementById('checklist-screen').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+async function submitEmail() {
+  const emailInput = document.getElementById('email-input');
+  const val = emailInput.value.trim();
+  if (!val || !val.includes('@')) { emailInput.style.borderColor='#b84a36'; return; }
+
+  const btn = document.querySelector('.capture button');
+  btn.textContent = 'Sending…'; btn.disabled = true;
+
+  const yes = Object.values(answers).filter(v=>v==='yes').length;
+  const no  = Object.values(answers).filter(v=>v==='no').length;
+  const key = yes+'-'+no;
+
+  try {
+    const res = await fetch('https://mraoyfuixnjrtdkldyxg.supabase.co/functions/v1/submit-phases', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ email:val, yes, no, answers_detail: JSON.stringify(answers) })
+    });
+    if (res.ok) {
+      document.querySelector('.capture-form').style.display='none';
+      document.getElementById('capture-success').style.display='block';
+    } else { throw new Error(); }
+  } catch {
+    btn.textContent='Try again'; btn.disabled=false; btn.style.background='#b84a36';
+  }
+}
+</script>
+</body>
+</html>
