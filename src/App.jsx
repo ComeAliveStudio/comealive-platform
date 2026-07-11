@@ -1932,7 +1932,7 @@ useEffect(() => {
             <h2>Make It Happen<br /><em>Premieres 2026</em></h2>
             <p style={{color:'rgba(246,243,240,0.75)', maxWidth:460, margin:'0 auto 2rem', fontSize:'0.9rem'}}>
               The independent filmmaker's survival guide.<br />
-              New episodes soon on Air.
+              New episodes soon on air.
             </p>
             <a
               href={SPOTIFY_URL}
