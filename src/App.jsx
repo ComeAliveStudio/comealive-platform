@@ -1929,10 +1929,10 @@ useEffect(() => {
           <ConciergeSection />
           <section style={{background:'#3a7490', padding:'5rem 3rem', textAlign:'center'}}>
             <div className="section-label" style={{justifyContent:'center'}}>Podcast</div>
-            <h2>Make It Happen<br /><em>premieres May 2026</em></h2>
+            <h2>Make It Happen<br /><em>Premieres 2026</em></h2>
             <p style={{color:'rgba(246,243,240,0.75)', maxWidth:460, margin:'0 auto 2rem', fontSize:'0.9rem'}}>
               The independent filmmaker's survival guide.<br />
-              New episodes every week on Spotify.
+              New episodes soon on Air.
             </p>
             <a
               href={SPOTIFY_URL}
