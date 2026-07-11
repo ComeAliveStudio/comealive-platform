@@ -1954,6 +1954,8 @@ useEffect(() => {
               {user && (
                 <a onClick={() => setPage('dashboard')}>Dashboard</a>
               )}
+              <a href="/terms-of-service.html">Terms of Service</a>
+              <a href="/privacy-policy.html">Privacy Policy</a>
             </div>
             <div className="footer-copy">© 2026 Come Alive Vision · Vienna</div>
           </footer>
